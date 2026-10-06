@@ -227,6 +227,53 @@ async function consolidateLiveSources(env) {
   };
 }
 
+async function getFullResumo(env, supabaseUrl, supabaseAnon) {
+  const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/moving_excluir_resumo`, {
+    method: 'POST',
+    headers: {
+      'apikey': supabaseAnon,
+      'Authorization': `Bearer ${supabaseAnon}`,
+      'Content-Type': 'application/json'
+    },
+    body: '{}'
+  });
+
+  let data = rpcRes.ok ? await rpcRes.json() : {};
+
+  // Buscar dados de vendas diárias
+  const diarioRes = await fetch(`${supabaseUrl}/rest/v1/moving_excluir_vendas?select=data_compra,plataforma,setor,tipo,valor&status=eq.CONFIRMADO&limit=10000`, {
+    headers: {
+      'apikey': supabaseAnon,
+      'Authorization': `Bearer ${supabaseAnon}`
+    }
+  });
+
+  if (diarioRes.ok) {
+    const vendas = await diarioRes.json();
+    const aggr = {};
+    for (const v of vendas) {
+      if (!v.data_compra) continue;
+      const dia = v.data_compra.slice(0, 10);
+      const plat = v.plataforma || 'OUTROS';
+      const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
+      const key = `${dia}|${plat}|${setor}`;
+      if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
+      aggr[key].total += 1;
+      aggr[key].receita += (Number(v.valor) || 0);
+    }
+    data.vendas_diarias = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
+  }
+
+  // Puxar consolidado de cupons e ações ao vivo na nuvem
+  const live = await consolidateLiveSources(env);
+  data.cupons = live.cupons;
+  data.start_inc = live.start_inc;
+  data.outras_acoes = live.outras_acoes;
+  data.atualizado_em = new Date().toISOString();
+
+  return data;
+}
+
 export default {
   // Disparo Agendado (Cron Trigger na Cloudflare a cada 15 min 24/7)
   async scheduled(event, env, ctx) {
@@ -242,14 +289,11 @@ export default {
     // Rota POST /api/sync (Disparo manual na nuvem)
     if (url.pathname === '/api/sync') {
       try {
-        const live = await consolidateLiveSources(env);
+        const resumoData = await getFullResumo(env, supabaseUrl, supabaseAnon);
         return new Response(JSON.stringify({
-          status: 'ok',
-          origem: 'cloudflare_cloud_worker',
-          timestamp: new Date().toISOString(),
-          cupons_count: live.cupons.length,
-          start_inc_ingressos: live.start_inc.ingressos,
-          antiga_gestao_ingressos: live.outras_acoes.antiga_gestao.ingressos
+          status: 'OK',
+          erro: null,
+          resumo: resumoData
         }), {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -257,7 +301,7 @@ export default {
           }
         });
       } catch (err) {
-        return new Response(JSON.stringify({ status: 'error', error: String(err) }), {
+        return new Response(JSON.stringify({ status: 'ERRO', erro: String(err) }), {
           status: 500,
           headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' }
         });
@@ -267,48 +311,7 @@ export default {
     // 1. Endpoint /api/resumo
     if (url.pathname === '/api/resumo') {
       try {
-        const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/moving_excluir_resumo`, {
-          method: 'POST',
-          headers: {
-            'apikey': supabaseAnon,
-            'Authorization': `Bearer ${supabaseAnon}`,
-            'Content-Type': 'application/json'
-          },
-          body: '{}'
-        });
-
-        let data = rpcRes.ok ? await rpcRes.json() : {};
-
-        // Buscar dados de vendas diárias
-        const diarioRes = await fetch(`${supabaseUrl}/rest/v1/moving_excluir_vendas?select=data_compra,plataforma,setor,tipo,valor&status=eq.CONFIRMADO&limit=10000`, {
-          headers: {
-            'apikey': supabaseAnon,
-            'Authorization': `Bearer ${supabaseAnon}`
-          }
-        });
-
-        if (diarioRes.ok) {
-          const vendas = await diarioRes.json();
-          const aggr = {};
-          for (const v of vendas) {
-            if (!v.data_compra) continue;
-            const dia = v.data_compra.slice(0, 10);
-            const plat = v.plataforma || 'OUTROS';
-            const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
-            const key = `${dia}|${plat}|${setor}`;
-            if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
-            aggr[key].total += 1;
-            aggr[key].receita += (Number(v.valor) || 0);
-          }
-          data.vendas_diarias = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
-        }
-
-        // Puxar consolidado de cupons e ações ao vivo na nuvem
-        const live = await consolidateLiveSources(env);
-        data.cupons = live.cupons;
-        data.start_inc = live.start_inc;
-        data.outras_acoes = live.outras_acoes;
-
+        const data = await getFullResumo(env, supabaseUrl, supabaseAnon);
         return new Response(JSON.stringify(data), {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',

@@ -1,8 +1,8 @@
 {
-  "gerado_em": "2026-10-06T19:26:42.432757-03:00",
+  "gerado_em": "2026-10-06T19:42:05.485216-03:00",
   "evento": "3419289",
   "api": {
-    "ingressos_confirmados": 811,
+    "ingressos_confirmados": 812,
     "por_setor": {
       "GOLD": {
         "total": 124,
@@ -17,10 +17,10 @@
         "receita": 25197.35
       },
       "FULLPASS": {
-        "total": 452,
-        "pagos": 452,
+        "total": 453,
+        "pagos": 453,
         "cortesias": 0,
-        "receita": 66763.7
+        "receita": 66898.45
       },
       "BLACK": {
         "total": 42,
@@ -61,9 +61,10 @@
   },
   "batem": false,
   "so_na_api": {
-    "qtd": 1,
+    "qtd": 2,
     "exemplos": [
-      "SYMPLA-UVRV-06-GJYM"
+      "SYMPLA-UVRV-06-GJYM",
+      "SYMPLA-UVS0-NM-QNQ8"
     ]
   },
   "so_na_planilha": {
@@ -73,26 +74,26 @@
   "valor_diferente": {
     "qtd": 303,
     "exemplos": [
-      "SYMPLA-UPVF-BJ-NXBE",
-      "SYMPLA-UQ80-JF-C75M",
-      "SYMPLA-URTF-QU-BTUF",
-      "SYMPLA-UQZ2-KC-Z3M2",
-      "SYMPLA-UVKN-NT-0F9T",
-      "SYMPLA-UUP9-7T-6X1Y",
-      "SYMPLA-UU0X-JD-FEBR",
-      "SYMPLA-UUGY-JB-ECY8",
-      "SYMPLA-UTG3-W8-691R",
-      "SYMPLA-UV3F-8Z-8U5R",
-      "SYMPLA-UPVZ-KZ-PZTR",
       "SYMPLA-UUUH-SF-3XG9",
-      "SYMPLA-UT5X-HC-Y4SG",
-      "SYMPLA-US96-Z8-QJJX",
-      "SYMPLA-UURD-3K-TMPG",
-      "SYMPLA-UVYK-Y8-D4HJ",
-      "SYMPLA-UUTK-S6-J21W",
-      "SYMPLA-UUR5-R6-7AZT",
-      "SYMPLA-URH5-6T-Y24S",
-      "SYMPLA-UVFG-4F-89JS"
+      "SYMPLA-UV7B-WW-YYXG",
+      "SYMPLA-UVQ1-DU-2THB",
+      "SYMPLA-UU4T-BG-LF34",
+      "SYMPLA-USU4-PW-NV07",
+      "SYMPLA-UV3Y-Q8-S832",
+      "SYMPLA-UZBW-FB-YVF5",
+      "SYMPLA-UUUF-06-Z41X",
+      "SYMPLA-UVLJ-SG-0LTN",
+      "SYMPLA-UURM-X9-16NE",
+      "SYMPLA-URLT-RK-0Q42",
+      "SYMPLA-UVFE-FL-N3V5",
+      "SYMPLA-URZB-X5-VRGH",
+      "SYMPLA-UVKN-NT-0F9T",
+      "SYMPLA-URAJ-PW-LMXL",
+      "SYMPLA-US9E-QW-Q39N",
+      "SYMPLA-UUTS-EY-6GG4",
+      "SYMPLA-UZBW-FB-YVDT",
+      "SYMPLA-UUUD-LP-LX1Q",
+      "SYMPLA-UQ6R-74-BF6E"
     ]
   },
   "setor_diferente": {

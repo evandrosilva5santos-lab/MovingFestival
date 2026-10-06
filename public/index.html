@@ -1742,18 +1742,21 @@
       avisoSync('erro', 'Não sincronizou', motivo);
     }
     fetch(API_SYNC, { method:'POST', signal: ctrl ? ctrl.signal : undefined })
-      .then(function(r){ return r.json().catch(function(){ return { status:'ERRO', erro:'o servidor respondeu sem dados (HTTP ' + r.status + ')' }; }); })
+      .then(function(r){ /* SYNC_DIAG */ var cod = r.status; return r.json().then(function(j){ if(j && typeof j==='object') j.__http = cod; return j; }).catch(function(){ return { status:'ERRO', erro:'o servidor respondeu sem dados (HTTP ' + cod + ')' }; }); })
       .then(function(j){
         var temResumo = j && j.resumo && typeof j.resumo.total === 'number';
         if(temResumo){ DATA = j.resumo; render(); }
-        if(temResumo && j.status === 'OK'){
+        if(temResumo && (j.status === 'OK' || j.status === 'ok')){
           SYNC_ERRO = false;
           setStatus('live', j.resumo.atualizado_em || new Date().toISOString());
           var dif = antes === null ? null : j.resumo.total - antes;
           var txt = (dif === null ? '' : (dif > 0 ? '+' + num(dif) + ' ingressos novos · ' : (dif < 0 ? num(dif) + ' ingressos (cancelamentos) · ' : 'Nenhuma venda nova · '))) + 'total ' + num(j.resumo.total);
           avisoSync('ok', 'Sincronizado às ' + horaAgora(), txt);
         } else {
-          falhou((j && (j.erro || j.error)) || 'o servidor não confirmou a sincronização');
+          var ultLog = (j && j.log) ? String(j.log).trim().split('\n').filter(function(l){ return l.trim(); }).pop() : '';
+          falhou((j && (j.erro || j.error)) || (!j ? 'resposta vazia do servidor' :
+            (j.status === 'OK' && !temResumo ? 'sincronizou, mas o resumo voltou sem total' :
+            'resposta inesperada (HTTP ' + (j.__http || '?') + ', status ' + (j.status || '—') + ')' + (ultLog ? ' · ' + ultLog : '') + '. Reinicie o server.py (Ctrl+C e python3 server.py).')));
         }
       })
       .catch(function(e){
