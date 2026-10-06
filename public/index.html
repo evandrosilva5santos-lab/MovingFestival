@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAhwklEQVR42lV6d6ylx3Xf75yZ+dqt776+773dt0VbyOWyiEWUaIkSZfVIcm+SEtuwgzg2HFgInILAQQwEQRIYBmwncRLbiJ0iyzbVbFqhIFEiRYnkkhLJbeTy7S63vN5u/erMnPzx3ooxMLj4MHcu5vc7Zb475/zo7j9wTBABASCAAED2HgnEAAECAERgBhGEIADR311Pbw2mvWnw3jLszxDAQEDQBCZohiEYSMCImQKSgBAxQoVQIVIIGREj1kg0GkZiDUNINOoBQkNJ6FVMeg+eAH5vvz00vI9pnwkDBAKEIATQ/sMeuD3me/N0G7HQD4gDBMFbVD1D6DY3AhExgxiKoQGjYBh6j55GqBEpCRWE4AQBofLoFRQ5eE+hFQ2GEEQAwNP+fkwQwN8GxHuuwL4NifedsIcSe4a/DfEHDhQCZB/rnv33+TD83m8ZzFAEJoCEGWpvRsEoaA2jxGhYIBXEXiBUelKQSEEE1qHlSRdAsGdveWubPSZ7GxcMSxDeD499iALDiBUU9pnw7a/21+xFHe9PgvdDiG4bhdT+5x5/xaRY9tCzgtIwLGBJPSlBRBgSMShUCImMoPRiFKyHvnfCv9jlmCG3CexFqiOkmgLGnJcjThY9JpXUDLhGaYgVT5dyLFXoecSEgG57Y8+08ndyY4/JDwjsm4nfGqRAJHu+hQIp8YQcgCMt0EBBZAgRQwuIRQiOoEi6JenPHC0un0tyL+q2CT2QGuo4PNarHu1Vp1LXst5YMIgUqZB0jbnNZVPdqqmnNH3FYqVCg+AZBIjshxDvh/i+J+l2Hu8ljL+N3kMc4Jgcw7EIQaAcSWpBzoeKiBAxDEMIWgkxcsGEwtBS6YnszuZ3l6PffDUZOmggVZQA71svPrGSHRtWphRXimeq6mbYUkVdU0ixRgvUYo5qhBnemOTfy/ClXTRp/xAgQO3hvp1C+P/iZy/o91OWERAChYgRksSKQu2jend6PDsZNW8uN653pW4QMSKFGkvEcEItLQlLailkaFZy71Q5FcTdnFxIdw38Z94YPNArpPAu9UWgbh6MXp0PL0+Y9ZgzRWAJCWOQRY8zQ9y3gxknv92kRog/q9AgOMY+dg8AiqAVmKAEWkDyVi4JwRMcwQEW0EQZ5I3yBvW7C4rG5tK7DvP6xWTvVCQSC/QcEhYvslPtZZBokBqWPBajxvzBm9nPXR504PLUuQIXjyZfO1k/1zF9hvKiBexFCYSwSnSB8WQLR2P5+CpOvyK/Nk2DI/hmgQMVah4NjXoihlFVGA1pJMgM8gCpQclgQSgwBAI89giIh9pxu+tFDxAFnIvS5sxuuxZ3hySMCigdNBGJ71tyQjFj5IjSje24IVtd9d3/w/e8MQwgbuDXa/oLD4x960CUeomc6D2b3T6IWMAEy7AKojE3xI+/IBN9ZHVsl9SwPtaIaojaMBGk5HIoRSleUxVTL5HtBm7W6HqAbQNh1AgJgSEhq223vVndZPaNAAfH3ZnpZrBxNMtIM1jEEMYNQkivolAhZsocdEa6vFmlf5Pfd90L+eGuXzpe+9x97dcDTirfBBy/deQzQIKcIYxpK3ds48QKOuvkUxpYNEqciHxeSjVytuey9cpHPklgVFQjjozWmgPmAGBgyP4K5KzgvKcdQqzAIhHXA9Vg5AQpvRv1x7NMgXzhoaCbhLujJzrN+P+uvTf38ORSAV18fFeezsOR08oGsbj3N/5l1FkrMA5Zd8QsIpDbWVgyvMLbnLy7S8feJHUdo103KMuCipJzq0dO2wokLlfZinb9JMqGcqyKWsykrFKViY1pxlESJZOT0dxh057Hbke+XfmvD7EMqinyKCwPYuNn41pS1ciLIQmBO6O1w2rpUPY7pj2/2/iHO3nrpZ25kWW68Asrobcut2aRZ36xHh8Lv/G6DhnH2/bbG+aPbhoLeECANMAhJx9Yp7uukluWlW6+7XppUFnjna4sBNbqgIyponB1fOzlqdbqPe+tn3vmzNK1uWIUNSrsKvQIWntXEtIgsbXpqHXsYPP4PQEt4mnrvpxim7mlyBC0SMi+rhAypph+Rv+HJP2fw8FAR3E0NoX2j7yQ/UoBpX791K85cfEPhfWfbPGYUZUcHXcHY1eL5dS4W+3rNzIOGKLw4XX8xFnVelFev55etltd3u5p70LhunNchXzth+79XwbRToF84vUDnWce/WiYHLr/4Nv7fP16/fnphycTHg7T6Gru6lQD1wvbHmzz9qXlrVdfHqVvBA8gev8EV8ovOQFJpBAwBUwJSwVO/cyc/z7ssmLm5jtGyS8dmmgsdir1Sx/+7NhPN6Y+koApHRIIROKZvBCxTBu8uK1HAT70Gu7/sju33L+A3rYeLPu1Z6dvmfprph/TrBQT9s6J33rfhy7MHzPPXRDX8RtdOtxYSVrjvl899eKCuHC0udV8xzMf/uVBRNmV5TGquSpV3iEeKzZqm+e2b7x8cVC9Hn84Tu6aomtKPFHEEioKCJVQTUd38ZOhCdiMceukSz5aliCB+o0//neYDoddIlDluawoy1kcwkAgmAj8y/1ga0CfWpGtYLTS2PWly8ru42duzNz93G8f/Ox21L2lH6wlzSyz5er6xZt3Xh8eca7LjK3VneeeOb90uRiMP3prPLismPQbhxbz3eGhW3a8lLLWvzk31V+qUfKxuDVNo97KucFrL57NFm9MvGcheL0pRAiIGAiYxpDHnCyZz9j4fYba3WoxK7V4Up/+R7/VHyJz7IUCLXEA68g5xIE3IYqKntoJhzt4X+6bkyZOookWvaDf3HgHnZlo55sbL3ZObpWNoxJsDtvPfOn4cnjU1bTSDUDWspatvb3n322jmjWcq2pppf7Nx33/+dm8qO9euPlTH3nq0U8f/uprlZtstGDCTZqabeFQ+e2zg8ntpPVwtOmlxsREMYQQXnAnU0xMJzMjHMsdOy/WkR7l5EHshSDek1FSj71zIOI8R6Tk5w8Wv3cjJAKRwEhtRpoOSze2x+84uDz7b6/e2LmjH2XDuCHNE4dm4OJy3babTaOgqNCjEKRlnSvx6TCN3UThTyrE7W6la4f/4runF3rloem7ByujoGtak4loPRmF/Ts2lrZXTti2IvEeDJyo06mGrOWVE2ItlSUiYgJraDZCnkpLvUx58fUKtVBGBed9ZpER+yOT9jOzYnY0G8SCiuldjROtbHrspVojj8bkzlaQBG0OAwoOURRSEJMOxURkYiIFAiAQL96ReAijKH2VIy18391fUjmvSqvdoJkNelluC6EqilkqHwoOGHq4SU5wMEAjpum26q7I2muEHlW5FIAy0KtTl1qBGkeDhy3px6OCBRgWLB5x5BODMnUTI7m+xhSL0ZH28SGoBZke5SMNEwahUgKxKJ0vpGTxsdUh5QaehRVYEysiZmbSCkGgkrrmWZ6tccgMpT0S61BWfphKd7MaDCrX2JHE1XP54TksJvCVbO9ie43KqxgsUaCEaigIKVAWoP+0dlaZ0VRMh8J2qxwfrUwUQwUFCoAucEP6S9i8KQDXWGuLcgSyPsX2wG4kUdmulY1ooIM+6ZGJiiQkDmO4EmJJMYjEwwvBKfgY3ISTvNClCsMw0mXTI9HNJGwnUSeMJiiegIrhBP1NP1j3UUTcRKTRGNLGC9hcRnwc6hioKRISlCQEfatXTI9FG2VKsnNXEk4vmFvXxwYpy4tiL3M54tEA2U5f266LduutnenDN2utdQ5GQVTVxsrGlDV1CDwl01gJsLoD3MDRA5g5Bp2ANUAQD3GgLm49h9UYU41szO7m5VgWSHkgH5l8Vxc3W6PLLVc2OG5ysxHN1yaPGI6oHHjekMGbMhJqfAy0AAvAQ0NijUCL3ioqncqkNhu2n1du0QT99mjnS017U6V55dMLndalo/e8OXVwszk1jJLe+s7p9a135MUsMtb9bb706vzirckjUuXF6HNHxpNfKuhJf/Evkx+dl9Y4WO3fEGTYffJr+tlH6gd/dmfmT3934ovhu3/xsVbtTLrRUdPQEYq1/M0L+W5YjBrFsJZd1Fvf7sSd+c6dU7U7asUE9ND7WXK5KAITQaQSDDLS/arSmYAxnshqsNPmZP0r46vfQ7/4fnL43PiZ14aNwbF52wnLLC2+d/ZTKxsfYQ1FiOuoj8G03vHSS985uvHkwl2DLB2SGUX3fXz34q3w2jX19mmIgxdizq48t/2VZHH2p+n+JL06vLG5fbD03fDkFRufGayX29vf+wb69rHG3GJzOoxmXD24uRC+kN260H1lfOs7i40Hj87e0V7ehQ1gPQjCBBIUHnqYW4G3sLVAJkxSjqqzX3O97PO9TxwaHP2x2SDsrWVPnH/uNw4/fvONT6xvfGQ8lOVz2WrvrGqPLx45PXfCTd/9yPmnynjsi2EQSmG5PQpaHb97SbMXC/GOWAY3N/XgtL6rgi73LiKVLyPJVHIgvfHq1z/XHDR+/tjdzbl5aCDrIbWnXDl94N5nWgeu9p/46xufe9fooY+13zO54ZUAFhAPL4BAD0trBYkh54Obvv/9rcnzH4lz9ciNxnxxo4rm9anDja8N3vXH53oPjT48P+G3z45mp//w0U++sLqZfvfsL7D+0TsethOHHrn0/W+8nRiaYZjYEQPiIAAcAFdCKtm75ytiEhHxDtDGPvft/Gr+c/c/3FxYsPlW71tffBn25PTxsbm7O5svH2v872vJ/K+f+eCRIqBio6S52Al8CSf79Ss9KgsIk8RxoG9da33ppZm4o6N4vlzvv3DpUsMfO93pKM1Lbz760aMKQ26Mf/O9nz6vzcLRWmL18xdefV+ZNScP6Fden6pCoYhh9i72DlIBDPGQ/QoQvICEiRUB4qz43BUvLo3rdqfddASuDb9w312P/+1XPmjLn0QS1N52rGyEXJuR8SBUZIpyeEWCNofjsmccAdhD2HuxUrhqrd/cLnl9czgRyqigw/7VA+ULwlRUvlkmYx1yhZ07teTYpFnmi+LI0UTp1Fk2WspSOc/EQCFSeSKBLcVZOAvvmZmVAhFyCwfNWkRA4pysDkNHMEaxG44tmpOf/KkPfORGPtoebfqsFu4eGBcR1EbVc//m8te/qm+mk5FjhtYINIwBjynV0spb3x3YNGCjpbBuMoSz9OjkzuFmUTgMrVWoSJNnVFVFyilFHA23NnQYThrjdm+QUT1FDAX0PBEjCmA0KcXGwA2655bj+DgagsraYguGnXgSEFHlxIknQBlBFItvzR1rRlHfVeycrwLjScvapnu2munOHw6tTdy5IV3JsWNxI4eeCkzEpESVhSQI2CPQHDM8MJmI6EQRSq7WKru10aSWfvPSPTNHX29NjG5cNOdf/dj4jKYCa6+tj8+/oTaPgjwi8rt9d/0qpmMv7Ipi5/lrfP69Y8ffLtPOX9/M5SLrCOJFPCkCVdY6CIgY2pAKdKi1dnt1Sa9RjVyNgsA/Eo0dwuFo3eG1HEwwRIWIHlNhxAzNB6NaOWo458KAAHgvofKkYwZ0YK6YSzeuTc/dWcnEo098RdXHr2TuvUn7WLsj62dRyOdP35uXX6rEQfIqyM6UTxfuYh0QX3GdPjl3/51yqKTtYLj6P9Q7DTIGeS9es9bkxToApBgASMgwK8sQCLy4fNuh0ZRm3Ralcp6Yhh7MZAUE0uOmXdPBeNQ84KYuF7UKaVOReM9iI1UNKdQsSRAfvOMVu1pcPv/Y7CE064/Z6rF2iBDY/n4xWv8v7/j4+bCZeEcETdfK8PA94bGHILJfto8tqkLerIbd31XvvtWcPxVceLU7WO/DeoIxABwIZVpRkEFCHRChsIXzVqvA9W+NZtImHj5MyyHFpJkUkSIxgAf0jDmtSQVlsJFJ38JQpdlAK1H1RPtW9cpW8WCnYcqoeec7//3zz64unXssCScJpF2/6n2v3f7Ce36iP37kYG93p7u7trF+jUxKIeuENDM0k3jIEOEbbvJp86HEnHpPUA0/PnPyzy5+9Umo7sk7NXwxiHaWpT3/igrZVco0a4G+Mtx8YONGPJ3n5XAlvxRG72q7uxVCF7KusewVoR1Af/CStyJWhIFbFb1w3Q03L33qzOjrV9NPtT7/zua5c9VDS1mjnl//+ML1frW9cs0NVtrlSNdrcmCeFo/N6LBZWq9Np/vC90bX14kAYSVKU8BEOlBmzEeHW+HhE1SfEjsCEbO5unrxXHq9PXO4fWm+7E8ePxW0DlfgBMKIo51zy8/81XjRed8hv9P+22/TyY8cun+R5jgI3Np94Z9smIpQCYRA//GsdYATeEj9eTH+vy9v/eXDSUbUMWocLrCZzStF3C5sTM6ASLyDV4SaQktEEUMxeW+hIL5UDNZgFiIiEhAzBeQ1UMEXnj3Be5IkTiC5z4f1mo5M5ghFNmI/qrdqptYIEnLZhohvz0ykz79Srm0ljYWw/Z7a7L27P3T6jwZh4fcwQ1egvbdaCTq65Q/kdx2QB9PsiNdxpYyDGqR+UNiiKBTBMDNRxCZgjgKONSJDcQiloRUCLWFIOoAKYUKQBhi8/2fU77VFHHtP8CKls6LJGA1HTKTZGe+ttbn1g6y0vTyKARTrS6Ng5mM8tbmdLgftjQn5jsrOWJbK016XSPsfdCgs7Aibg0c4Ql1jmOWxqbLhwBVp5fIMpXgXKhUQe9LOaBHlrLKVspaUJmUgkReWUGAErhBmIQaRUwTWMAStiQiRooBVyKSI2YEDIBDRgAYZ9gApAsUkUFSP9RQUmfh0EKo8cyvPrSXDAonxABMqQCsAECfkFN68C/GojDzRiHpFVUY2n7IvYtRv0R1FcyPvsc1DFmKvNIi8IQpCbRRrzUw+JNJEwhSBFJEnhMIViSbSAmPAjsST8aKFNDPlIJAWCAk5QIBKxAuVrozZiuz2ZLjs3bBYHG8svq1FIbKilV4lfweEUHrMBKIjQknUFHSA4D4eCi877BDga85LPVDYliyoFjei374w3LUovB3W9Lk23bMJxYoChuchXGi0m4y+M+ceviydJDp3wB1bk+sLamHFTcbx+QNu+nKpTyargZ07X07FwWhUjkUGudtKkOxIk+FirVMbhEb3q/ztrY2Dwa1u9eT1BkosVVgSzQxhEU0EzAXy7gk63CD9yYWydx1jy26SECn4RG2y/j7zKwEcwVrRFqIkrYq5omwQpdtFFajtXdfpVZl4te7vnO68tLz14PTUzWH1BLJjN81cwHRpcLrT6ZXlzM1yPqK11fLUBg/n9dle98y5amrMDTfT+slOeaF74vSk8h6DXGXkvRAIkdpxyIeSWBVDZUb5aK8XiRA0o0FeHp2gE9MCkD7UqaBs/6rrvUG2RsmUmp61H2oEZxSfZ1q19JKXFOXlUJ4IJQn4aKZUJncOXVsoMbVXqn6gdQXuDdLxxenYp/Wafo0r26tUxCcGEoggobE3h52ZTtK1Sah7ve5iHOixULw3QFA65CU0X6jb2ctZaxYKInBd9jkAkgkSLdiyIMKkxhTJbA0TgYz6UCxkBz2uyfDpcuNzrtGm1rgysywPhaod3Nzklzdx6fODZ9XGtUZaj1XDjnI96gSqARtozIWhcX5MadI0BV3NJc9PVO+/Rq+cMMeXrbFoFV6IfMxTfVkdMy3i68eDzoV0phat9EaTndowLUbk09LZUG1MGt6ohplrUDAwvOOtvyCnZg8efW9TMne5oLpCjXEgxj3TcB6DlLIKVO7umjryV8uV3y9NxM0xrk8ynzQ4FVa75ksp77zkpm8plfvlzdFQl5tqmPlCRUEWuJGqqtiXyjpdifIccKi0NaoVaK8hykE5DQLYEzEROTLwhXgpvGJtRGnSWqAFxlFSQLzUA91xrKyqG1NjLccielsSOF/TVNdYKXCsRdM1KSztjGRQQov3vuLgkOo8QMWLzu86aSnc9BIiiFHj6Nx79PrQ13e41U3aZ9XEbuTzqmkCM9IE57u2ctb7mFkHsVJ1rUPYIGVjVQxHQp4h8OwYJJX3PmEEAZNRYDPSxulQTCBQGI68Is4qu9silyhummBGo2acl+uOxCJmjBw6JWKmrJJhibyCZk3wQmO69aNhZgp9xKgFjVUryyWaHDaDMmcOeDSP6JSJG9R4yoVFcHVndMdjqtXhqtLrazdurv1+I6rV1FRk6v1Kos6HVdzJ8irhKJORENpBrSxHyumtzaeputZpZGFdqan3wEzmhbu2LjfOo7bRvv8R+v5EODgTngwxk1BNifVyq4t2TjMsjRBjDWonGJSoHIHEC7R4QAlKkbpWP244VjDAQUPLJZZ8vwDFYA9fYnvTN4/r/PXqaE/un2ysXs6PfrLWmlAHukfLV5cak08dGANbeHPiyL1/H5yEpP7g3Jf/8PXHD4Txzxz/4M8e/5Fhb/mFr/7sTLy1OBlMLZzBWDz0P5bneu2LRbRce/8nzXa9vOOeMLcSWwxSL0TlLbS30Ia0mkhqiHIxoMlZtFKs9dEjqH/22d9UDAjSlLKMyYkWIWaa1GjSkGnVKy/CBGYih8kT+tZ307EGzTWjS89nuu1bY0lCH9hcHgll9c4n5k/+CelOwvyVa0//8rP/OgyLiYa7NnppMmze0T65deO/tVWv3TweRnc5OZra+577m/zNv01++EeCrk7tibDdQOQRGLiSds/BriPdQZnDlXAZ3Ah+CJVQECHcpa0u1D/51X/uHKUZO8ciZD1X1rvSK+upwfMdW6bqVqEChiJSENI0e3d4/RujONQn3hZf/W6xm6aHj01K59HPht2PH/2nM8FshTw0wX995fFh2btvYv7+9vg97ZZ33ZMTj5E+MVjdaZgj9fqRG5sffOJPk/Xnw4992vSR9hdiPad2h2CFgLDzMpWrGHZR9uFT2AEog/ZQFdwt2C6CGvE6dFoqJwCRZrECW0otUqVVSlNYVV7RO2eK1NFrmdIEAaWFZDV62682l/7zIN2Ve9/ZuH4xfekvuoOF3QfvfPvkWGjzNB8VgSjKxriajlS7qSKfyiA4mI1Gc0c/Oj390VtnLz/zBfPG2c7iQvzRX3E3VwdbB+u0qF7vSqzQBTVuiFuWfAA7AluMPMiAUwQWnbehfhi+gjqI2UVSv/KP/9WwVJUngJg5VLbp/zSKlZJ14tD7MDCurNT1VGmWPalGWYEibj4UrCzlbz5bHDtTWzgY4aZZvLSwfsNLoOpjYa2uIl1/9uym2m26lYm1K437Dtx9bObga6/uPvPnuy9+uUXp2Ps/Htz9QHrparV2ojE6ZF7vSh/oCaUlxpcgPZQDoBRUpDyUQxLh6N/DxDvBYzDjgAgFQt95KSs9NCPS0or1ZHBRLf+8pl7YuQdzvyN6nFz19Ert1ZE2JLmHFyICQ+qapps0/O5w+fHRwmRy/yP1WOPW9ezqzWzgEI+HXpXPPvPG9kYvDKGMXjwwVVNTnPHBhej0g2Z6pli9ki1VoX1XcyOmnZFAwQl5jaku7rgo3svGG8QQVxFVGJ/CvT9HrYOiIKykKoVJVER6VMJDLIn3KuEt3v23rtwlGSCc9WiTWBh1V6fcqXjb8v0tNxn6ywO1UVLhZLsrrYfqx0+Fq1/u/9Wfry0cMKceCN//QF0cttf99loy88jdu7tlWblaTU9OmelZtCfE5uX6UvatK7x1po3TYV76KpeTNWqyvJJhpGBGcH0/GiFgYSFrJWA6cDeFc+h3JYmFSQCvDMQK/fUzIwCaJVRUC2XSXJsu/oVRjlsPYvwzQpOkHWve6XG/0IcalkJxltKSXt4xrw4UvMQhzTS4ulVef2pUvuyaog4c1pPHpDWLpE5BwOJQjKrhVrV9XbaWMYhMfk9c3RPkIaUj74Bpg3mNOiPzWGNqXZfmd1w6EC6lMc5Td6sDd4ITZBDnRDOiQGqJlKWIF/rCN4dE0IRQIzJci4JD+oumflolh41KnSOlyYQEjyIjT6SNKA3WKDP6yxvRuiUmYYEJ2YWkdj1dsvZc5VecH1TkfGCYGJbIxYaPGH2PlmMqC1CkYt2+xIgAEnRYGoxMI16jmW9ZO3A64Hv/gekcQVUiz6TIfV7BexglgRbnPBO0EFggBC9w3ldVtsqfqBWuJoVW2nkYLYElEQKBIVoJiLxDYNxc5DYG2hEVhKLwnAMB6Ye0eVibDNQT3gVlkAAyRhgDElgLLvxYBqdgmTJBIXCAkGwDOw4siOuYqflg1089pM0stjZ8WsB7AWAdnMfQQzFiQ6EWPe94y/h9vaKQFyqqAgLnlGJ4EACGNGKp14QJrgJI2BA0n25XG7kyWjJPA4uhEHu4oXhAGDxGagKhQgjYCr4U6UMIlgBCIKiRGKAvkonyxAzsKQxQx2iGF1nm36nykc9K5BaayVpklTgP78FEJIi0UPX46NIUbShRgFJkFBTvDxEARIRAyWTDJ7FkuXgPrSQKJUxIiIuCIi1C1M3oyY1wvdoTy5EDxAsDCSEiZEAlcIDb10ERIAYCUkI0qYuFcHM66DWDXOt6ibYu6rVMS1sXhQxySkt4D/FSWZRORMCEkH0jgta18tjApOOq8J4FzoNAEJQOAJhJkRDRIOfC+sqSYokA70SskPYhCUCsaLzpz2T81FZILIUIEzwRCAWkBLwAtC+ng2Cv3JWRnlb5SXplXl9p6X4cxkF0EuEMyGCMvKXtTRmVGOQyKlBUt5W0YCIAvhIeFKL9A4iWbKdQdgLjicsdh1qUkvUu93PyHqTIeRkWMBUpBkFEhBjEcKXkBRkN7b0yONoqm9o5ofMDs5QrvaclE7rdiwAIJGASgTDpw3JjYfSkkZVdQ6yOhMG7hnZaSh0GzoTIR0gL6eWUligsSkdOQBBFogmaiSDeQ4sBjsjMbuVqiENJHLxHLUEzcavb3M+p8uQFXqjyAMQzrKeiFACKyTlAwAxlEIWyYEqQTIZud7W2XsGw+D0R5m3FkWFAIKwX/bXJ9C+c3ynJewelHvZ+scgL770iZDntDmhUoqxgHfw+hn1FKjFYyAsUQVcFGYNw0g8HvN1XheVAeWaJQjkw4WY8hhnf2mYntCecvq1I3pck12rwHswQB/FwlgDUIvv+ifSlbnSjYEd7qmBhAhMpiCc1zzuz2ROF31Kw3u6E8b0es9v9ck8YNupSWiCv4ATW77fDiKAAYC+k98WQSQBdlCQiWqNy1B2xAwXMXiQufKMmxKQZrRilk1bi48BbB0DiiLQGkShDYBKHKvfeo6zARFyT2Vb5gdD/9VptoyJFwiAiURAQNZU/7s72qpuKCvg+w7Zb7xbEo7ywnktLlRMR8nJbqgwwCYFAe1YAEykSrSCATnP24pUlEJwHsSShMElRkcqRF1xYUkx1LYokDNAIUZWwFbJKmMVYUQpsiDXyIZzAggILEALjFkKbOaNoT0MNReJJHVIrOr+sSMjn3g8YhqnuvPceRYXCwXv6gZCZAWYQ9p3A9Jb+1AtyS7qfq6xiZiKSJCQBBKIVVY52hmQ9qf1SJlVOae2M8VpLmqKypBSsFaUQeNEGJoARyksUJYUAaTndzgPClVTfFsKTYST2inWDetwejjaIPIOczUjz3pHNeEsIrwDmfeGv98L0A1E2BORFIPh/uh2vI0TOhqcAAAAASUVORK5CYII=">
+<title>Painel Moving Festival 2026</title>
+  <meta name="description" content="Dashboard de vendas em tempo real do Moving Festival 2026 — app limpo, estilo SaaS.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+  /* App shell SaaS (estilo shadcn / ManyChat): sidebar retrátil + dark mode + telas dinâmicas */
+  :root{
+    --bg:#F5F6F8; --surface:#FFFFFF; --surface-2:#F8F9FB;
+    --border:#E7E9EE; --border-2:#EEF0F4;
+    --fg:#171A1F; --fg-muted:#656D78; --fg-faint:#9AA1AC;
+    --accent:#2B6CF6; --accent-soft:rgba(43,108,246,.10); --accent-ink:#1E52C7;
+    --c-fullpass:#0EA5E9; --c-zone:#8B5CF6; --c-gold:#E08A00; --c-black:#475569;
+    --c-success:#16A34A; --c-warning:#D97706; --c-danger:#DC2626;
+    --bar-muted:#DEE3EA;
+    --shadow:0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.04);
+    --shadow-md:0 4px 16px -6px rgba(16,24,40,.14);
+    --font-display:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;
+    --font-body:'Inter',ui-sans-serif,system-ui,sans-serif;
+    --radius:14px;
+    color-scheme:light;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1216; --surface:#171B21; --surface-2:#1C2128;
+    --border:#262B33; --border-2:#222831;
+    --fg:#F2F4F7; --fg-muted:#9BA3AE; --fg-faint:#69727E;
+    --accent:#4C86FF; --accent-soft:rgba(76,134,255,.16); --accent-ink:#9DBBFF;
+    --c-fullpass:#38BDF8; --c-zone:#A855F7; --c-gold:#F59E0B; --c-black:#CBD5E1;
+    --bar-muted:#2A313B;
+    --shadow:0 1px 2px rgba(0,0,0,.4); --shadow-md:0 8px 24px -10px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--font-body); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3{ font-family:var(--font-display); margin:0; letter-spacing:-.01em; }
+  .tnum{ font-variant-numeric:tabular-nums; }
+  button{ font-family:inherit; }
+
+  .app{ display:grid; grid-template-columns:244px 1fr; min-height:100%; transition:grid-template-columns .2s ease; }
+  .app.sidebar-collapsed{ grid-template-columns:68px 1fr; }
+
+  /* Sidebar */
+  .sidebar{ background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; gap:4px; padding:18px 14px; position:sticky; top:0; height:100vh; transition:width .2s ease, padding .2s ease; z-index:30; }
+  .sidebar.collapsed{ width:68px; padding:16px 8px; }
+  .sidebar.collapsed .brand{ justify-content:center; padding:6px 0 16px; }
+  .sidebar.collapsed .brand .nm,
+  .sidebar.collapsed .navlbl,
+  .sidebar.collapsed .nav a .nav-txt,
+  .sidebar.collapsed .side-foot .who{ display:none; }
+  .sidebar.collapsed .nav a{ justify-content:center; padding:10px 0; }
+  .sidebar.collapsed .nav a svg{ width:20px; height:20px; margin:0; }
+  .sidebar.collapsed .side-foot{ justify-content:center; padding:10px 0; }
+  .sidebar.collapsed .btn-sidebar-toggle svg{ transform:rotate(180deg); }
+
+  .brand{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 8px 16px; }
+  .brand-left{ display:flex; align-items:center; gap:11px; }
+  .brand .mk{ width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--accent),#7AA7FF); display:grid; place-items:center; color:#fff; font-family:var(--font-display); font-weight:800; font-size:16px; flex:none; }
+  .brand .nm{ font-family:var(--font-display); font-weight:800; font-size:15px; line-height:1.1; }
+  .brand .nm small{ display:block; font-family:var(--font-body); font-weight:500; font-size:10.5px; color:var(--fg-faint); letter-spacing:.02em; }
+  .btn-sidebar-toggle{ background:transparent; border:1px solid var(--border); border-radius:8px; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; color:var(--fg-muted); cursor:pointer; transition:all .15s; flex:none; }
+  .btn-sidebar-toggle:hover{ background:var(--surface-2); color:var(--fg); border-color:var(--accent); }
+
+  .navlbl{ font-size:10.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--fg-faint); padding:12px 10px 6px; }
+  .nav{ display:flex; flex-direction:column; gap:2px; }
+  .nav a{ display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:10px; color:var(--fg-muted); text-decoration:none; font-weight:600; font-size:13.5px; cursor:pointer; transition:background .15s, color .15s; }
+  .nav a svg{ width:19px; height:19px; flex:none; }
+  .nav a:hover{ background:var(--surface-2); color:var(--fg); }
+  .nav a.active{ background:var(--accent-soft); color:var(--accent-ink); }
+  .side-foot{ margin-top:auto; display:flex; align-items:center; gap:10px; padding:10px; border-top:1px solid var(--border); }
+  .avatar{ width:30px; height:30px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); display:grid; place-items:center; font-weight:700; font-size:12px; color:var(--fg-muted); flex:none; }
+  .side-foot .who{ font-size:12.5px; font-weight:600; } .side-foot .who small{ display:block; color:var(--fg-faint); font-weight:500; font-size:11px; }
+
+  /* Topbar */
+  main{ min-width:0; display:flex; flex-direction:column; }
+  .topbar{ position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 82%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:16px 26px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .topbar .h{ display:flex; flex-direction:column; }
+  .topbar h1{ font-size:20px; font-weight:700; }
+  .topbar .sub{ font-size:12.5px; color:var(--fg-muted); }
+  .seg{ display:flex; gap:3px; background:var(--surface-2); border:1px solid var(--border); padding:3px; border-radius:11px; overflow-x:auto; scrollbar-width:none; }
+  .seg::-webkit-scrollbar{ display:none; }
+  .seg button{ border:0; background:transparent; color:var(--fg-muted); font-weight:600; font-size:12.5px; padding:7px 12px; border-radius:8px; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:7px; }
+  .seg button .d{ width:7px; height:7px; border-radius:50%; }
+  .seg button[aria-pressed="true"]{ background:var(--surface); color:var(--fg); box-shadow:var(--shadow); }
+  .right{ margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .status{ display:inline-flex; align-items:center; gap:7px; font-size:12px; color:var(--fg-muted); white-space:nowrap; }
+  .pulse{ width:8px; height:8px; border-radius:50%; background:var(--c-success); animation:pulse 2.4s infinite; }
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(22,163,74,.5)}70%{box-shadow:0 0 0 7px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+  .btn{ font-weight:600; font-size:13px; border-radius:10px; padding:9px 15px; border:1px solid transparent; background:var(--accent); color:#fff; cursor:pointer; display:inline-flex; align-items:center; gap:7px; }
+  .btn svg{ width:16px; height:16px; }
+
+  .content{ padding:24px 26px 56px; max-width:1180px; width:100%; }
+
+  /* Cards & grid */
+  .grid{ display:grid; gap:16px; }
+  .g4{ grid-template-columns:repeat(4,1fr); } .g3{ grid-template-columns:repeat(3,1fr); } .g2{ grid-template-columns:repeat(2,1fr); }
+  .grid + .grid{ margin-top:16px; }
+  @media(max-width:1000px){ .g4{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:1fr} }
+  @media(max-width:560px){ .g4,.g2{grid-template-columns:1fr} }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); min-width:0; }
+  .ttl{ font-size:12px; font-weight:700; letter-spacing:.02em; color:var(--fg-muted); margin-bottom:15px; display:flex; align-items:center; gap:8px; }
+  .ttl .tag{ margin-left:auto; font-size:11px; font-weight:600; color:var(--fg-faint); }
+
+  /* KPI */
+  .kpi .k{ font-size:12px; color:var(--fg-muted); font-weight:600; }
+  .kpi .v{ font-family:var(--font-display); font-weight:800; font-size:30px; margin-top:7px; }
+  .kpi .s{ font-size:12px; margin-top:5px; color:var(--fg-faint); }
+  .kpi .s.up{ color:var(--c-success); font-weight:600; }
+  .kpi.hl .v{ color:var(--accent); }
+
+  /* Setor */
+  .setor .row{ display:flex; align-items:center; justify-content:space-between; }
+  .setor .nm{ display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px; }
+  .setor .nm .d{ width:9px; height:9px; border-radius:50%; background:var(--sc); }
+  .setor .share{ font-size:12px; color:var(--fg-faint); font-weight:600; }
+  .setor .big{ font-family:var(--font-display); font-weight:800; font-size:32px; margin-top:10px; }
+  .setor .sub{ font-size:11.5px; color:var(--fg-muted); margin-top:1px; }
+  .track{ height:7px; border-radius:999px; background:var(--surface-2); margin-top:12px; overflow:hidden; }
+  .track>i{ display:block; height:100%; border-radius:999px; background:var(--sc); }
+  .setor .plats{ display:flex; gap:12px; margin-top:12px; font-size:11px; color:var(--fg-muted); flex-wrap:wrap; }
+
+  /* Tabela */
+  .tscroll{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:440px; }
+  th,td{ padding:11px 12px; text-align:right; font-variant-numeric:tabular-nums; }
+  th:first-child,td:first-child{ text-align:left; }
+  thead th{ font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--fg-faint); border-bottom:1px solid var(--border); }
+  tbody td{ border-bottom:1px solid var(--border-2); }
+  tfoot td{ font-weight:700; border-top:1px solid var(--border); }
+  .sd{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:9px; vertical-align:middle; }
+
+  /* Rank */
+  .rank{ list-style:none; margin:0; padding:0; display:grid; gap:14px; }
+  .rank li{ display:grid; grid-template-columns:18px 1fr auto; gap:12px; align-items:center; }
+  .rank .pos{ font-size:12px; color:var(--fg-faint); text-align:right; font-weight:600; }
+  .rank .n{ font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rank .m{ font-size:11px; color:var(--fg-muted); }
+  .rank .bar{ height:6px; border-radius:999px; background:var(--surface-2); margin-top:7px; overflow:hidden; }
+  .rank .bar>i{ display:block; height:100%; border-radius:999px; }
+  .rank .val{ font-weight:700; font-size:14px; font-variant-numeric:tabular-nums; }
+
+  /* Charts */
+  .chart svg{ width:100%; height:auto; display:block; overflow:visible; }
+  .chart .ax{ stroke:var(--border); stroke-width:1; }
+  .chart .lbl{ fill:var(--fg-muted); font-family:var(--font-body); font-size:10px; }
+  .chart .vv{ fill:var(--fg); font-family:var(--font-body); font-size:10px; font-weight:700; }
+
+  .note{ font-size:12px; color:var(--fg-muted); background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:10px; padding:11px 14px; box-shadow:var(--shadow); }
+
+  /* Extras (fora do total) */
+  .extras-head{ display:flex; align-items:center; gap:10px; margin:22px 0 10px; }
+  .extras-head h2{ font-size:14px; font-weight:700; }
+  .extras-head .pill{ font-size:11px; font-weight:700; color:var(--fg-muted); background:var(--surface-2); border:1px dashed var(--border); padding:3px 10px; border-radius:999px; }
+  .extras-head .ex{ margin-left:auto; font-size:11px; font-weight:600; color:var(--c-warning); }
+  .extra{ border-style:dashed; box-shadow:none; background:var(--surface-2); }
+  .extra .row{ display:flex; align-items:center; justify-content:space-between; }
+  .extra .nm{ display:flex; align-items:center; gap:9px; font-weight:700; font-size:13px; }
+  .extra .ic{ width:28px; height:28px; border-radius:8px; display:grid; place-items:center; background:var(--surface); border:1px solid var(--border); color:var(--fg-muted); }
+  .extra .ic svg{ width:16px; height:16px; }
+  .extra .big{ font-family:var(--font-display); font-weight:800; font-size:28px; margin-top:10px; }
+  .extra .sub{ font-size:11.5px; color:var(--fg-muted); }
+  .extra .plats{ display:flex; gap:12px; margin-top:10px; font-size:11px; color:var(--fg-muted); flex-wrap:wrap; }
+
+  /* Metas */
+  .metas{ margin-bottom:16px; }
+  .metas .head{ display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:22px; }
+  .metas .now{ font-family:var(--font-display); font-weight:800; font-size:38px; line-height:1; }
+  .metas .now small{ font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--fg-muted); margin-left:6px; }
+  .metas .badge{ display:inline-flex; align-items:center; gap:7px; font-weight:700; font-size:12.5px; padding:6px 12px; border-radius:999px; color:var(--tc); background:color-mix(in srgb,var(--tc) 12%,transparent); }
+  .metas .next{ margin-left:auto; text-align:right; font-size:12.5px; color:var(--fg-muted); }
+  .metas .next b{ display:block; font-family:var(--font-display); font-size:20px; color:var(--fg); }
+  .thermo{ position:relative; padding-top:30px; }
+  .thermo .trilho{ display:flex; height:14px; border-radius:999px; overflow:hidden; background:var(--surface-2); }
+  .thermo .faixa{ position:relative; height:100%; background:color-mix(in srgb,var(--fc) 18%,var(--surface)); }
+  .thermo .faixa + .faixa{ box-shadow:inset 2px 0 0 var(--surface); }
+  .thermo .faixa > i{ position:absolute; top:0; bottom:0; left:0; background:var(--fc); }
+  .thermo .faixa + .faixa > i{ left:2px; }
+  .thermo .pin{ position:absolute; top:0; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; z-index:1; }
+  .thermo .pin span{ font-size:11px; font-weight:700; background:var(--fg); color:var(--surface); padding:3px 8px; border-radius:6px; white-space:nowrap; }
+  .thermo .pin i{ width:2px; height:34px; background:var(--fg); }
+  .ticks{ position:relative; height:62px; margin-top:4px; }
+  .ticks .t{ position:absolute; top:0; width:84px; margin-left:-42px; padding-top:9px; text-align:center; font-size:11px; line-height:1.25; white-space:nowrap; }
+  .ticks .t::before{ content:""; position:absolute; top:0; left:50%; width:1px; height:6px; background:var(--border); }
+  .ticks .t b{ margin-bottom:2px; }
+  :root[data-theme="dark"] .ticks .t .q, :root[data-theme="dark"] .metas .badge{ color:var(--tc2, var(--tc)); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ticks .t .q, :root:not([data-theme="light"]) .metas .badge{ color:var(--tc2, var(--tc)); } }
+  .ticks .t b{ display:block; font-family:var(--font-display); font-size:12.5px; color:var(--fg); }
+  .ticks .t .q{ display:block; color:var(--tc); font-weight:700; }
+  .ticks .t .n{ display:block; color:var(--fg-faint); }
+  .ticks .t .n{ display:none; }
+
+  /* Responsive sidebar -> topo */
+  @media(max-width:860px){
+    .app{ grid-template-columns:1fr; }
+    .sidebar{ position:static; height:auto; flex-direction:row; align-items:center; gap:6px; overflow-x:auto; border-right:0; border-bottom:1px solid var(--border); padding:10px 12px; }
+    .brand{ padding:0 10px 0 4px; } .brand .nm{ display:none; }
+    .navlbl,.side-foot{ display:none; }
+    .nav{ flex-direction:row; gap:4px; } .nav a{ white-space:nowrap; padding:9px 12px; }
+    .topbar,.content{ padding-inline:16px; }
+  }
+  @media(prefers-reduced-motion:reduce){ .pulse{animation:none} }
+</style>
+<style>
+  .banner{ display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--fg-muted); background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--c-warning); border-radius:10px; padding:10px 14px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .banner.err{ border-left-color:var(--c-danger); }
+  .pulse.off{ background:var(--c-warning); animation:none; }
+  .pulse.bad{ background:var(--c-danger); animation:none; }
+  .filtro-info{ font-size:12px; color:var(--fg-muted); margin:-4px 0 14px; }
+  .filtro-info b{ color:var(--fg); }
+  .dim{ opacity:.35; transition:opacity .2s; }
+  .hl{ box-shadow:0 0 0 2px var(--accent), var(--shadow); transition:box-shadow .2s; }
+  .rank .n.sm{ font-size:12.5px; }
+  .empty{ font-size:12.5px; color:var(--fg-faint); padding:8px 0; }
+
+  /* START INC HERO & CUPONS */
+  .start-hero{ background:linear-gradient(135deg, rgba(43,108,246,0.08) 0%, rgba(139,92,246,0.06) 100%); border:1px solid rgba(43,108,246,0.3); border-radius:14px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+  .start-tag{ display:inline-flex; align-items:center; gap:6px; background:rgba(43,108,246,0.18); color:var(--accent); border:1px solid rgba(43,108,246,0.4); padding:3px 9px; border-radius:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  .start-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:16px; }
+  .start-kpi{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  .start-kpi .lbl{ font-size:11px; font-weight:600; color:var(--fg-muted); text-transform:uppercase; }
+  .start-kpi .val{ font-family:var(--font-display); font-size:24px; font-weight:800; margin-top:4px; color:var(--fg); }
+  .start-kpi .sub{ font-size:11px; color:var(--fg-faint); margin-top:2px; }
+
+  .camp-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:12px; margin-top:14px; }
+  .camp-card{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; transition:border-color .2s; }
+  .camp-card:hover{ border-color:var(--accent); }
+  .camp-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .camp-code{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--accent); }
+  .camp-title{ font-size:11.5px; font-weight:600; color:var(--fg-muted); }
+  .camp-stats{ display:flex; justify-content:space-between; font-size:12px; margin-top:6px; }
+  .camp-stats b{ font-family:var(--font-display); font-size:14px; }
+
+  .btn-toggle{ background:var(--surface); border:1px solid var(--border); color:var(--fg); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all .15s; }
+  .btn-toggle:hover{ background:var(--surface-2); border-color:var(--accent); }
+
+  /* BADGES & CHIPS */
+  .badge-orig{ display:inline-block; padding:2px 7px; border-radius:6px; font-size:10px; font-weight:700; text-transform:uppercase; }
+  .orig-start{ background:rgba(43,108,246,0.14); color:var(--accent); border:1px solid rgba(43,108,246,0.3); }
+  .orig-promoter{ background:rgba(139,92,246,0.14); color:#8B5CF6; border:1px solid rgba(139,92,246,0.3); }
+  .orig-comunidade{ background:rgba(224,138,0,0.14); color:#E08A00; border:1px solid rgba(224,138,0,0.3); }
+  .orig-antiga{ background:rgba(100,116,139,0.14); color:#64748B; border:1px solid rgba(100,116,139,0.3); }
+  .orig-aniversariante{ background:rgba(236,72,153,0.14); color:#EC4899; border:1px solid rgba(236,72,153,0.3); }
+  .orig-parceria{ background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.3); }
+
+  .badge-plat{ display:inline-block; padding:2px 6px; border-radius:5px; font-size:10px; font-weight:700; }
+  .plat-uticket{ background:rgba(14,165,233,0.14); color:#0EA5E9; }
+  .plat-sympla{ background:rgba(30,64,175,0.14); color:#2563EB; }
+
+  /* Tema no rodapé da sidebar */
+  .side-foot .theme-toggle{ margin-left:auto; padding:7px; border-radius:9px; }
+  .side-foot .theme-toggle #themeToggleTxt{ display:none; }
+  .sidebar.collapsed .side-foot{ flex-direction:column; gap:8px; }
+  .sidebar.collapsed .side-foot .theme-toggle{ margin-left:0; }
+  @media(max-width:860px){
+    .sidebar .side-foot{ display:flex; margin-top:0; margin-left:auto; border-top:0; padding:0; }
+    .sidebar .side-foot .avatar, .sidebar .side-foot .who{ display:none; }
+  }
+  /* THEME TOGGLE */
+  .theme-toggle{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:7px 11px; color:var(--fg); font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:all .15s; }
+  .theme-toggle:hover{ border-color:var(--accent); background:var(--surface); }
+  .theme-toggle svg{ width:15px; height:15px; flex:none; }
+  :root[data-theme="light"] .theme-toggle .icon-sun{ display:none; }
+  :root[data-theme="light"] .theme-toggle .icon-moon{ display:inline-block; }
+  :root[data-theme="dark"] .theme-toggle .icon-moon{ display:none; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun{ display:inline-block; }
+
+  /* RECOMPENSAS UTICKET & METAS */
+  .badge-recompensa{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(22,163,74,0.14); color:var(--c-success); border:1px solid rgba(22,163,74,0.3); }
+  .badge-liberado{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(43,108,246,0.14); color:var(--accent); border:1px solid rgba(43,108,246,0.3); }
+  .badge-pendente{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(217,119,6,0.14); color:var(--c-warning); border:1px solid rgba(217,119,6,0.3); }
+  .prog-ciclo{ height:4px; background:var(--border); border-radius:2px; overflow:hidden; width:100%; min-width:40px; margin-top:4px; }
+  .prog-ciclo > div{ height:100%; background:var(--c-success); border-radius:2px; }
+  .card-recompensa{ background:linear-gradient(135deg, rgba(22,163,74,0.08) 0%, rgba(43,108,246,0.06) 100%); border:1px solid rgba(22,163,74,0.3); border-radius:14px; padding:18px 20px; margin-bottom:18px; }
+  .top-prom-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:10px; margin-top:12px; }
+  .top-prom-card{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px; }
+  .top-prom-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .top-prom-name{ font-weight:700; font-size:12.5px; }
+  .top-prom-badge{ font-size:11px; font-weight:800; color:var(--c-success); }
+
+  /* GEO / REGIÕES */
+  .geo-box{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  @media(max-width:860px){ .geo-box{ grid-template-columns:1fr; } }
+  .geo-item{ margin-bottom:10px; font-size:12px; }
+  .geo-row{ display:flex; justify-content:space-between; margin-bottom:3px; }
+  .geo-bar{ height:5px; background:var(--surface-2); border-radius:3px; overflow:hidden; }
+  .geo-bar > div{ height:100%; border-radius:3px; }
+
+  .filter-bar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+  .chip-group{ display:flex; gap:4px; background:var(--surface-2); border:1px solid var(--border); padding:3px; border-radius:10px; }
+  .chip-btn{ border:0; background:transparent; color:var(--fg-muted); font-size:11.5px; font-weight:600; padding:6px 11px; border-radius:7px; cursor:pointer; transition:all .15s; }
+  .chip-btn[aria-pressed="true"]{ background:var(--surface); color:var(--fg); box-shadow:var(--shadow); }
+  .search-inp{ background:var(--surface); border:1px solid var(--border); color:var(--fg); padding:7px 12px; border-radius:9px; font-size:12.5px; outline:none; width:220px; transition:border-color .15s; }
+  .search-inp:focus{ border-color:var(--accent); }
+  /* VENDAS POR DIA (FILTRO MULTIDIMENSIONAL) */
+  .date-picker-wrap{ display:flex; align-items:center; gap:6px; background:var(--surface-2); border:1px solid var(--border); padding:4px 9px; border-radius:9px; font-size:12px; color:var(--fg-muted); }
+  .date-picker-wrap input[type="date"]{ background:transparent; border:0; color:var(--fg); font-family:var(--font-body); font-size:12px; font-weight:600; outline:none; color-scheme:light dark; cursor:pointer; }
+  .btn-clear-filter{ background:transparent; border:1px solid var(--border); color:var(--fg-muted); font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:8px; cursor:pointer; transition:all .15s; }
+  .btn-clear-filter:hover{ background:var(--surface-2); color:var(--c-danger); border-color:var(--c-danger); }
+  .badge-setor-pill{ display:inline-block; padding:2px 6px; border-radius:4px; font-size:10.5px; font-weight:700; }
+  .tbl-diario tfoot td{ font-weight:800; border-top:2px solid var(--border); background:var(--surface-2); }
+</style>
+
+<div class="app" id="appRoot">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="mk mk-foto"><img src="data:image/jpeg;base64,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" alt="Moving Felizes para Sempre" width="34" height="34"></div>
+        <div class="nm">Moving 2026<small>Painel de vendas</small></div>
+      </div>
+      <button class="btn-sidebar-toggle" id="btnSideToggle" type="button" title="Recolher menu lateral" aria-label="Recolher menu lateral">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+    <div class="navlbl">Menu</div>
+    <nav class="nav" id="nav">
+      <a data-view="overview" class="active" title="Visão geral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span class="nav-txt">Visão geral</span></a>
+      <a data-view="diario" title="Vendas por Dia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nav-txt">Vendas por Dia</span></a>
+      <a data-view="plataformas" title="Plataformas & Regiões"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><span class="nav-txt">Plataformas</span></a>
+      <a data-view="promoters" title="Ações Start & Cupons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Ações Start & Cupons</span></a>
+      <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
+      <a data-view="tendencias" title="Tendências"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="nav-txt">Tendências</span></a>
+    </nav>
+    <div class="side-foot"><div class="avatar">EG</div><div class="who">Evandro & Gê<small>Start Inc.</small></div><button class="theme-toggle" id="themeToggle" type="button" title="Alternar tema claro/escuro">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span id="themeToggleTxt">Tema</span>
+        </button></div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="topbar">
+      <div class="h"><h1 id="pageTitle">Visão geral</h1><span class="sub" id="pageSub">Consolidado em tempo real das 3 ticketeiras</span></div>
+      <div class="right">
+        <div class="seg" id="seg">
+          <button aria-pressed="true" type="button" data-setor="">Todos</button>
+          <button aria-pressed="false" type="button" data-setor="FULLPASS"><span class="d" style="background:var(--c-fullpass)"></span>Full Pass</button>
+          <button aria-pressed="false" type="button" data-setor="ZONE"><span class="d" style="background:var(--c-zone)"></span>Zone</button>
+          <button aria-pressed="false" type="button" data-setor="GOLD"><span class="d" style="background:var(--c-gold)"></span>Gold</button>
+          <button aria-pressed="false" type="button" data-setor="BLACK"><span class="d" style="background:var(--c-black)"></span>Black</button>
+          <button aria-pressed="false" type="button" data-setor="CAMPING"><span class="d" style="background:var(--fg-faint)"></span>Camping</button>
+        </div>
+        <span class="status"><span class="pulse" id="pulse"></span> <span id="ago">carregando…</span></span>
+        <button class="btn" id="sync" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span>Sincronizar</span></button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="banner" id="banner" hidden></div>
+      <p class="filtro-info" id="filtroInfo" hidden></p>
+
+      <!-- OVERVIEW -->
+      <section data-view="overview">
+        <div class="card metas" id="metas">
+          <div class="ttl">Metas da campanha</div>
+          <div class="head">
+            <div class="now tnum" id="metaNow">—<small>ingressos</small></div>
+            <span class="badge" id="metaBadge" style="--tc:var(--t-ruim)">—</span>
+            <div class="next" id="metaNext"></div>
+          </div>
+          <div style="overflow-x:auto"><div style="min-width:860px;padding-inline:48px">
+            <div class="thermo" id="thermo"></div>
+            <div class="ticks" id="ticks"></div>
+          </div></div>
+        </div>
+
+        <div class="grid g4">
+          <div class="card kpi hl-k"><div class="k" id="kTotalLbl">Total geral</div><div class="v tnum" id="kTotal" style="color:var(--accent)">—</div><div class="s" id="kTotalS">ingressos consolidados</div></div>
+          <div class="card kpi"><div class="k">Vendidos (pagos)</div><div class="v tnum" id="kPagos">—</div><div class="s" id="kReceita">—</div></div>
+          <div class="card kpi"><div class="k">Cortesias</div><div class="v tnum" id="kCort">—</div><div class="s">não contam receita</div></div>
+          <div class="card kpi"><div class="k">Vendas hoje</div><div class="v tnum" id="kHoje">—</div><div class="s" id="kOntem">—</div></div>
+        </div>
+
+        <div class="grid g4" id="setores"></div>
+
+        <div class="extras-head" id="extrasHead">
+          <h2>Extras</h2><span class="pill">fora do total de ingressos</span>
+        </div>
+        <div class="grid g2" id="extras"></div>
+
+        <div class="grid g2">
+          <div class="card"><div class="ttl">Cruzamento por ticketeira</div><div class="tscroll"><table>
+            <thead><tr><th>Setor</th><th>Uticket</th><th>Sympla</th><th>Wix</th><th>Total</th></tr></thead>
+            <tbody id="crossBody"></tbody>
+            <tfoot id="crossFoot"></tfoot>
+          </table></div></div>
+          <div class="card"><div class="ttl">Qual plataforma vende mais</div><div class="chart" id="chartPlat"></div></div>
+        </div>
+      </section>
+
+      <!-- VENDAS POR DIA (FILTROS MULTIDIMENSIONAIS) -->
+      <section data-view="diario" hidden>
+        <!-- FILTROS MULTIDIMENSIONAIS -->
+        <div class="card" style="margin-bottom:18px">
+          <div class="ttl" style="margin-bottom:12px">
+            Filtros Analíticos de Vendas Diárias
+            <span class="tag" id="diarioFiltroAtivoBadge">Todo o Período · Todas as Plataformas · Todos os Setores</span>
+          </div>
+
+          <!-- LINHA 1: PERÍODO RÁPIDO & DATAS PERSONALIZADAS -->
+          <div class="filter-bar" style="margin-bottom:10px">
+            <div class="chip-group" id="diarioPeriodoChips">
+              <button class="chip-btn" data-periodo="hoje">Hoje</button>
+              <button class="chip-btn" data-periodo="ontem">Ontem</button>
+              <button class="chip-btn" data-periodo="7d">Últimos 7 dias</button>
+              <button class="chip-btn" data-periodo="14d">Últimos 14 dias</button>
+              <button class="chip-btn" data-periodo="30d">Últimos 30 dias</button>
+              <button class="chip-btn" aria-pressed="true" data-periodo="tudo">Todo o Período</button>
+            </div>
+
+            <div class="date-picker-wrap">
+              <span>De:</span>
+              <input type="date" id="filtroDataIni" title="Data inicial">
+              <span>Até:</span>
+              <input type="date" id="filtroDataFim" title="Data final">
+            </div>
+
+            <button class="btn-clear-filter" id="btnResetDiarioFiltros" type="button">Limpar Filtros</button>
+          </div>
+
+          <!-- LINHA 2: PLATAFORMAS & SETORES -->
+          <div class="filter-bar" style="margin-bottom:0">
+            <!-- PLATAFORMA -->
+            <div class="chip-group" id="diarioPlatChips">
+              <button class="chip-btn" aria-pressed="true" data-plat="ALL">Todas as Plataformas</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="WIX">🌐 Wix</button>
+            </div>
+
+            <!-- SETOR -->
+            <div class="chip-group" id="diarioSetorChips">
+              <button class="chip-btn" aria-pressed="true" data-setor="ALL">Todos os Setores</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="FULLPASS"><span class="d" style="background:var(--c-fullpass)"></span>Full Pass</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="ZONE"><span class="d" style="background:var(--c-zone)"></span>Zone</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="GOLD"><span class="d" style="background:var(--c-gold)"></span>Gold</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="BLACK"><span class="d" style="background:var(--c-black)"></span>Black</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="CAMPING"><span class="d" style="background:var(--fg-faint)"></span>Camping</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPIS DO FILTRO -->
+        <div class="grid g4" style="margin-bottom:18px">
+          <div class="card kpi hl-k">
+            <div class="k">Total Vendido no Filtro</div>
+            <div class="v tnum" id="diarioKpiTotal" style="color:var(--accent)">—</div>
+            <div class="s" id="diarioKpiTotalSub">ingressos/itens</div>
+          </div>
+          <div class="card kpi">
+            <div class="k">Receita Gerada no Período</div>
+            <div class="v tnum" id="diarioKpiReceita">—</div>
+            <div class="s" id="diarioKpiReceitaSub">valor faturado</div>
+          </div>
+          <div class="card kpi">
+            <div class="k">Média Diária de Vendas</div>
+            <div class="v tnum" id="diarioKpiMedia">—</div>
+            <div class="s" id="diarioKpiMediaSub">vendas por dia ativo</div>
+          </div>
+          <div class="card kpi">
+            <div class="k">Melhor Dia (Pico)</div>
+            <div class="v tnum" id="diarioKpiPicoVal">—</div>
+            <div class="s" id="diarioKpiPicoData">—</div>
+          </div>
+        </div>
+
+        <!-- GRÁFICO DIÁRIO FILTRADO -->
+        <div class="card" style="margin-bottom:18px">
+          <div class="ttl">
+            Evolução Diária de Vendas
+            <span class="tag" id="diarioChartBadge">Volume diário</span>
+          </div>
+          <div class="chart" id="chartDiarioEvolucao" style="min-height:220px"></div>
+        </div>
+
+        <!-- ONDAS DE VENDA DO DIA (por hora) -->
+        <div class="card onda-card" id="ondaCard" style="margin-bottom:18px">
+          <div class="ttl">
+            Ondas de venda do dia
+            <span class="tag" id="ondaTag">—</span>
+            <span class="onda-nav"><button type="button" id="ondaPrev" aria-label="Dia anterior" title="Dia anterior">‹</button><button type="button" id="ondaNext" aria-label="Próximo dia" title="Próximo dia">›</button></span>
+          </div>
+          <div class="onda-kpis">
+            <div><small>Total do dia</small><b id="ondaTotal">—</b></div>
+            <div><small>Pico</small><b id="ondaPico" style="color:var(--onda-pico)">—</b></div>
+            <div><small>Vale</small><b id="ondaVale" style="color:var(--onda-vale)">—</b></div>
+            <div><small>Média por hora ativa</small><b id="ondaMedia">—</b></div>
+          </div>
+          <div class="chart" id="chartOnda"></div>
+          <p class="onda-dica">Clique numa barra do gráfico acima (ou use ‹ ›) para ver a onda daquele dia. Linha tracejada: média por hora dos dias do filtro. Os filtros de plataforma e setor valem aqui também.</p>
+        </div>
+
+        <!-- TABELA ANALÍTICA DIA A DIA -->
+        <div class="card">
+          <div class="ttl" style="margin-bottom:12px">
+            Detalhamento Diário Completo
+            <span class="tag" id="diarioDiasCountBadge">— dias com vendas</span>
+          </div>
+          <div class="tscroll">
+            <table class="tbl-diario">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Dia da Semana</th>
+                  <th>Plataforma</th>
+                  <th>Total Vendas</th>
+                  <th>Full Pass</th>
+                  <th>Zone</th>
+                  <th>Gold</th>
+                  <th>Black</th>
+                  <th>Camping</th>
+                  <th>Receita Estimada</th>
+                </tr>
+              </thead>
+              <tbody id="diarioTableBody"></tbody>
+              <tfoot id="diarioTableFoot"></tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLATAFORMAS -->
+      <section data-view="plataformas" hidden>
+        <div class="grid g2">
+          <div class="card"><div class="ttl">Plataformas por volume</div><div class="chart" id="chartPlat2"></div></div>
+          <div class="card"><div class="ttl">Canais de venda</div><div class="chart" id="chartCanais"></div></div>
+        </div>
+        <div class="grid"><div class="card"><div class="ttl">Detalhe por plataforma e setor</div><div class="tscroll"><table>
+          <thead><tr><th>Plataforma</th><th>Full Pass</th><th>Zone</th><th>Gold</th><th>Black</th><th>Total</th></tr></thead>
+          <tbody id="platBody"></tbody>
+          <tfoot id="platFoot"></tfoot>
+        </table></div></div></div>
+
+        <!-- DISTRIBUIÇÃO GEOGRÁFICA -->
+        <div class="grid" style="margin-top:16px">
+          <div class="card">
+            <div class="ttl">
+              📍 Distribuição Geográfica & Origem dos Compradores
+              <span class="tag">🇧🇷 Brasil: 100% · 5.027 Telefones Auditados</span>
+            </div>
+            <p style="font-size:12.5px;color:var(--fg-muted);margin:-6px 0 14px">
+              Auditoria de inteligência territorial a partir de 5.027 números de WhatsApp/telefone dos compradores cadastrados na Uticket e Sympla.
+            </p>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px">
+              <div style="font-size:28px">🇧🇷</div>
+              <div>
+                <div style="font-weight:800;font-size:13.5px;color:var(--fg)">Brasil — 100% da Base Nacional (+55)</div>
+                <div style="font-size:12px;color:var(--fg-muted)">5.027 compradores únicos mapeados com telefone válido no Brasil. Concentração no Sul (RS 92,3%, SC 5,4%).</div>
+              </div>
+            </div>
+            <div class="geo-box">
+              <div>
+                <h4 style="font-size:12.5px;font-weight:700;margin:0 0 10px;color:var(--fg)">Por Estado (UF)</h4>
+                <div id="geoEstadosList"></div>
+              </div>
+              <div>
+                <h4 style="font-size:12.5px;font-weight:700;margin:0 0 10px;color:var(--fg)">Principais Polos e Cidades</h4>
+                <div id="geoPolosList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AÇÕES START INC & CUPONS UNIFICADOS -->
+      <section data-view="promoters" hidden>
+        <!-- 1. HERO MASTER START INC -->
+        <div class="start-hero">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+            <div>
+              <div class="start-tag">🚀 Ação da Start Inc.</div>
+              <h2 style="font-size:18px;font-weight:800;margin-top:8px">Desempenho Consolidado da Estratégia Start Inc. (Evandro + Gê)</h2>
+              <p style="font-size:12.5px;color:var(--fg-muted);margin:3px 0 0">
+                Todos os cupons com prefixo <b>START</b> representam ações diretas, campanhas e grupos gerenciados pela Start Inc. (Evandro + Gê).
+              </p>
+            </div>
+            <button class="btn-toggle" id="btnToggleCampanhas" type="button">
+              <span id="lblToggleCampanhas">Ver 9 Campanhas Start</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+
+          <div class="start-grid">
+            <div class="start-kpi">
+              <div class="lbl">Ingressos Start Inc.</div>
+              <div class="val tnum" id="startIngressos" style="color:var(--accent)">2.670</div>
+              <div class="sub" id="startPctIngressos">69,0% das vendas por cupom · 42,9% do festival</div>
+            </div>
+            <div class="start-kpi">
+              <div class="lbl">Receita Gerada Start</div>
+              <div class="val tnum" id="startReceita" style="color:var(--c-success)">R$ 259.148</div>
+              <div class="sub">Vendas diretas faturadas com cupom Start</div>
+            </div>
+            <div class="start-kpi">
+              <div class="lbl">Pedidos / Vendas</div>
+              <div class="val tnum" id="startPedidos">1.782</div>
+              <div class="sub">Transações aprovadas nos cupons Start</div>
+            </div>
+            <div class="start-kpi">
+              <div class="lbl">Ticket Médio Start</div>
+              <div class="val tnum" id="startTicketMedio">R$ 97,06</div>
+              <div class="sub">Valor médio por ingresso vendido</div>
+            </div>
+          </div>
+
+          <!-- CONTAINER EXPANSÍVEL DAS CAMPANHAS START INC -->
+          <div id="campanhasStartContainer" style="display:none;margin-top:16px;border-top:1px solid rgba(43,108,246,0.2);padding-top:16px">
+            <div style="font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px">
+              Detalhamento das Campanhas Start Inc.
+            </div>
+            <div class="camp-grid" id="campanhasStartGrid">
+              <!-- Preenchido via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3 style="font-size:14px;font-weight:700">Outras Ações da Campanha (Promoters, Antiga Gestão & Sympla)</h3>
+        </div>
+        <div class="grid g4" id="outrasAcoesGrid" style="margin-bottom:16px">
+          <div class="card" style="border-top:3px solid #8B5CF6">
+            <div class="ttl"><span class="badge-orig orig-promoter">Promoters</span> <span class="tag">Equipe</span></div>
+            <div class="val tnum" id="outrasPromIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">767 ing.</div>
+            <div class="sub" id="outrasPromRec" style="font-size:11.5px;color:var(--fg-muted)">R$ 70.790 · 50 promoters ativos</div>
+          </div>
+          <div class="card" style="border-top:3px solid #64748B">
+            <div class="ttl"><span class="badge-orig orig-antiga">Antiga Gestão</span> <span class="tag">Antigo Mkt</span></div>
+            <div class="val tnum" id="outrasAntigaGestaoIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">186 ing.</div>
+            <div class="sub" id="outrasAntigaGestaoSub" style="font-size:11.5px;color:var(--fg-muted)">R$ 33.980 · MOVINGMANIACO15</div>
+          </div>
+          <div class="card" style="border-top:3px solid #EC4899">
+            <div class="ttl"><span class="badge-orig orig-aniversariante">Aniversariantes</span> <span class="tag">Sympla</span></div>
+            <div class="val tnum" id="outrasBdayIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">185 ing.</div>
+            <div class="sub" id="outrasBdaySub" style="font-size:11.5px;color:var(--fg-muted)">R$ 17.659 · 153 cupons BDAY</div>
+          </div>
+          <div class="card" style="border-top:3px solid #10B981">
+            <div class="ttl"><span class="badge-orig orig-parceria">Parcerias</span> <span class="tag">Festas / Excursões</span></div>
+            <div class="val tnum" id="outrasParceriaIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">52 ing.</div>
+            <div class="sub" style="font-size:11.5px;color:var(--fg-muted)">R$ 7.138 · Festasrs, Kioma, Triptrance</div>
+          </div>
+        </div>
+
+        <!-- 3. PAINEL DE RECOMPENSAS UTICKET (A CADA 10 VENDAS GANHA 1 INGRESSO) -->
+        <div class="card-recompensa">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+            <div>
+              <span class="badge-recompensa">🎁 Regra Uticket: 1 Ingresso Cortesia a cada 10 Vendas</span>
+              <h3 style="font-size:16px;font-weight:800;margin:6px 0 2px">Metas & Recompensas dos Promoters (Uticket)</h3>
+              <p style="font-size:12.5px;color:var(--fg-muted);margin:0">
+                A cada 10 ingressos vendidos por um promoter na Uticket, ele ganha <b>1 ingresso cortesia</b> para vender ou levar.
+              </p>
+            </div>
+            <div style="display:flex;gap:20px">
+              <div style="text-align:right">
+                <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Ingressos Conquistados</div>
+                <div class="tnum" id="uticketTotalGanhos" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--c-success)">58 ing.</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Promoters Premiados</div>
+                <div class="tnum" id="uticketPromPremiados" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--fg)">12 de 37</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOP PROMOTERS PREMIADOS COM CICLO ATUAL -->
+          <div style="margin-top:14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-muted)">
+            Top Promoters Premiados & Ciclo para o Próximo Ingresso:
+          </div>
+          <div class="top-prom-grid" id="topPromotersGrid">
+            <!-- Renderizado dinamicamente pelo JS -->
+          </div>
+        </div>
+
+        <!-- 4. MAPEAMENTO COMPLETO DE CUPONS (UTICKET + SYMPLA) -->
+        <div class="card">
+          <div class="ttl" style="margin-bottom:12px">
+            Mapeamento Consolidado de Cupons (Uticket + Sympla)
+            <span class="tag" id="couponCountBadge">219 cupons mapeados</span>
+          </div>
+
+          <div class="filter-bar">
+            <!-- FILTRO DE PLATAFORMA -->
+            <div class="chip-group" id="platFilterGroup">
+              <button class="chip-btn" aria-pressed="true" data-plat="ALL">Todas as Plataformas</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket (37)</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla (182)</button>
+            </div>
+
+            <!-- FILTRO DE ORIGEM -->
+            <div class="chip-group" id="origemFilterGroup">
+              <button class="chip-btn" aria-pressed="true" data-orig="ALL">Todas as Ações</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="START_INC">🚀 Start Inc.</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="PROMOTER">👥 Promoters</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="PREMIADOS">🎁 Promoters Premiados (12)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes Sympla (153)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="BDAY_LIBERADOS">🍾 Aniv. Liberados (32)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="BDAY_PENDENTES">⏳ Aniv. Pendentes (121)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="ANTIGA_GESTAO">🏛️ Antiga Gestão / Antigo Mkt</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="PARCERIA">🤝 Parcerias</button>
+            </div>
+
+            <!-- BUSCA INSTANTÂNEA -->
+            <input type="text" class="search-inp" id="searchCoupon" placeholder="🔍 Buscar cupom ou promoter...">
+          </div>
+
+          <div class="tscroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cupom / Código</th>
+                  <th>Origem</th>
+                  <th>Plataforma</th>
+                  <th>Campanha / Canal</th>
+                  <th>Pedidos</th>
+                  <th>Ingressos</th>
+                  <th>Receita Gerada</th>
+                  <th>Recompensas / Metas</th>
+                  <th>Participação</th>
+                </tr>
+              </thead>
+              <tbody id="couponsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- INGRESSOS -->
+      <section data-view="ingressos" hidden>
+        <div class="card"><div class="ttl">Ingressos que mais vendem (por lote)</div>
+          <ol class="rank" id="lotes"></ol>
+        </div>
+      </section>
+
+      <!-- TENDÊNCIAS -->
+      <section data-view="tendencias" hidden>
+        <div class="grid g3">
+          <div class="card"><div class="ttl">Vendas por dia <span class="tag">últimos 30 dias</span></div><div class="chart" id="chartDia"></div></div>
+          <div class="card"><div class="ttl">Vendas por hora</div><div class="chart" id="chartHora"></div></div>
+          <div class="card"><div class="ttl">Por dia da semana</div><div class="chart" id="chartSemana"></div></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  // ===== CONFIG =====
+  var API_RESUMO = '/api/resumo';
+  var API_SYNC   = '/api/sync';
+  var REFRESH_MS = 60000;
+
+  // Último retrato do banco (06/10/2026 17:14), usado só se o servidor não responder.
+  var SNAPSHOT = {"atualizado_em":"2026-10-06T20:14:37.759854+00:00","total":5168,"pagos":5095,"cortesias":73,"receita":652231,
+    "setores":[{"setor":"BLACK","total":145,"pagos":145,"cortesias":0,"uticket":52,"sympla":44,"wix":49},{"setor":"FULLPASS","total":4017,"pagos":3980,"cortesias":37,"uticket":3320,"sympla":500,"wix":197},{"setor":"ZONE","total":546,"pagos":546,"cortesias":0,"uticket":262,"sympla":220,"wix":64},{"setor":"GOLD","total":460,"pagos":424,"cortesias":36,"uticket":270,"sympla":134,"wix":56}],
+    "extras":[{"tipo":"CAMPING","total":1030,"uticket":1030,"sympla":0,"wix":0},{"tipo":"COPO","total":75,"uticket":75,"sympla":0,"wix":0}],
+    "lotes":[{"lote":"FULLPASS CONVOCAÇAO L2 - PROMOCIONAL","setor":"FULLPASS","total":1440},{"lote":"FULLPASS CONVOCAÇAO L1 - PROMOCIONAL","setor":"FULLPASS","total":1011},{"lote":"FULLPASS CONVOCAÇAO EXTRA - PROMOCIONAL","setor":"FULLPASS","total":433},{"lote":"FULLPASS - 2º LOTE","setor":"FULLPASS","total":258},{"lote":"FULLPASS LOTE 2","setor":"FULLPASS","total":257},{"lote":"FULLPASS - LOTE WIX","setor":"FULLPASS","total":197},{"lote":"ZONE - 2º LOTE","setor":"ZONE","total":139},{"lote":"FULLPASS 3 LOTE","setor":"FULLPASS","total":118},{"lote":"GOLD LOTE 2","setor":"GOLD","total":105},{"lote":"GOLD (VIP) CONVOCAÇAO - PROMOCIONAL","setor":"GOLD","total":103}],
+    "canais":[{"canal":"GRUPO_VIP","total":2126},{"canal":"DIRETO","total":980},{"canal":"AFILIADO_PROMOTER","total":592},{"canal":"ORGANICO","total":556},{"canal":"DESCONHECIDO","total":454},{"canal":"ANTIGO_MKT","total":186},{"canal":"ANIVERSARIANTE","total":153},{"canal":"META_ADS","total":57},{"canal":"PARCERIA","total":35},{"canal":"CUPOM_CAMPANHA","total":14},{"canal":"EMAIL","total":9},{"canal":"MEIA_ENTRADA","total":6}],
+    "promoters":[{"promoter":"JONATAN","total":121},{"promoter":"DANIELASILVA","total":64},{"promoter":"FRANCIELES","total":58},{"promoter":"CAROLINANEVES","total":53},{"promoter":"LEOMARTINS","total":46},{"promoter":"CLAITIANE","total":31},{"promoter":"EGLAI","total":30},{"promoter":"ANDRESSALEMOS","total":27},{"promoter":"JEFERSONB","total":24},{"promoter":"SABRINASOUZA","total":21},{"promoter":"FULLDIVULGAÇAO","total":21},{"promoter":"STARTELEICAO","total":20},{"promoter":"Festasrs","total":18},{"promoter":"GOLDDIVULGAÇAO","total":15},{"promoter":"NATANIELE","total":12},{"promoter":"KARENV","total":11},{"promoter":"Kioma","total":5},{"promoter":"Triptrance","total":5},{"promoter":"GUTO","total":5},{"promoter":"KIOMA","total":5}],
+    "por_dia":[{"dia":"2026-09-07","total":13},{"dia":"2026-09-08","total":29},{"dia":"2026-09-09","total":37},{"dia":"2026-09-10","total":41},{"dia":"2026-09-11","total":18},{"dia":"2026-09-12","total":25},{"dia":"2026-09-13","total":7},{"dia":"2026-09-14","total":25},{"dia":"2026-09-15","total":56},{"dia":"2026-09-16","total":28},{"dia":"2026-09-17","total":41},{"dia":"2026-09-18","total":40},{"dia":"2026-09-19","total":31},{"dia":"2026-09-20","total":25},{"dia":"2026-09-21","total":20},{"dia":"2026-09-22","total":22},{"dia":"2026-09-23","total":23},{"dia":"2026-09-24","total":31},{"dia":"2026-09-25","total":20},{"dia":"2026-09-26","total":19},{"dia":"2026-09-27","total":2},{"dia":"2026-09-28","total":11},{"dia":"2026-09-29","total":1284},{"dia":"2026-09-30","total":490},{"dia":"2026-10-01","total":758},{"dia":"2026-10-02","total":176},{"dia":"2026-10-03","total":85},{"dia":"2026-10-04","total":123},{"dia":"2026-10-05","total":122},{"dia":"2026-10-06","total":92}],
+    "por_hora":[{"hora":0,"total":95},{"hora":1,"total":45},{"hora":2,"total":22},{"hora":3,"total":6},{"hora":4,"total":9},{"hora":5,"total":9},{"hora":6,"total":17},{"hora":7,"total":38},{"hora":8,"total":63},{"hora":9,"total":119},{"hora":10,"total":138},{"hora":11,"total":174},{"hora":12,"total":1240},{"hora":13,"total":376},{"hora":14,"total":259},{"hora":15,"total":241},{"hora":16,"total":231},{"hora":17,"total":202},{"hora":18,"total":280},{"hora":19,"total":298},{"hora":20,"total":359},{"hora":21,"total":312},{"hora":22,"total":317},{"hora":23,"total":230}],
+    "por_dia_semana":[{"dia_semana":1,"total":700},{"dia_semana":2,"total":1624},{"dia_semana":3,"total":747},{"dia_semana":4,"total":1040},{"dia_semana":5,"total":419},{"dia_semana":6,"total":272},{"dia_semana":7,"total":278}],
+    "metas":[{"ordem":0,"nome":"Meta 0","valor":5000,"classificacao":"Ruim"},{"ordem":1,"nome":"Meta 1","valor":6000,"classificacao":"Ok"},{"ordem":2,"nome":"Meta 2","valor":7000,"classificacao":"Dá pra melhorar"},{"ordem":3,"nome":"Meta 3","valor":7500,"classificacao":"Saímos da merda"},{"ordem":4,"nome":"Meta 4","valor":8000,"classificacao":"Boa"},{"ordem":5,"nome":"Meta 5","valor":8500,"classificacao":"Ótima"},{"ordem":6,"nome":"Meta 6","valor":9000,"classificacao":"Excelente"},{"ordem":7,"nome":"Meta 7","valor":9500,"classificacao":"Magnífico"},{"ordem":8,"nome":"Meta NASA","valor":10000,"classificacao":"Estourar champanhe"}]};
+
+  var SET = {
+    FULLPASS:{nome:'Full Pass', cor:'var(--c-fullpass)'},
+    ZONE:{nome:'Zone', cor:'var(--c-zone)'},
+    GOLD:{nome:'Gold', cor:'var(--c-gold)'},
+    BLACK:{nome:'Black', cor:'var(--c-black)'}
+  };
+  var ORDEM = ['FULLPASS','ZONE','GOLD','BLACK'];
+  var CANAL = { GRUPO_VIP:'Grupo VIP', DIRETO:'Direto', AFILIADO_PROMOTER:'Afiliado / Promoter', ORGANICO:'Orgânico', DESCONHECIDO:'Sem origem', COMUNIDADE:'Comunidade', ANTIGA_GESTAO:'Antiga Gestão (Antigo Mkt)', ANTIGO_MKT:'Antiga Gestão (Antigo Mkt)', ANIVERSARIANTE:'Aniversariante', META_ADS:'Meta Ads', PARCERIA:'Parceria', CUPOM_CAMPANHA:'Cupom de campanha', EMAIL:'E-mail', MEIA_ENTRADA:'Meia-entrada', WHATSAPP:'WhatsApp', AFILIADO:'Afiliado', ORGANICO_SYMPLA:'Orgânico Sympla' };
+  var SEMANA = {1:'Seg',2:'Ter',3:'Qua',4:'Qui',5:'Sex',6:'Sáb',7:'Dom'};
+  var TIER = { 'Ruim':'ruim', 'Ok':'ok', 'Dá pra melhorar':'melhorar', 'Boa':'boa', 'Ótima':'otima', 'Otima':'otima', 'Excelente':'exc' };
+
+  var DATA = null, FILTRO = '';
+  var CUPOM_PLAT_FILTER = 'ALL';
+  var CUPOM_ORIG_FILTER = 'ALL';
+  var CUPOM_SEARCH = '';
+  var CAMPANHAS_START_EXPANDED = false;
+
+  var CANAL_LABEL = {
+    'GRUPO_VIP_NOTURNO': 'Grupo VIP Novos (Noturno 2026)',
+    'GRUPO_VIP_ANTIGOS': 'Grupo VIP Antigos (Base 2022/2023)',
+    'META_ADS': 'Meta Ads (Tráfego Pago)',
+    'CAMPANHA_ELEICAO': 'Campanha Eleição',
+    'EMAIL_MARKETING': 'E-mail Marketing',
+    'CAMPANHA_BLACK': 'Black Friday',
+    'CAMPANHA_CASAMENTO': 'Ação Casamento',
+    'COMUNIDADE_MOVING': 'Comunidade MovinG',
+    'ANTIGO_MKT': 'Antiga Gestão (Antigo Mkt)',
+    'ANTIGA_GESTAO': 'Antiga Gestão (Antigo Mkt)',
+    'START_OUTROS': 'Ação Start Inc.',
+    'PROMOTER': 'Promoter / Divulgação',
+    'ANIVERSARIANTE': 'Aniversariante (Sympla)',
+    'PARCERIA_FESTASRS': 'Parceria Festasrs',
+    'PARCERIA_KIOMA': 'Parceria Kioma',
+    'PARCERIA_TRIPTRANCE': 'Parceria Triptrance',
+    'PARCERIA_GUTO': 'Parceria GUTO'
+  };
+
+  var DIARIO_PERIODO = 'tudo';
+  var DIARIO_PLAT = 'ALL';
+  var DIARIO_SETOR = 'ALL';
+  var DIARIO_DATA_INI = '';
+  var DIARIO_DATA_FIM = '';
+
+  function $(id){ return document.getElementById(id); }
+  function num(n){ return (+n||0).toLocaleString('pt-BR'); }
+  function brl(n){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function canalNome(c){ return CANAL[c] || String(c||'').replace(/_/g,' ').toLowerCase().replace(/^./,function(x){return x.toUpperCase();}); }
+  function hojeSP(offsetDias){
+    var d = new Date(Date.now() - (offsetDias||0)*864e5);
+    return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+  }
+
+  // ===== Navegação =====
+  var titles = {
+    overview:['Visão geral','Consolidado em tempo real das 3 ticketeiras'],
+    diario:['Vendas por Dia','Análise analítica dia a dia com filtros de período, plataforma e setor'],
+    plataformas:['Plataformas & canais','De onde vêm as vendas'],
+    promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
+    ingressos:['Ingressos','Lotes que mais vendem'],
+    tendencias:['Tendências','Vendas por dia, hora e dia da semana']
+  };
+  var views = [].slice.call(document.querySelectorAll('section[data-view]'));
+  var links = [].slice.call(document.querySelectorAll('#nav a'));
+  function show(v){
+    views.forEach(function(s){ s.hidden = s.getAttribute('data-view')!==v; });
+    links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('data-view')===v); });
+    var t = titles[v]||['',''];
+    $('pageTitle').textContent = t[0]; $('pageSub').textContent = t[1];
+  }
+  $('nav').addEventListener('click', function(e){ var a=e.target.closest('a'); if(!a) return; e.preventDefault(); show(a.getAttribute('data-view')); });
+
+  // ===== Gráficos =====
+  function barh(el,rows,max){
+    if(!rows.length){ el.innerHTML='<div class="empty">Sem dados ainda.</div>'; return; }
+    var W=520,rowH=36,pad=6,labelW=168,valW=56,H=rows.length*rowH+pad;
+    var m=max||Math.max.apply(null,rows.map(function(r){return r[1]}))||1;
+    var barMax=W-labelW-valW,s='';
+    rows.forEach(function(r,i){ var y=i*rowH+20,w=Math.max(3,r[1]/m*barMax),lead=r[2];
+      s+='<text class="lbl" x="0" y="'+(y+4)+'">'+esc(r[0])+'</text>';
+      s+='<rect x="'+labelW+'" y="'+(y-11)+'" width="'+w+'" height="16" rx="5" fill="'+(lead?'var(--accent)':'var(--bar-muted)')+'"/>';
+      s+='<text class="vv" x="'+(labelW+w+8)+'" y="'+(y+4)+'">'+num(r[1])+'</text>'; });
+    el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img">'+s+'</svg>';
+  }
+  function barv(el,rows,thin){
+    if(!rows.length){ el.innerHTML='<div class="empty">Sem dados ainda.</div>'; return; }
+    var W=520,H=176,base=146,topPad=20,gap=thin?3:12;
+    var m=Math.max.apply(null,rows.map(function(r){return r[1]}))||1;
+    var bw=(W-(rows.length-1)*gap)/rows.length,s='<line class="ax" x1="0" y1="'+base+'" x2="'+W+'" y2="'+base+'"/>';
+    rows.forEach(function(r,i){ var x=i*(bw+gap),h=r[1]/m*(base-topPad),y=base-h,lead=r[1]===m&&m>0;
+      s+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+Math.max(h,0)+'" rx="3" fill="'+(lead?'var(--accent)':'var(--bar-muted)')+'"/>';
+      if(lead)s+='<text class="vv" x="'+(x+bw/2)+'" y="'+(y-5)+'" text-anchor="middle">'+num(r[1])+'</text>';
+      if(r[0])s+='<text class="lbl" x="'+(x+bw/2)+'" y="'+(base+14)+'" text-anchor="middle">'+esc(r[0])+'</text>'; });
+    el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img">'+s+'</svg>';
+  }
+  function line(el,rows){
+    if(rows.length<2){ el.innerHTML='<div class="empty">Sem dados ainda.</div>'; return; }
+    var W=520,H=176,base=144,topPad=20,left=6,right=W-10;
+    var m=Math.max.apply(null,rows.map(function(r){return r[1]}))||1;
+    var step=(right-left)/(rows.length-1),pts=[];
+    rows.forEach(function(r,i){ pts.push([left+i*step, base-r[1]/m*(base-topPad)]); });
+    var poly=pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1)}).join(' ');
+    var area='M'+left+','+base+' L'+poly.replace(/ /g,' L')+' L'+right+','+base+' Z';
+    var s='<line class="ax" x1="0" y1="'+base+'" x2="'+W+'" y2="'+base+'"/>';
+    s+='<path d="'+area+'" fill="var(--accent)" opacity="0.10"/>';
+    s+='<polyline points="'+poly+'" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/>';
+    var iMax=0; rows.forEach(function(r,i){ if(r[1]>rows[iMax][1]) iMax=i; });
+    var pk=pts[iMax], last=pts[pts.length-1];
+    s+='<circle cx="'+pk[0].toFixed(1)+'" cy="'+pk[1].toFixed(1)+'" r="3.5" fill="var(--accent)"/>';
+    s+='<text class="vv" x="'+pk[0].toFixed(1)+'" y="'+(pk[1]-8).toFixed(1)+'" text-anchor="middle">'+num(rows[iMax][1])+'</text>';
+    if(iMax!==pts.length-1){
+      s+='<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="4" fill="var(--accent)"/>';
+      s+='<text class="vv" x="'+(last[0]-4)+'" y="'+(last[1]-9)+'" text-anchor="end">'+num(rows[rows.length-1][1])+'</text>';
+    }
+    rows.forEach(function(r,i){ if(r[0])s+='<text class="lbl" x="'+(left+i*step)+'" y="'+(base+14)+'" text-anchor="middle">'+esc(r[0])+'</text>'; });
+    el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img">'+s+'</svg>';
+  }
+
+  // ===== Render =====
+  function render(){
+    var d = DATA; if(!d) return;
+    var setores = {}; (d.setores||[]).forEach(function(s){ setores[s.setor]=s; });
+    var totalGeral = ORDEM.reduce(function(a,k){ return a+((setores[k]||{}).total||0); },0);
+    var f = (FILTRO && FILTRO!=='CAMPING') ? FILTRO : '';
+    var sel = f ? (setores[f]||{total:0,pagos:0,cortesias:0}) : {total:totalGeral, pagos:d.pagos, cortesias:d.cortesias};
+
+    // Info do filtro
+    var info = $('filtroInfo');
+    if(f){ info.hidden=false; info.innerHTML='Filtrando por <b>'+SET[f].nome+'</b>. Números, cards e lotes mostram só esse setor; canais, promoters e tendências seguem com todos os setores. A régua de metas sempre usa o total geral.'; }
+    else if(FILTRO==='CAMPING'){ info.hidden=false; info.innerHTML='<b>Camping</b> não entra no total de ingressos. Os números dele estão no bloco <b>Extras</b>, destacado abaixo.'; }
+    else info.hidden=true;
+
+    // Metas (sempre total geral de ingressos)
+    renderMetas(totalGeral, d.metas||[]);
+
+    // KPIs
+    $('kTotalLbl').textContent = f ? ('Total '+SET[f].nome) : 'Total geral';
+    $('kTotal').textContent = num(sel.total);
+    $('kTotalS').textContent = f ? ((totalGeral? Math.round(sel.total/totalGeral*100):0)+'% do total geral') : 'ingressos consolidados';
+    $('kPagos').textContent = num(sel.pagos);
+    $('kReceita').textContent = f ? 'ingressos pagos' : ('receita '+brl(d.receita));
+    $('kCort').textContent = num(sel.cortesias);
+    var dias={}; (d.por_dia||[]).forEach(function(x){ dias[String(x.dia).slice(0,10)]=x.total; });
+    $('kHoje').textContent = num(dias[hojeSP(0)]||0);
+    $('kOntem').textContent = 'ontem: '+num(dias[hojeSP(1)]||0)+(f?' · todos os setores':'');
+
+    // Cards de setor
+    $('setores').innerHTML = ORDEM.map(function(k){
+      var s = setores[k]||{total:0,pagos:0,cortesias:0,uticket:0,sympla:0,wix:0};
+      var pct = totalGeral ? Math.round(s.total/totalGeral*100) : 0;
+      var cls = f ? (k===f?' hl':' dim') : '';
+      return '<div class="card setor'+cls+'" style="--sc:'+SET[k].cor+'"><div class="row"><span class="nm"><span class="d"></span>'+SET[k].nome+'</span><span class="share">'+pct+'%</span></div>'+
+        '<div class="big tnum">'+num(s.total)+'</div><div class="sub">'+num(s.pagos)+' pagos · '+num(s.cortesias)+' cortesias</div>'+
+        '<div class="track"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="plats"><span>uticket '+num(s.uticket)+'</span><span>sympla '+num(s.sympla)+'</span><span>wix '+num(s.wix)+'</span></div></div>';
+    }).join('');
+
+    // Extras
+    var ICON = {
+      CAMPING:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 12 4l9 16z"/><path d="M12 4v16"/><path d="m9 20 3-5 3 5"/></svg>',
+      COPO:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l-1.5 17a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1z"/><path d="M6.5 8h11"/></svg>'
+    };
+    var NOME = { CAMPING:['Camping','vagas de camping vendidas'], COPO:['Copo Moving 2026','copos avulsos vendidos'] };
+    var ex = d.extras||[];
+    $('extras').innerHTML = ex.length ? ex.map(function(e){
+      var n = NOME[e.tipo]||[e.tipo,'itens vendidos'];
+      var cls = FILTRO==='CAMPING' ? (e.tipo==='CAMPING'?' hl':'') : '';
+      return '<div class="card extra'+cls+'"><div class="row"><span class="nm"><span class="ic">'+(ICON[e.tipo]||'')+'</span>'+esc(n[0])+'</span><span class="sub">não soma</span></div>'+
+        '<div class="big tnum">'+num(e.total)+'</div><div class="sub">'+n[1]+'</div>'+
+        '<div class="plats"><span>uticket '+num(e.uticket)+'</span><span>sympla '+num(e.sympla)+'</span><span>wix '+num(e.wix)+'</span></div></div>';
+    }).join('') : '<div class="card extra"><div class="empty">Nenhum extra vendido ainda.</div></div>';
+
+    // Tabela + plataformas
+    var P={uticket:0,sympla:0,wix:0};
+    $('crossBody').innerHTML = ORDEM.map(function(k){
+      var s=setores[k]||{uticket:0,sympla:0,wix:0,total:0};
+      P.uticket+=s.uticket||0; P.sympla+=s.sympla||0; P.wix+=s.wix||0;
+      var cls = f && k!==f ? ' class="dim"' : '';
+      return '<tr'+cls+'><td><span class="sd" style="background:'+SET[k].cor+'"></span>'+SET[k].nome+'</td><td>'+num(s.uticket)+'</td><td>'+num(s.sympla)+'</td><td>'+num(s.wix)+'</td><td>'+num(s.total)+'</td></tr>';
+    }).join('');
+    $('crossFoot').innerHTML = '<tr><td>Total</td><td>'+num(P.uticket)+'</td><td>'+num(P.sympla)+'</td><td>'+num(P.wix)+'</td><td>'+num(totalGeral)+'</td></tr>';
+
+    var src = f ? (setores[f]||{uticket:0,sympla:0,wix:0}) : P;
+    var plat = [['Uticket',src.uticket||0],['Sympla',src.sympla||0],['Wix',src.wix||0]].sort(function(a,b){return b[1]-a[1];});
+    plat.forEach(function(r,i){ r[2]=(i===0); });
+    barh($('chartPlat'), plat); barh($('chartPlat2'), plat);
+
+    $('platBody').innerHTML = [['Uticket','uticket'],['Sympla','sympla'],['Wix','wix']].map(function(p){
+      var tot=0; var cells = ORDEM.map(function(k){ var v=(setores[k]||{})[p[1]]||0; tot+=v; return '<td>'+num(v)+'</td>'; }).join('');
+      return '<tr><td>'+p[0]+'</td>'+cells+'<td>'+num(tot)+'</td></tr>';
+    }).join('');
+    $('platFoot').innerHTML = '<tr><td>Total</td>'+ORDEM.map(function(k){ return '<td>'+num((setores[k]||{}).total||0)+'</td>'; }).join('')+'<td>'+num(totalGeral)+'</td></tr>';
+
+    // Canais
+    var can = (d.canais||[]).slice(0,8).map(function(c,i){ return [canalNome(c.canal), c.total, i===0]; });
+    barh($('chartCanais'), can);
+
+    // Promoters (se elemento existir)
+    if($('promoters')){
+      var pr = (d.promoters||[]).slice(0,15), pmax = pr.length ? pr[0].total : 1;
+      $('promoters').innerHTML = pr.length ? pr.map(function(p,i){
+        return '<li><span class="pos">'+(i+1)+'</span><span><div class="n">'+esc(p.promoter)+'</div><div class="m">'+num(p.total)+' ingressos</div><div class="bar"><i style="width:'+Math.max(3,Math.round(p.total/pmax*100))+'%;background:var(--accent)"></i></div></span><span class="val">'+num(p.total)+'</span></li>';
+      }).join('') : '<li class="empty">Nenhum promoter identificado ainda.</li>';
+    }
+
+    // Lotes
+    var lt = (d.lotes||[]).filter(function(l){ return !f || l.setor===f; });
+    var lmax = lt.length ? lt[0].total : 1;
+    $('lotes').innerHTML = lt.length ? lt.map(function(l,i){
+      var c = (SET[l.setor]||{cor:'var(--accent)'}).cor, sn=(SET[l.setor]||{nome:l.setor}).nome;
+      return '<li><span class="pos">'+(i+1)+'</span><span><div class="n sm">'+esc(l.lote)+'</div><div class="m">'+esc(sn)+'</div><div class="bar"><i style="width:'+Math.max(3,Math.round(l.total/lmax*100))+'%;background:'+c+'"></i></div></span><span class="val">'+num(l.total)+'</span></li>';
+    }).join('') : '<li class="empty">Nenhum lote '+(f?'de '+SET[f].nome+' ':'')+'entre os 10 mais vendidos.</li>';
+
+    // Tendências
+    var diaRows=[], i;
+    for(i=29;i>=0;i--){ var k=hojeSP(i); diaRows.push([(i%5===0)? k.slice(8,10)+'/'+k.slice(5,7) : '', dias[k]||0]); }
+    line($('chartDia'), diaRows);
+    var horas={}; (d.por_hora||[]).forEach(function(h){ horas[h.hora]=h.total; });
+    var horaRows=[]; for(i=0;i<24;i++){ horaRows.push([(i%3===0)? i+'h' : '', horas[i]||0]); }
+    barv($('chartHora'), horaRows, true);
+    var sem={}; (d.por_dia_semana||[]).forEach(function(w){ sem[w.dia_semana]=w.total; });
+    var semRows=[]; for(i=1;i<=7;i++){ semRows.push([SEMANA[i], sem[i]||0]); }
+    barv($('chartSemana'), semRows);
+
+    // Regiões e Geografia
+    renderRegioes(d);
+
+    // Ações Start Inc & Cupons Unificados (Uticket + Sympla)
+    renderCuponsView(d);
+
+    // Vendas por Dia (Filtros Multidimensionais)
+    renderDiarioView(d);
+  }
+
+  // ===== Distribuição Geográfica (Estados e Polos) =====
+  function renderRegioes(d){
+    var reg = d && d.regioes;
+    if(!reg) return;
+    var est = reg.estados || [];
+    var pol = reg.polos || [];
+    var maxEst = est.length ? est[0].pct : 100;
+    var maxPol = pol.length ? pol[0].pct : 100;
+
+    if($('geoEstadosList')){
+      $('geoEstadosList').innerHTML = est.map(function(e){
+        var w = Math.max(3, Math.round((e.pct / maxEst) * 100));
+        return '<div class="geo-item">' +
+          '<div class="geo-row"><span><b>' + esc(e.uf) + '</b> · ' + esc(e.nome) + '</span><span class="tnum" style="font-weight:700">' + e.pct.toFixed(1).replace('.',',') + '% <small style="color:var(--fg-faint)">(' + num(e.vendas_amostra) + ' ped.)</small></span></div>' +
+          '<div class="geo-bar"><div style="width:' + w + '%;background:' + (e.cor || 'var(--accent)') + '"></div></div>' +
+        '</div>';
+      }).join('');
+    }
+
+    if($('geoPolosList')){
+      $('geoPolosList').innerHTML = pol.map(function(p){
+        var w = Math.max(3, Math.round((p.pct / maxPol) * 100));
+        return '<div class="geo-item">' +
+          '<div class="geo-row"><span>' + esc(p.polo) + '</span><span class="tnum" style="font-weight:700">' + p.pct.toFixed(1).replace('.',',') + '% <small style="color:var(--fg-faint)">(' + num(p.total) + ')</small></span></div>' +
+          '<div class="geo-bar"><div style="width:' + w + '%;background:var(--accent)"></div></div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  // ===== Ações Start Inc & Cupons Unificados =====
+  function renderCuponsView(d){
+    if(!d) return;
+    var st = d.start_inc || {};
+    var out = d.outras_acoes || {};
+    var cupons = d.cupons || [];
+    var totCuponsIng = cupons.reduce(function(a,c){ return a + (c.total||0); }, 0) || 1;
+
+    // 1. Hero Start Inc
+    var ingStart = st.ingressos || 0;
+    var recStart = st.receita || 0;
+    var pedStart = st.pedidos || 0;
+    var tktMedio = ingStart > 0 ? (recStart / ingStart) : 0;
+    var pctCupons = ((ingStart / totCuponsIng) * 100).toFixed(1).replace('.',',');
+    var pctFest = d.total > 0 ? ((ingStart / d.total) * 100).toFixed(1).replace('.',',') : '0';
+
+    if($('startIngressos')) $('startIngressos').textContent = num(ingStart);
+    if($('startReceita')) $('startReceita').textContent = brl(recStart);
+    if($('startPedidos')) $('startPedidos').textContent = num(pedStart);
+    if($('startTicketMedio')) $('startTicketMedio').textContent = 'R$ ' + tktMedio.toFixed(2).replace('.',',');
+    if($('startPctIngressos')) $('startPctIngressos').textContent = pctCupons + '% das vendas por cupom · ' + pctFest + '% do festival';
+
+    // Label do botão de expandir
+    var camps = st.campanhas || [];
+    if($('lblToggleCampanhas')){
+      $('lblToggleCampanhas').textContent = CAMPANHAS_START_EXPANDED ? 'Recolher Campanhas' : 'Ver ' + camps.length + ' Campanhas Start';
+    }
+
+    // Grid de Campanhas Start
+    if($('campanhasStartGrid')){
+      var maxCamp = camps.length ? Math.max.apply(null, camps.map(function(c){ return c.total||0; })) : 1;
+      $('campanhasStartGrid').innerHTML = camps.map(function(c){
+        var pct = Math.max(3, Math.round(((c.total||0) / (maxCamp||1)) * 100));
+        var cNome = CANAL_LABEL[c.canal] || c.canal || 'Ação Start';
+        return '<div class="camp-card">' +
+          '<div class="camp-head">' +
+            '<span class="camp-code">' + esc(c.cupom) + '</span>' +
+            '<span class="badge-orig orig-start">Start Inc</span>' +
+          '</div>' +
+          '<div class="camp-title">' + esc(cNome) + '</div>' +
+          '<div class="camp-stats">' +
+            '<div><b>' + num(c.total) + '</b> ing.</div>' +
+            '<div style="color:var(--c-success);font-weight:700">' + brl(c.receita) + '</div>' +
+            '<div style="color:var(--fg-muted)">' + num(c.pedidos) + ' ped.</div>' +
+          '</div>' +
+          '<div style="height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden">' +
+            '<div style="width:' + pct + '%;height:100%;background:var(--accent);border-radius:2px"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // 2. Outras Ações (Promoters, Antiga Gestão, Aniversariantes Sympla, Parcerias)
+    if(out.promoters){
+      if($('outrasPromIng')) $('outrasPromIng').textContent = num(out.promoters.ingressos) + ' ing.';
+      if($('outrasPromRec')) $('outrasPromRec').textContent = brl(out.promoters.receita) + ' · ' + (out.promoters.cupons_count||0) + ' promoters ativos';
+    }
+    if(out.antiga_gestao){
+      if($('outrasAntigaGestaoIng')) $('outrasAntigaGestaoIng').textContent = num(out.antiga_gestao.ingressos) + ' ing.';
+      if($('outrasAntigaGestaoSub')) $('outrasAntigaGestaoSub').textContent = brl(out.antiga_gestao.receita) + ' · MOVINGMANIACO15';
+    } else if(out.comunidade){
+      if($('outrasAntigaGestaoIng')) $('outrasAntigaGestaoIng').textContent = num(out.comunidade.ingressos) + ' ing.';
+    }
+    if(out.aniversariantes){
+      if($('outrasBdayIng')) $('outrasBdayIng').textContent = num(out.aniversariantes.ingressos) + ' ing.';
+      if($('outrasBdaySub')) $('outrasBdaySub').textContent = brl(out.aniversariantes.receita) + ' · ' + (out.aniversariantes.liberados||0) + ' liberados / ' + (out.aniversariantes.pendentes||0) + ' pendentes';
+    }
+    if(out.parcerias){
+      if($('outrasParceriaIng')) $('outrasParceriaIng').textContent = num(out.parcerias.ingressos) + ' ing.';
+    }
+
+    // 3. Recompensas Uticket (Regra 1 a cada 10)
+    var uRec = out.uticket_recompensas || {};
+    var uTotGanhos = uRec.total_ingressos_ganhos || 0;
+    var uPromPrem = uRec.promoters_premiados || 0;
+    if($('uticketTotalGanhos')) $('uticketTotalGanhos').textContent = uTotGanhos + ' ing.';
+    if($('uticketPromPremiados')) $('uticketPromPremiados').textContent = uPromPrem + ' de ' + (out.promoters ? out.promoters.cupons_count : 37);
+
+    if($('topPromotersGrid')){
+      var uticketPromoters = cupons.filter(function(c){
+        return c.plataforma === 'UTICKET' && c.origem === 'PROMOTER' && (c.recompensa_10 && c.recompensa_10.ganhos > 0);
+      }).sort(function(a,b){ return (b.total||0) - (a.total||0); });
+
+      $('topPromotersGrid').innerHTML = uticketPromoters.map(function(p){
+        var r = p.recompensa_10 || {ganhos:0, ciclo:0, falta:10};
+        var faltaHtml = r.falta === 1 ? '<b style="color:var(--c-warning)">FALTA SÓ 1!</b>' : 'faltam ' + r.falta;
+        return '<div class="top-prom-card">' +
+          '<div class="top-prom-head">' +
+            '<span class="top-prom-name">' + esc(p.cupom) + '</span>' +
+            '<span class="top-prom-badge">🎁 ' + r.ganhos + ' ganho' + (r.ganhos>1?'s':'') + '</span>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--fg-muted);margin-bottom:3px">' +
+            '<span>' + num(p.total) + ' vendas</span>' +
+            '<span>Ciclo: <b>' + r.ciclo + '/10</b> (' + faltaHtml + ')</span>' +
+          '</div>' +
+          '<div class="prog-ciclo"><div style="width:' + (r.ciclo * 10) + '%"></div></div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // 4. Tabela de Cupons
+    renderCuponsTable();
+  }
+
+  function renderCuponsTable(){
+    if(!DATA) return;
+    var cupons = DATA.cupons || [];
+    var totCuponsIng = cupons.reduce(function(a,c){ return a + (c.total||0); }, 0) || 1;
+
+    // Filtros
+    var filtrados = cupons.filter(function(c){
+      if(CUPOM_PLAT_FILTER !== 'ALL' && c.plataforma !== CUPOM_PLAT_FILTER) return false;
+
+      // Filtros de Origem / Regras Especiais
+      if(CUPOM_ORIG_FILTER === 'START_INC' && c.origem !== 'START_INC') return false;
+      if(CUPOM_ORIG_FILTER === 'PROMOTER' && c.origem !== 'PROMOTER') return false;
+      if(CUPOM_ORIG_FILTER === 'ANTIGA_GESTAO' && c.origem !== 'ANTIGA_GESTAO' && c.origem !== 'COMUNIDADE') return false;
+      if(CUPOM_ORIG_FILTER === 'PARCERIA' && c.origem !== 'PARCERIA') return false;
+      if(CUPOM_ORIG_FILTER === 'PREMIADOS'){
+        var r = c.recompensa_10;
+        if(!r || !r.ganhos || r.ganhos <= 0) return false;
+      }
+      if(CUPOM_ORIG_FILTER === 'ANIVERSARIANTE'){
+        var isBday = (c.cupom || '').toUpperCase().indexOf('BDAY') > -1 || c.origem === 'ANIVERSARIANTE';
+        if(!isBday) return false;
+      }
+      if(CUPOM_ORIG_FILTER === 'BDAY_LIBERADOS'){
+        var isBday = (c.cupom || '').toUpperCase().indexOf('BDAY') > -1;
+        if(!isBday || (c.total||0) < 2) return false;
+      }
+      if(CUPOM_ORIG_FILTER === 'BDAY_PENDENTES'){
+        var isBday = (c.cupom || '').toUpperCase().indexOf('BDAY') > -1;
+        if(!isBday || (c.total||0) >= 2) return false;
+      }
+
+      // Busca por texto
+      if(CUPOM_SEARCH){
+        var q = CUPOM_SEARCH;
+        var txt = (c.cupom + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
+        if(txt.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+
+    if($('couponCountBadge')){
+      $('couponCountBadge').textContent = filtrados.length + ' de ' + cupons.length + ' cupons mapeados';
+    }
+
+    if(!$('couponsTableBody')) return;
+
+    if(!filtrados.length){
+      $('couponsTableBody').innerHTML = '<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--fg-muted)">Nenhum cupom encontrado com os filtros selecionados.</td></tr>';
+      return;
+    }
+
+    var origClass = {
+      'START_INC': 'orig-start',
+      'PROMOTER': 'orig-promoter',
+      'ANTIGA_GESTAO': 'orig-antiga',
+      'COMUNIDADE': 'orig-antiga',
+      'ANIVERSARIANTE': 'orig-aniversariante',
+      'PARCERIA': 'orig-parceria'
+    };
+    var origLabel = {
+      'START_INC': '🚀 Start Inc.',
+      'PROMOTER': '👥 Promoter',
+      'ANTIGA_GESTAO': '🏛️ Antiga Gestão',
+      'COMUNIDADE': '🏛️ Antiga Gestão',
+      'ANIVERSARIANTE': '🎂 Aniversariante',
+      'PARCERIA': '🤝 Parceria'
+    };
+
+    $('couponsTableBody').innerHTML = filtrados.map(function(c){
+      var oCls = origClass[c.origem] || '';
+      var oLbl = origLabel[c.origem] || c.origem;
+      var pCls = c.plataforma === 'UTICKET' ? 'plat-uticket' : 'plat-sympla';
+      var cNome = CANAL_LABEL[c.canal] || c.canal || 'Geral';
+      var partPct = ((c.total / totCuponsIng) * 100).toFixed(1);
+      var partBar = Math.min(100, Math.max(3, Math.round((c.total / (DATA.start_inc ? DATA.start_inc.ingressos : totCuponsIng)) * 100)));
+
+      // Renderização da Coluna Recompensas / Metas
+      var recompensaHtml = '<span style="color:var(--fg-faint);font-size:12px">—</span>';
+      if(c.plataforma === 'UTICKET' && c.origem === 'PROMOTER'){
+        var r = c.recompensa_10 || {ganhos: Math.floor(c.total / 10), ciclo: c.total % 10, falta: 10 - (c.total % 10)};
+        var faltaLbl = r.falta === 1 ? '<b style="color:var(--c-warning)">falta só 1!</b>' : 'faltam ' + r.falta;
+        if(r.ganhos > 0){
+          recompensaHtml = '<div>' +
+            '<span class="badge-recompensa">🎁 ' + r.ganhos + ' ganho' + (r.ganhos>1?'s':'') + '</span>' +
+            '<div class="prog-ciclo"><div style="width:' + (r.ciclo * 10) + '%"></div></div>' +
+            '<div style="font-size:10px;color:var(--fg-muted);margin-top:2px">ciclo: ' + r.ciclo + '/10 (' + faltaLbl + ')</div>' +
+          '</div>';
+        } else {
+          recompensaHtml = '<div>' +
+            '<div class="prog-ciclo"><div style="width:' + (r.ciclo * 10) + '%;background:var(--fg-faint)"></div></div>' +
+            '<div style="font-size:10.5px;color:var(--fg-muted);margin-top:2px">' + r.ciclo + '/10 (' + faltaLbl + ')</div>' +
+          '</div>';
+        }
+      } else if((c.cupom||'').toUpperCase().indexOf('BDAY') > -1){
+        if(c.total >= 2){
+          recompensaHtml = '<div>' +
+            '<span class="badge-liberado">🍾 LIBERADO P/ LEVAR</span>' +
+            '<div style="font-size:10px;color:var(--c-success);font-weight:700;margin-top:2px">' + c.total + ' vendidos</div>' +
+          '</div>';
+        } else {
+          recompensaHtml = '<div>' +
+            '<span class="badge-pendente">⏳ PENDENTE</span>' +
+            '<div style="font-size:10px;color:var(--c-warning);font-weight:600;margin-top:2px">' + c.total + '/2 (falta 1)</div>' +
+          '</div>';
+        }
+      }
+
+      return '<tr>' +
+        '<td><b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b></td>' +
+        '<td><span class="badge-orig ' + oCls + '">' + oLbl + '</span></td>' +
+        '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='UTICKET'?'Uticket':'Sympla') + '</span></td>' +
+        '<td style="font-size:12px;color:var(--fg-muted)">' + esc(cNome) + '</td>' +
+        '<td>' + num(c.pedidos) + '</td>' +
+        '<td><b style="color:var(--fg)">' + num(c.total) + '</b></td>' +
+        '<td style="color:var(--c-success);font-weight:600">' + brl(c.receita) + '</td>' +
+        '<td>' + recompensaHtml + '</td>' +
+        '<td>' +
+          '<div style="display:flex;align-items:center;gap:6px">' +
+            '<span style="font-size:11.5px;min-width:34px">' + partPct + '%</span>' +
+            '<div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;min-width:40px">' +
+              '<div style="width:' + partBar + '%;height:100%;background:var(--accent);border-radius:2px"></div>' +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  // Listeners para Ações Start Inc e Cupons
+  var btnT = $('btnToggleCampanhas');
+  if(btnT){
+    btnT.addEventListener('click', function(){
+      CAMPANHAS_START_EXPANDED = !CAMPANHAS_START_EXPANDED;
+      var box = $('campanhasStartContainer');
+      if(box) box.style.display = CAMPANHAS_START_EXPANDED ? 'block' : 'none';
+      if($('lblToggleCampanhas')){
+        var cCount = (DATA && DATA.start_inc && DATA.start_inc.campanhas) ? DATA.start_inc.campanhas.length : 7;
+        $('lblToggleCampanhas').textContent = CAMPANHAS_START_EXPANDED ? 'Recolher Campanhas' : 'Ver ' + cCount + ' Campanhas Start';
+      }
+    });
+  }
+
+  var platG = $('platFilterGroup');
+  if(platG){
+    platG.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      [].slice.call(platG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      CUPOM_PLAT_FILTER = b.getAttribute('data-plat') || 'ALL';
+      renderCuponsTable();
+    });
+  }
+
+  var origG = $('origemFilterGroup');
+  if(origG){
+    origG.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      [].slice.call(origG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      CUPOM_ORIG_FILTER = b.getAttribute('data-orig') || 'ALL';
+      renderCuponsTable();
+    });
+  }
+
+  var sInp = $('searchCoupon');
+  if(sInp){
+    sInp.addEventListener('input', function(e){
+      CUPOM_SEARCH = (e.target.value || '').trim().toLowerCase();
+      renderCuponsTable();
+    });
+  }
+
+  // ===== Vendas por Dia (Filtros Multidimensionais) =====
+  function renderDiarioView(d){
+    if(!d) return;
+    var vendas = d.vendas_diarias || [];
+    window.__movingDados = d; setTimeout(function(){ if(window.movingOnda) window.movingOnda(); }, 0);
+    if(!vendas.length && d.por_dia){
+      vendas = (d.por_dia||[]).map(function(p){
+        return { dia: p.dia, plataforma: 'UTICKET', setor: 'FULLPASS', total: p.total, receita: p.total * 130 };
+      });
+    }
+
+    // Badge de filtros ativos
+    var platNome = DIARIO_PLAT === 'ALL' ? 'Todas as Plataformas' : (DIARIO_PLAT === 'UTICKET' ? 'Uticket' : (DIARIO_PLAT === 'SYMPLA' ? 'Sympla' : 'Wix'));
+    var setorNome = DIARIO_SETOR === 'ALL' ? 'Todos os Setores' : (SET[DIARIO_SETOR] ? SET[DIARIO_SETOR].nome : DIARIO_SETOR);
+    var perNome = DIARIO_PERIODO === 'tudo' ? 'Todo o Período' : (DIARIO_PERIODO === 'hoje' ? 'Hoje' : (DIARIO_PERIODO === 'ontem' ? 'Ontem' : (DIARIO_PERIODO === '7d' ? 'Últimos 7 dias' : (DIARIO_PERIODO === '14d' ? 'Últimos 14 dias' : (DIARIO_PERIODO === '30d' ? 'Últimos 30 dias' : 'Personalizado')))));
+    if($('diarioFiltroAtivoBadge')){
+      $('diarioFiltroAtivoBadge').textContent = perNome + ' · ' + platNome + ' · ' + setorNome;
+    }
+
+    // Filtragem dos registros
+    var filtrados = vendas.filter(function(v){
+      if(DIARIO_DATA_INI && v.dia < DIARIO_DATA_INI) return false;
+      if(DIARIO_DATA_FIM && v.dia > DIARIO_DATA_FIM) return false;
+      if(DIARIO_PLAT !== 'ALL' && v.plataforma !== DIARIO_PLAT) return false;
+      if(DIARIO_SETOR !== 'ALL' && v.setor !== DIARIO_SETOR) return false;
+      return true;
+    });
+
+    // Agrupamento por dia
+    var porDiaMap = {};
+    filtrados.forEach(function(v){
+      var dia = v.dia;
+      if(!porDiaMap[dia]){
+        porDiaMap[dia] = {
+          dia: dia,
+          total: 0,
+          receita: 0,
+          uticket: 0,
+          sympla: 0,
+          wix: 0,
+          fullpass: 0,
+          zone: 0,
+          gold: 0,
+          black: 0,
+          camping: 0
+        };
+      }
+      var o = porDiaMap[dia];
+      var tot = v.total || 0;
+      var rec = v.receita || 0;
+      o.total += tot;
+      o.receita += rec;
+      if(v.plataforma === 'UTICKET') o.uticket += tot;
+      else if(v.plataforma === 'SYMPLA') o.sympla += tot;
+      else if(v.plataforma === 'WIX') o.wix += tot;
+
+      var s = (v.setor || '').toUpperCase();
+      if(s === 'FULLPASS') o.fullpass += tot;
+      else if(s === 'ZONE') o.zone += tot;
+      else if(s === 'GOLD') o.gold += tot;
+      else if(s === 'BLACK') o.black += tot;
+      else if(s === 'CAMPING') o.camping += tot;
+    });
+
+    var listaDias = Object.values(porDiaMap);
+    listaDias.sort(function(a,b){ return a.dia.localeCompare(b.dia); });
+
+    // KPIs da seleção
+    var totFiltro = listaDias.reduce(function(acc, x){ return acc + x.total; }, 0);
+    var recFiltro = listaDias.reduce(function(acc, x){ return acc + x.receita; }, 0);
+    var qtdDias = listaDias.filter(function(x){ return x.total > 0; }).length;
+    var mediaDiaria = qtdDias > 0 ? (totFiltro / qtdDias).toFixed(1).replace('.',',') : '0';
+
+    var picoDia = null;
+    listaDias.forEach(function(x){
+      if(!picoDia || x.total > picoDia.total) picoDia = x;
+    });
+
+    if($('diarioKpiTotal')) $('diarioKpiTotal').textContent = num(totFiltro);
+    if($('diarioKpiTotalSub')) $('diarioKpiTotalSub').textContent = num(qtdDias) + ' dias com vendas no filtro';
+    if($('diarioKpiReceita')) $('diarioKpiReceita').textContent = brl(recFiltro);
+    if($('diarioKpiReceitaSub')) $('diarioKpiReceitaSub').textContent = totFiltro > 0 ? ('ticket médio ' + brl(recFiltro / totFiltro)) : 'sem receita';
+    if($('diarioKpiMedia')) $('diarioKpiMedia').textContent = mediaDiaria;
+    if($('diarioKpiMediaSub')) $('diarioKpiMediaSub').textContent = 'vendas por dia ativo';
+    if($('diarioKpiPicoVal')) $('diarioKpiPicoVal').textContent = picoDia ? num(picoDia.total) : '—';
+    if($('diarioKpiPicoData')){
+      if(picoDia){
+        var partes = picoDia.dia.split('-');
+        var dataFmt = partes.length === 3 ? (partes[2] + '/' + partes[1] + '/' + partes[0]) : picoDia.dia;
+        $('diarioKpiPicoData').textContent = 'pico em ' + dataFmt;
+      } else {
+        $('diarioKpiPicoData').textContent = '—';
+      }
+    }
+
+    // Gráfico Diário em SVG responsivo
+    if($('chartDiarioEvolucao')){
+      var chartEl = $('chartDiarioEvolucao');
+      if(!listaDias.length || totFiltro === 0){
+        chartEl.innerHTML = '<div class="empty" style="text-align:center;padding:36px">Nenhuma venda encontrada para os filtros selecionados.</div>';
+      } else {
+        var W = 900, H = 210, base = 175, topPad = 25;
+        var maxVal = Math.max.apply(null, listaDias.map(function(x){ return x.total; })) || 1;
+        var barCount = listaDias.length;
+        var barWidth = Math.max(3, Math.min(26, (W - 40) / barCount - 2));
+        var totalWidth = barCount * (barWidth + 2);
+        var startX = Math.max(20, (W - totalWidth) / 2);
+
+        var svgHtml = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto;overflow:visible">';
+        svgHtml += '<line class="ax" x1="10" y1="' + base + '" x2="' + (W - 10) + '" y2="' + base + '"/>';
+        svgHtml += '<line x1="10" y1="' + (base - (base-topPad)*0.5) + '" x2="' + (W - 10) + '" y2="' + (base - (base-topPad)*0.5) + '" stroke="var(--border)" stroke-dasharray="3,3" opacity="0.4"/>';
+
+        listaDias.forEach(function(item, idx){
+          var x = startX + idx * (barWidth + 2);
+          var h = Math.max(2, (item.total / maxVal) * (base - topPad));
+          var y = base - h;
+          var isPeak = item.total === maxVal && maxVal > 0;
+          var partes = item.dia.split('-');
+          var dLabel = partes.length === 3 ? (partes[2] + '/' + partes[1]) : item.dia;
+
+          var corBarra = isPeak ? 'var(--accent)' : 'var(--bar-muted)';
+
+          svgHtml += '<rect data-dia="' + item.dia + '" style="cursor:pointer" x="' + x + '" y="' + y + '" width="' + barWidth + '" height="' + h + '" rx="3" fill="' + corBarra + '">' +
+            '<title>' + dLabel + ': ' + num(item.total) + ' vendas (' + brl(item.receita) + ')</title>' +
+          '</rect>';
+
+          if(isPeak || item.total >= maxVal * 0.45 || barCount <= 12){
+            svgHtml += '<text class="vv" x="' + (x + barWidth/2) + '" y="' + (y - 5) + '" text-anchor="middle" font-size="9">' + num(item.total) + '</text>';
+          }
+
+          var step = barCount > 35 ? 5 : (barCount > 20 ? 3 : 1);
+          if(idx % step === 0 || idx === barCount - 1){
+            svgHtml += '<text class="lbl" x="' + (x + barWidth/2) + '" y="' + (base + 14) + '" text-anchor="middle" font-size="9">' + dLabel + '</text>';
+          }
+        });
+
+        svgHtml += '</svg>';
+        chartEl.innerHTML = svgHtml;
+      }
+    }
+
+    // Tabela Analítica Dia a Dia
+    var listaTabela = listaDias.slice().sort(function(a,b){ return b.dia.localeCompare(a.dia); });
+
+    if($('diarioDiasCountBadge')){
+      $('diarioDiasCountBadge').textContent = listaTabela.length + ' dias listados (' + num(totFiltro) + ' vendas)';
+    }
+
+    if($('diarioTableBody')){
+      if(!listaTabela.length){
+        $('diarioTableBody').innerHTML = '<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--fg-muted)">Nenhuma venda encontrada para os filtros selecionados.</td></tr>';
+        if($('diarioTableFoot')) $('diarioTableFoot').innerHTML = '';
+        return;
+      }
+
+      var diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+      var PLATS = [['UTICKET','Uticket','plat-uticket'],['SYMPLA','Sympla','plat-sympla'],['WIX','Wix','plat-wix']];
+      function vazio(){ return { total:0, receita:0, FULLPASS:0, ZONE:0, GOLD:0, BLACK:0, CAMPING:0 }; }
+      var porDiaPlat = {}, totPlat = {}, totGeral = vazio();
+      filtrados.forEach(function(v){
+        var k = v.dia, pl = v.plataforma, se = String(v.setor || '').toUpperCase();
+        porDiaPlat[k] = porDiaPlat[k] || {};
+        var o = porDiaPlat[k][pl] = porDiaPlat[k][pl] || vazio();
+        var t = totPlat[pl] = totPlat[pl] || vazio();
+        [o, t, totGeral].forEach(function(x){
+          x.total += v.total || 0; x.receita += v.receita || 0;
+          if(x[se] !== undefined) x[se] += v.total || 0;
+        });
+      });
+      function cel(v, cor){ return v ? '<td' + (cor ? ' style="color:' + cor + ';font-weight:700"' : '') + '>' + num(v) + '</td>' : '<td><span style="color:var(--fg-faint)">0</span></td>'; }
+      function setores(o){ return cel(o.FULLPASS) + cel(o.ZONE) + cel(o.GOLD) + cel(o.BLACK) + cel(o.CAMPING, 'var(--c-warning)'); }
+      function linhasPlat(mapa, prefixo){
+        var h = '';
+        PLATS.forEach(function(pp){
+          var o = mapa[pp[0]]; if(!o || !o.total) return;
+          h += '<tr class="plat-row">' + prefixo +
+            '<td><span class="badge-plat ' + pp[2] + '">' + pp[1] + '</span></td>' +
+            '<td>' + num(o.total) + '</td>' + setores(o) +
+            '<td style="color:var(--fg-muted)">' + brl(o.receita) + '</td></tr>';
+        });
+        return h;
+      }
+
+      var tbodyHtml = listaTabela.map(function(item){
+        var dObj = new Date(item.dia + 'T12:00:00-03:00');
+        var dSemana = diasSemanaNomes[dObj.getDay()] || '—';
+        var partes = item.dia.split('-');
+        var dataFmt = partes.length === 3 ? (partes[2] + '/' + partes[1] + '/' + partes[0]) : item.dia;
+        var doDia = porDiaPlat[item.dia] || {};
+        var soma = { FULLPASS:item.fullpass, ZONE:item.zone, GOLD:item.gold, BLACK:item.black, CAMPING:item.camping };
+        return '<tr class="dia-row">' +
+            '<td><b style="font-family:var(--font-mono);font-size:12.5px">' + dataFmt + '</b></td>' +
+            '<td><span style="color:var(--fg-muted);font-weight:600">' + dSemana + '</span></td>' +
+            '<td><span class="tag-todas">Todas</span></td>' +
+            '<td><b style="font-size:13.5px;color:var(--accent)">' + num(item.total) + '</b></td>' +
+            setores(soma) +
+            '<td style="color:var(--c-success);font-weight:700">' + brl(item.receita) + '</td>' +
+          '</tr>' + linhasPlat(doDia, '<td></td><td></td>');
+      }).join('');
+
+      $('diarioTableBody').innerHTML = tbodyHtml;
+
+      if($('diarioTableFoot')){
+        $('diarioTableFoot').innerHTML = '<tr>' +
+            '<td colspan="2">TOTAL DO PERÍODO</td>' +
+            '<td><span class="tag-todas">Todas</span></td>' +
+            '<td><b style="font-size:14px;color:var(--accent)">' + num(totFiltro) + '</b></td>' +
+            setores(totGeral) +
+            '<td style="color:var(--c-success);font-size:13.5px">' + brl(recFiltro) + '</td>' +
+          '</tr>' + linhasPlat(totPlat, '<td colspan="2"></td>');
+      }
+    }
+  }
+
+  // Listeners para Vendas por Dia
+  var dPeriodoG = $('diarioPeriodoChips');
+  if(dPeriodoG){
+    dPeriodoG.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      [].slice.call(dPeriodoG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      var p = b.getAttribute('data-periodo');
+      DIARIO_PERIODO = p;
+      if(p === 'hoje'){ DIARIO_DATA_INI = hojeSP(0); DIARIO_DATA_FIM = hojeSP(0); }
+      else if(p === 'ontem'){ DIARIO_DATA_INI = hojeSP(1); DIARIO_DATA_FIM = hojeSP(1); }
+      else if(p === '7d'){ DIARIO_DATA_INI = hojeSP(6); DIARIO_DATA_FIM = hojeSP(0); }
+      else if(p === '14d'){ DIARIO_DATA_INI = hojeSP(13); DIARIO_DATA_FIM = hojeSP(0); }
+      else if(p === '30d'){ DIARIO_DATA_INI = hojeSP(29); DIARIO_DATA_FIM = hojeSP(0); }
+      else { DIARIO_DATA_INI = ''; DIARIO_DATA_FIM = ''; }
+      if($('filtroDataIni')) $('filtroDataIni').value = DIARIO_DATA_INI;
+      if($('filtroDataFim')) $('filtroDataFim').value = DIARIO_DATA_FIM;
+      renderDiarioView(DATA);
+    });
+  }
+
+  var dPlatG = $('diarioPlatChips');
+  if(dPlatG){
+    dPlatG.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      [].slice.call(dPlatG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      DIARIO_PLAT = b.getAttribute('data-plat') || 'ALL';
+      renderDiarioView(DATA);
+    });
+  }
+
+  var dSetorG = $('diarioSetorChips');
+  if(dSetorG){
+    dSetorG.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      [].slice.call(dSetorG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      DIARIO_SETOR = b.getAttribute('data-setor') || 'ALL';
+      renderDiarioView(DATA);
+    });
+  }
+
+  if($('filtroDataIni')){
+    $('filtroDataIni').addEventListener('change', function(e){
+      DIARIO_DATA_INI = e.target.value || '';
+      DIARIO_PERIODO = 'custom';
+      if(dPeriodoG){ [].slice.call(dPeriodoG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); }); }
+      renderDiarioView(DATA);
+    });
+  }
+
+  if($('filtroDataFim')){
+    $('filtroDataFim').addEventListener('change', function(e){
+      DIARIO_DATA_FIM = e.target.value || '';
+      DIARIO_PERIODO = 'custom';
+      if(dPeriodoG){ [].slice.call(dPeriodoG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); }); }
+      renderDiarioView(DATA);
+    });
+  }
+
+  if($('btnResetDiarioFiltros')){
+    $('btnResetDiarioFiltros').addEventListener('click', function(){
+      DIARIO_PERIODO = 'tudo';
+      DIARIO_PLAT = 'ALL';
+      DIARIO_SETOR = 'ALL';
+      DIARIO_DATA_INI = '';
+      DIARIO_DATA_FIM = '';
+      if($('filtroDataIni')) $('filtroDataIni').value = '';
+      if($('filtroDataFim')) $('filtroDataFim').value = '';
+      if(dPeriodoG){
+        [].slice.call(dPeriodoG.children).forEach(function(c){
+          c.setAttribute('aria-pressed', c.getAttribute('data-periodo')==='tudo'?'true':'false');
+        });
+      }
+      if(dPlatG){
+        [].slice.call(dPlatG.children).forEach(function(c){
+          c.setAttribute('aria-pressed', c.getAttribute('data-plat')==='ALL'?'true':'false');
+        });
+      }
+      if(dSetorG){
+        [].slice.call(dSetorG.children).forEach(function(c){
+          c.setAttribute('aria-pressed', c.getAttribute('data-setor')==='ALL'?'true':'false');
+        });
+      }
+      renderDiarioView(DATA);
+    });
+  }
+
+  // Cores por classificação: [cor da barra, cor do texto no claro]. No escuro o texto usa a cor da barra.
+  var CORES = {
+    'Ruim':               ['#DC2626', '#B91C1C'],
+    'Ok':                 ['#F97316', '#C2410C'],
+    'Dá pra melhorar':    ['#EAB308', '#A16207'],
+    'Saímos da merda':    ['#60A5FA', '#2563EB'],
+    'Boa':                ['#2B6CF6', '#1E52C7'],
+    'Ótima':              ['#4ADE80', '#16A34A'],
+    'Excelente':          ['#22C55E', '#15803D'],
+    'Magnífico':          ['#16A34A', '#166534'],
+    'Estourar champanhe': ['#15803D', '#14532D']
+  };
+  var COR_PADRAO = ['#2B6CF6', '#1E52C7'];
+  function corDe(m){ return CORES[m.classificacao] || COR_PADRAO; }
+  function kFmt(v){ return (v/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+'k'; }
+  function renderMetas(cur, metas){
+    if(!metas.length){ $('thermo').innerHTML=''; $('ticks').innerHTML=''; return; }
+    metas = metas.slice().sort(function(a,b){ return a.valor-b.valor; });
+    var passo = metas.length>1 ? metas[1].valor-metas[0].valor : 1000;
+    var MIN = Math.max(0, metas[0].valor - passo), MAX = metas[metas.length-1].valor;
+    function pct(v){ return Math.max(0,Math.min(100,(v-MIN)/(MAX-MIN)*100)); }
+    // Faixas: de uma meta até a próxima, com a cor da meta onde a faixa termina
+    var prev = MIN, trilho = '';
+    metas.forEach(function(m){
+      var w = (m.valor-prev)/(MAX-MIN)*100;
+      var fill = cur<=prev ? 0 : (cur>=m.valor ? 100 : (cur-prev)/(m.valor-prev)*100);
+      trilho += '<div class="faixa" style="flex:0 0 '+w.toFixed(3)+'%;--fc:'+corDe(m)[0]+'"><i style="width:'+fill.toFixed(2)+'%"></i></div>';
+      prev = m.valor;
+    });
+    $('thermo').innerHTML='<div class="trilho">'+trilho+'</div><div class="pin" style="left:'+pct(cur)+'%"><span>Agora · '+num(cur)+'</span><i></i></div>';
+    $('ticks').innerHTML = metas.map(function(m,i){
+      var c = corDe(m), last = i===metas.length-1;
+      var pal = String(m.classificacao).split(' '), corte = Math.ceil(pal.length/2);
+      var q = pal.length > 1 ? esc(pal.slice(0,corte).join(' '))+'<br>'+esc(pal.slice(corte).join(' ')) : esc(m.classificacao);
+      if(last) q += ' 🍾';
+      return '<div class="t" title="'+num(m.valor)+' ingressos · '+esc(m.classificacao)+'" style="left:'+pct(m.valor)+'%;--tc:'+c[1]+';--tc2:'+c[0]+'"><b>'+kFmt(m.valor)+'</b><span class="q">'+q+'</span></div>';
+    }).join('');
+    var hit=null, nxt=null;
+    metas.forEach(function(m){ if(cur>=m.valor) hit=m; else if(!nxt) nxt=m; });
+    var b=$('metaBadge');
+    if(hit){ b.textContent='Nível atual · '+hit.classificacao; b.style.setProperty('--tc', corDe(hit)[1]); b.style.setProperty('--tc2', corDe(hit)[0]); }
+    else { b.textContent='Abaixo de '+kFmt(metas[0].valor); b.style.setProperty('--tc', corDe(metas[0])[1]); b.style.setProperty('--tc2', corDe(metas[0])[0]); }
+    $('metaNow').innerHTML=num(cur)+'<small>ingressos</small>';
+    $('metaNext').innerHTML = nxt ? ('Próxima: '+kFmt(nxt.valor)+' · '+esc(nxt.classificacao)+'<b>faltam '+num(nxt.valor-cur)+'</b>') : 'Todas as metas batidas<b>🍾</b>';
+    if(window.movingComemorar) window.movingComemorar(cur, metas, corDe, kFmt);
+  }
+
+  // ===== Status =====
+  function setStatus(modo, quando){
+    var p=$('pulse'), a=$('ago'), bn=$('banner');
+    p.className='pulse'+(modo==='live'?'':(modo==='snap'?' off':' bad'));
+    var txt='sem dados';
+    if(quando){
+      var min=Math.max(0,Math.round((Date.now()-new Date(quando).getTime())/60000));
+      txt = min<1 ? 'agora' : (min<60 ? 'há '+min+' min' : (min<1440 ? 'há '+Math.round(min/60)+' h' : new Date(quando).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})));
+    }
+    a.textContent = txt;
+    if(modo==='live'){ bn.hidden=true; }
+    else if(modo==='snap'){ bn.hidden=false; bn.className='banner'; bn.textContent='Sem conexão com o servidor do painel. Mostrando o último retrato salvo ('+new Date(quando).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+'). Para dados ao vivo, abra pelo http://localhost:7777 com o server.py rodando.'; }
+  }
+
+  // ===== Dados =====
+  function carregar(){
+    return fetch(API_RESUMO,{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(function(j){ if(!j || j.error || typeof j.total!=='number') throw new Error(j && j.error || 'resposta inválida'); DATA=j; render(); setStatus('live', j.atualizado_em); })
+      .catch(function(){ if(!DATA || DATA===SNAPSHOT){ DATA=SNAPSHOT; render(); setStatus('snap', SNAPSHOT.atualizado_em); } });
+  }
+
+  $('seg').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    [].slice.call($('seg').children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
+    b.setAttribute('aria-pressed','true');
+    FILTRO = b.getAttribute('data-setor')||'';
+    if(FILTRO==='CAMPING') show('overview');
+    render();
+    if(FILTRO==='CAMPING'){ try{ $('extrasHead').scrollIntoView({behavior:'smooth',block:'center'}); }catch(err){} }
+  });
+
+  $('sync').addEventListener('click', function(){
+    var btn=$('sync'), lbl=btn.querySelector('span'); btn.disabled=true; lbl.textContent='Sincronizando…';
+    fetch(API_SYNC,{method:'POST'}).then(function(r){ return r.json(); })
+      .then(function(j){ if(j && j.resumo && typeof j.resumo.total==='number'){ DATA=j.resumo; render(); setStatus('live', j.resumo.atualizado_em || new Date().toISOString()); } else { return carregar(); } })
+      .catch(function(){ var bn=$('banner'); bn.hidden=false; bn.className='banner err'; bn.textContent='Não consegui sincronizar agora. Confira se o server.py está rodando e tente de novo.'; })
+      .then(function(){ btn.disabled=false; lbl.textContent='Sincronizar'; });
+  });
+
+  DATA = SNAPSHOT; render(); setStatus('snap', SNAPSHOT.atualizado_em); $('banner').hidden=true;
+  carregar();
+  setInterval(carregar, REFRESH_MS);
+  setInterval(function(){ if(DATA) setStatus($('pulse').className.indexOf('off')>-1?'snap':'live', DATA.atualizado_em); }, 30000);
+})();
+</script>
+
+<script>
+// ===== TEMA (DARK / LIGHT MODE) =====
+(function(){
+  var raiz = document.documentElement, KEY = 'moving_tema';
+  function aplicar(t){
+    raiz.setAttribute('data-theme', t);
+    var b = document.getElementById('themeToggle');
+    if(b){
+      b.title = t === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro';
+      b.setAttribute('aria-label', b.title);
+      var txt = document.getElementById('themeToggleTxt');
+      if(txt) txt.textContent = t === 'dark' ? 'Escuro' : 'Claro';
+    }
+  }
+  var salvo = null;
+  try { salvo = localStorage.getItem(KEY); } catch(e){}
+  aplicar(salvo === 'light' || salvo === 'dark' ? salvo : (raiz.getAttribute('data-theme') || 'dark'));
+
+  var btn = document.getElementById('themeToggle');
+  if(btn){
+    btn.addEventListener('click', function(){
+      var novo = raiz.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      aplicar(novo);
+      try { localStorage.setItem(KEY, novo); } catch(e){}
+    });
+  }
+})();
+
+// ===== SIDEBAR RETRÁTIL (COLAPSAR PARA MOSTRAR SÓ ÍCONES) =====
+(function(){
+  var app = document.getElementById('appRoot');
+  var side = document.getElementById('sidebar');
+  var btn = document.getElementById('btnSideToggle');
+  var KEY = 'moving_sidebar_collapsed';
+
+  function aplicarSidebar(col){
+    if(app && side){
+      if(col){
+        app.classList.add('sidebar-collapsed');
+        side.classList.add('collapsed');
+      } else {
+        app.classList.remove('sidebar-collapsed');
+        side.classList.remove('collapsed');
+      }
+    }
+    if(btn){
+      btn.title = col ? 'Expandir menu lateral' : 'Recolher menu lateral';
+      btn.setAttribute('aria-label', btn.title);
+    }
+  }
+
+  var salvo = false;
+  try { salvo = localStorage.getItem(KEY) === 'true'; } catch(e){}
+  aplicarSidebar(salvo);
+
+  if(btn){
+    btn.addEventListener('click', function(){
+      var isCol = side && side.classList.contains('collapsed');
+      var novo = !isCol;
+      aplicarSidebar(novo);
+      try { localStorage.setItem(KEY, novo ? 'true' : 'false'); } catch(e){}
+    });
+  }
+})();
+</script>
+</html>
+<script>
+// Filtro de setor só aparece na Visão geral. Ao sair dela, volta para "Todos".
+(function(){
+  var seg = document.getElementById('seg'), nav = document.getElementById('nav');
+  if(!seg || !nav) return;
+  function ajustar(){
+    var ativo = nav.querySelector('a.active');
+    var naVisaoGeral = !ativo || ativo.getAttribute('data-view') === 'overview';
+    seg.hidden = !naVisaoGeral;
+    if(!naVisaoGeral){
+      var todos = seg.querySelector('button[data-setor=""]');
+      if(todos && todos.getAttribute('aria-pressed') !== 'true') todos.click();
+    }
+  }
+  nav.addEventListener('click', function(){ setTimeout(ajustar, 0); });
+  ajustar();
+})();
+</script>
+<style>
+  /* Sincronizar: topo no computador; no celular vira botão flutuante redondo, só ícone */
+  @keyframes girar { to { transform: rotate(360deg); } }
+  #sync:disabled svg{ animation: girar 1s linear infinite; }
+  #sync:disabled{ opacity:.85; cursor:progress; }
+  @media (max-width:860px){
+    #sync{
+      position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom, 0px)); z-index:60;
+      width:56px; height:56px; padding:0; border-radius:50%; justify-content:center; gap:0;
+      box-shadow:0 8px 24px -6px rgba(43,108,246,.55), 0 2px 6px rgba(16,24,40,.18);
+    }
+    #sync span{ display:none; }
+    #sync svg{ width:24px; height:24px; }
+    .content{ padding-bottom:96px; }
+    .topbar{ backdrop-filter:none; -webkit-backdrop-filter:none; background:var(--bg); }
+  }
+  @media (prefers-reduced-motion: reduce){ #sync:disabled svg{ animation:none; } }
+</style>
+
+<style>
+  /* Confete + aviso de meta batida */
+  #confeteCanvas{ position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:200; }
+  .meta-toast{ position:fixed; left:50%; top:24px; transform:translate(-50%,-20px); opacity:0; z-index:201;
+    background:var(--surface); color:var(--fg); border:1px solid var(--border); border-left:4px solid var(--mc,#2B6CF6);
+    border-radius:14px; padding:14px 18px; box-shadow:0 12px 32px -8px rgba(16,24,40,.35); display:flex; align-items:center; gap:12px;
+    font-family:var(--font-body); transition:opacity .35s ease, transform .35s ease; max-width:calc(100vw - 32px); }
+  .meta-toast.on{ opacity:1; transform:translate(-50%,0); }
+  .meta-toast .em{ font-size:26px; line-height:1; }
+  .meta-toast b{ display:block; font-family:var(--font-display); font-size:16px; }
+  .meta-toast small{ color:var(--fg-muted); font-size:12.5px; }
+</style>
+<script>
+// Confete ao bater cada meta. Cada pessoa vê uma vez por meta (guardado no navegador dela).
+(function(){
+  var KEY = 'moving_metas_comemoradas', fila = [], rodando = false;
+  function lerVistas(){ try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e){ return []; } }
+  function salvarVistas(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
+  var semMovimento = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function confete(cores){
+    if(semMovimento) return;
+    var cv = document.createElement('canvas'); cv.id = 'confeteCanvas'; document.body.appendChild(cv);
+    var ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1;
+    function tam(){ cv.width = innerWidth*dpr; cv.height = innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+    tam(); addEventListener('resize', tam);
+    var pal = cores.concat(['#2B6CF6','#F97316','#EAB308','#22C55E','#8B5CF6','#EC4899']);
+    var ps = [];
+    for(var i=0;i<180;i++){
+      var lado = i%2 ? 1 : -1;
+      ps.push({ x: innerWidth/2 + lado*innerWidth*0.25, y: innerHeight*0.35,
+        vx: (Math.random()*7+2)*-lado*(Math.random()<.5?1:-0.4), vy: -(Math.random()*11+6),
+        g: 0.28+Math.random()*0.12, w: 6+Math.random()*6, h: 8+Math.random()*8,
+        r: Math.random()*6.28, vr: (Math.random()-.5)*0.3, c: pal[i%pal.length], vida: 0 });
+    }
+    var t0 = performance.now();
+    (function quadro(t){
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      var vivos = 0;
+      ps.forEach(function(p){
+        p.vx *= 0.99; p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        if(p.y < innerHeight+40){ vivos++;
+          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h*Math.abs(Math.cos(p.r*2))); ctx.restore(); }
+      });
+      if(vivos && t - t0 < 6000) requestAnimationFrame(quadro);
+      else { removeEventListener('resize', tam); cv.remove(); }
+    })(t0);
+  }
+
+  function aviso(m, cor, kFmt){
+    var el = document.createElement('div'); el.className = 'meta-toast'; el.style.setProperty('--mc', cor);
+    el.setAttribute('role','status');
+    var ult = m.ultima ? ' 🍾' : '';
+    el.innerHTML = '<span class="em">🎉</span><div><b>Bateu '+kFmt(m.valor)+' · '+String(m.classificacao).replace(/[<>&]/g,'')+ult+'</b><small>Meta de '+m.valor.toLocaleString('pt-BR')+' ingressos</small></div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add('on'); });
+    setTimeout(function(){ el.classList.remove('on'); setTimeout(function(){ el.remove(); proximo(); }, 400); }, 4200);
+  }
+
+  function proximo(){
+    var item = fila.shift();
+    if(!item){ rodando = false; return; }
+    rodando = true;
+    confete([item.cor]); aviso(item.m, item.cor, item.kFmt);
+  }
+
+  // Chamado pela régua a cada atualização dos números
+  window.movingComemorar = function(cur, metas, corDe, kFmt){
+    var vistas = lerVistas(), novas = [];
+    metas.forEach(function(m, i){
+      if(cur >= m.valor && vistas.indexOf(m.valor) < 0){
+        novas.push({ m: { valor:m.valor, classificacao:m.classificacao, ultima: i===metas.length-1 }, cor: corDe(m)[0], kFmt: kFmt });
+        vistas.push(m.valor);
+      }
+    });
+    if(!novas.length) return;
+    salvarVistas(vistas);
+    // Primeira visita com várias metas já batidas: comemora só a mais alta.
+    fila.push(novas[novas.length-1]);
+    if(!rodando) proximo();
+  };
+})();
+</script>
+
+<style>
+  :root{ --onda-pico:#16A34A; --onda-vale:#EA580C; }
+  :root[data-theme="dark"]{ --onda-pico:#4ADE80; --onda-vale:#FB923C; }
+  .onda-card .ttl{ flex-wrap:wrap; }
+  .onda-nav{ display:inline-flex; gap:4px; margin-left:8px; }
+  .onda-nav button{ width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); color:var(--fg); cursor:pointer; font-size:16px; line-height:1; }
+  .onda-nav button:disabled{ opacity:.35; cursor:default; }
+  .onda-kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:8px; }
+  .onda-kpis small{ display:block; font-size:11px; color:var(--fg-muted); font-weight:600; }
+  .onda-kpis b{ font-family:var(--font-display); font-size:20px; font-variant-numeric:tabular-nums; }
+  .onda-dica{ font-size:11.5px; color:var(--fg-faint); margin:8px 0 0; }
+  #chartOnda svg{ width:100%; height:auto; display:block; overflow:visible; }
+  #chartOnda .gl{ stroke:var(--border); stroke-width:1; stroke-dasharray:3 4; }
+  #chartOnda .lb{ fill:var(--fg-muted); font-family:var(--font-body); font-size:10.5px; }
+  #chartOnda .vv{ font-family:var(--font-body); font-size:11px; font-weight:700; }
+  @media(max-width:560px){ .onda-kpis{ grid-template-columns:repeat(2,1fr); } }
+</style>
+<script>
+// Gráfico de ondas: vendas por hora do dia escolhido, com pico, vale e média do período.
+(function(){
+  var escolhido = null;
+  function $(id){ return document.getElementById(id); }
+  function n(v){ return (+v||0).toLocaleString('pt-BR'); }
+  var SEM = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  function rotulo(dia){ var p = dia.split('-'); var dt = new Date(+p[0], +p[1]-1, +p[2]); return SEM[dt.getDay()] + ', ' + p[2] + '/' + p[1]; }
+  function chip(gid, attr){ var b = document.querySelector('#'+gid+' button[aria-pressed="true"]'); return b ? (b.getAttribute(attr)||'ALL') : 'ALL'; }
+  function diasVisiveis(){ return [].slice.call(document.querySelectorAll('#chartDiarioEvolucao rect[data-dia]')).map(function(r){ return r.getAttribute('data-dia'); }); }
+  function filtrar(rows){
+    var pl = chip('diarioPlatChips','data-plat'), st = chip('diarioSetorChips','data-setor');
+    return rows.filter(function(r){ return (pl==='ALL' || r.plataforma===pl) && (st==='ALL' || String(r.setor||'').toUpperCase()===st); });
+  }
+  // Curva suave sem "passar" do valor real (interpolação monotônica)
+  function curva(pts){
+    var k = pts.length; if(k < 2) return '';
+    var dx=[], dy=[], m=[], t=[], i;
+    for(i=0;i<k-1;i++){ dx[i]=pts[i+1][0]-pts[i][0]; dy[i]=pts[i+1][1]-pts[i][1]; m[i]=dy[i]/dx[i]; }
+    t[0]=m[0]; t[k-1]=m[k-2];
+    for(i=1;i<k-1;i++){ t[i] = (m[i-1]*m[i] <= 0) ? 0 : (m[i-1]+m[i])/2; }
+    for(i=0;i<k-1;i++){ if(m[i]===0){ t[i]=0; t[i+1]=0; } else { var a=t[i]/m[i], b=t[i+1]/m[i], h=a*a+b*b; if(h>9){ var r=3/Math.sqrt(h); t[i]=r*a*m[i]; t[i+1]=r*b*m[i]; } } }
+    var d = 'M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1);
+    for(i=0;i<k-1;i++){
+      var c1x=pts[i][0]+dx[i]/3, c1y=pts[i][1]+t[i]*dx[i]/3, c2x=pts[i+1][0]-dx[i]/3, c2y=pts[i+1][1]-t[i+1]*dx[i]/3;
+      d += ' C'+c1x.toFixed(1)+','+c1y.toFixed(1)+' '+c2x.toFixed(1)+','+c2y.toFixed(1)+' '+pts[i+1][0].toFixed(1)+','+pts[i+1][1].toFixed(1);
+    }
+    return d;
+  }
+  function vazio(msg){ $('chartOnda').innerHTML = '<div class="empty" style="text-align:center;padding:36px">'+msg+'</div>'; ['ondaTotal','ondaPico','ondaVale','ondaMedia'].forEach(function(id){ $(id).textContent='—'; }); }
+
+  window.movingOnda = function(){
+    if(!$('ondaCard')) return;
+    var d = window.__movingDados || {}, rows = d.vendas_hora_dia;
+    var dias = diasVisiveis();
+    if(escolhido && dias.indexOf(escolhido) < 0) escolhido = null;
+    var ini = $('filtroDataIni') && $('filtroDataIni').value, fim = $('filtroDataFim') && $('filtroDataFim').value;
+    var dia = escolhido || ((ini && fim && ini===fim) ? ini : (dias.length ? dias[dias.length-1] : null));
+    var idx = dia ? dias.indexOf(dia) : -1;
+    $('ondaPrev').disabled = idx <= 0; $('ondaNext').disabled = idx < 0 || idx >= dias.length-1;
+    $('ondaTag').textContent = dia ? rotulo(dia) : '—';
+    [].slice.call(document.querySelectorAll('#chartDiarioEvolucao rect[data-dia]')).forEach(function(r){
+      if(r.getAttribute('data-dia')===dia){ r.setAttribute('stroke','var(--fg)'); r.setAttribute('stroke-width','2'); } else { r.removeAttribute('stroke'); r.removeAttribute('stroke-width'); }
+    });
+    if(!rows){ vazio('O detalhe por hora chega com os dados ao vivo. Abra pelo http://localhost:7777 com o server.py rodando.'); return; }
+    if(!dia){ vazio('Nenhum dia com vendas no filtro.'); return; }
+
+    var f = filtrar(rows), H = [], M = [], i, dset = {};
+    for(i=0;i<24;i++){ H[i]=0; M[i]=0; }
+    dias.forEach(function(x){ dset[x]=1; });
+    var temHora = false;
+    f.forEach(function(r){ var k = String(r.dia).slice(0,10); if(k===dia){ H[r.hora]+=r.total; temHora = true; } if(dset[k]) M[r.hora]+=r.total; });
+    var nd = Object.keys(dset).length || 1;
+    for(i=0;i<24;i++) M[i] = M[i]/nd;
+    var tot = H.reduce(function(a,b){ return a+b; },0);
+    if(!temHora || !tot){ vazio('Sem vendas por hora para '+rotulo(dia)+' neste filtro (o detalhe por hora cobre os últimos 60 dias).'); return; }
+
+    // pico, vale (entre a primeira e a última hora com venda) e média
+    var pk = 0; for(i=1;i<24;i++) if(H[i] > H[pk]) pk = i;
+    var a = 0; while(a<23 && !H[a]) a++; var z = 23; while(z>0 && !H[z]) z--;
+    var vl = null; if(z - a >= 2){ vl = a+1; for(i=a+1;i<z;i++) if(H[i] < H[vl]) vl = i; }
+    var ativas = 0; for(i=a;i<=z;i++) ativas++;
+    $('ondaTotal').textContent = n(tot);
+    $('ondaPico').textContent = pk+'h · '+n(H[pk]);
+    $('ondaVale').textContent = vl===null ? '—' : vl+'h · '+n(H[vl]);
+    $('ondaMedia').textContent = (tot/ativas).toLocaleString('pt-BR',{maximumFractionDigits:1});
+
+    // desenho
+    var W=900, Ht=250, L=40, R=14, T=28, B=206;
+    var mx = Math.max.apply(null, H.concat(M)) || 1;
+    var esc = Math.pow(10, Math.floor(Math.log10(mx))), topo = Math.ceil(mx/esc)*esc; if(topo/esc > 5 && esc>=1) topo = Math.ceil(mx/(esc/2))*(esc/2);
+    function X(h){ return L + h*(W-L-R)/23; }
+    function Y(v){ return B - v/topo*(B-T); }
+    var s = '<svg viewBox="0 0 '+W+' '+Ht+'" role="img" aria-label="Vendas por hora em '+rotulo(dia)+'">';
+    s += '<defs><linearGradient id="ondaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".38"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>';
+    [0, .5, 1].forEach(function(f2){ var v = topo*f2, y = Y(v); s += '<line class="gl" x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'"/><text class="lb" x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end">'+n(Math.round(v))+'</text>'; });
+    for(i=0;i<24;i+=2) s += '<text class="lb" x="'+X(i)+'" y="'+(B+18)+'" text-anchor="middle">'+i+'h</text>';
+    var pD = [], pM = [];
+    for(i=0;i<24;i++){ pD.push([X(i), Y(H[i])]); pM.push([X(i), Y(M[i])]); }
+    var cD = curva(pD);
+    s += '<path d="'+cD+' L'+X(23)+','+B+' L'+X(0)+','+B+' Z" fill="url(#ondaGrad)"/>';
+    s += '<path d="'+curva(pM)+'" fill="none" stroke="var(--fg-faint)" stroke-width="1.6" stroke-dasharray="5 5"/>';
+    s += '<path d="'+cD+'" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linejoin="round"/>';
+    function marca(h, cor, txt, cima){
+      var x = X(h), y = Y(H[h]), ty = cima ? y-12 : y+20, anc = x < L+60 ? 'start' : (x > W-R-60 ? 'end' : 'middle');
+      return '<circle cx="'+x+'" cy="'+y+'" r="5.5" fill="'+cor+'" stroke="var(--surface)" stroke-width="2"/><text class="vv" x="'+x+'" y="'+ty+'" text-anchor="'+anc+'" fill="'+cor+'">'+txt+'</text>';
+    }
+    s += marca(pk, 'var(--onda-pico)', 'Pico '+pk+'h · '+n(H[pk]), true);
+    if(vl !== null) s += marca(vl, 'var(--onda-vale)', 'Vale '+vl+'h · '+n(H[vl]), Y(H[vl]) > B-26);
+    for(i=0;i<24;i++){
+      var x0 = X(i) - (W-L-R)/46;
+      s += '<rect x="'+x0+'" y="'+T+'" width="'+((W-L-R)/23)+'" height="'+(B-T)+'" fill="transparent"><title>'+i+'h: '+n(H[i])+' vendas · média do período '+M[i].toLocaleString('pt-BR',{maximumFractionDigits:1})+'</title></rect>';
+    }
+    s += '</svg>';
+    $('chartOnda').innerHTML = s;
+  };
+
+  document.addEventListener('click', function(e){
+    var r = e.target.closest && e.target.closest('#chartDiarioEvolucao rect[data-dia]');
+    if(r){ escolhido = r.getAttribute('data-dia'); window.movingOnda(); if($('ondaCard').scrollIntoView) $('ondaCard').scrollIntoView({behavior:'smooth', block:'nearest'}); return; }
+    var nav = e.target.closest && e.target.closest('#ondaPrev, #ondaNext');
+    if(nav && !nav.disabled){
+      var dias = diasVisiveis(), atual = $('ondaTag').getAttribute('data-dia');
+      var cur = escolhido || null, i = cur ? dias.indexOf(cur) : -1;
+      if(i < 0){ var t = $('ondaTag').textContent; i = dias.length-1; dias.forEach(function(x,j){ if(rotulo(x)===t) i=j; }); }
+      i += (nav.id==='ondaPrev' ? -1 : 1);
+      if(i >= 0 && i < dias.length){ escolhido = dias[i]; window.movingOnda(); }
+    }
+  });
+})();
+</script>
+
+<style>
+  [hidden]{ display:none !important; }
+  .tbl-diario tr.dia-row td{ border-top:1px solid var(--border); font-weight:600; }
+  .tbl-diario tbody tr.dia-row:first-child td{ border-top:0; }
+  .tbl-diario tr.plat-row td{ font-size:12.5px; color:var(--fg-muted); padding-top:5px; padding-bottom:5px; border-top:0; font-weight:500; }
+  .tbl-diario tr.plat-row td:nth-child(3){ padding-left:22px; }
+  .tbl-diario tfoot tr.plat-row td{ font-weight:600; }
+  .tag-todas{ display:inline-block; font-size:11px; font-weight:700; color:var(--fg-muted); background:var(--surface-2); border:1px solid var(--border); padding:2px 8px; border-radius:999px; }
+  .badge-plat.plat-wix{ background:color-mix(in srgb, #10B981 14%, transparent); color:#10B981; }
+</style>
+
+<style>
+  .mk.mk-foto{ background:none; padding:0; overflow:hidden; box-shadow:0 0 0 1px var(--border); }
+  .mk.mk-foto img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:inherit; }
+</style>

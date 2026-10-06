@@ -3,6 +3,11 @@
 .env.*
 !.env.example
 
+# Node / Bun
+node_modules/
+bun.lock
+bun.lockb
+
 # Python
 __pycache__/
 *.py[cod]
