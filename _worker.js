@@ -261,6 +261,66 @@ async function consolidateLiveSources(env) {
   };
 }
 
+function normalizarLotes(listaLotes) {
+  if (!Array.isArray(listaLotes)) return [];
+  const SET = {
+    FULLPASS: { nome: 'Full Pass' },
+    ZONE: { nome: 'Zone' },
+    GOLD: { nome: 'Gold' },
+    BLACK: { nome: 'Black' }
+  };
+  const mapa = {};
+  for (const item of listaLotes) {
+    const raw = String(item.lote || '').trim().toUpperCase();
+    let setor = String(item.setor || '').trim().toUpperCase();
+    const total = Number(item.total) || 0;
+
+    if (!setor) {
+      if (raw.includes('FULLPASS') || raw.includes('FULL PASS')) setor = 'FULLPASS';
+      else if (raw.includes('ZONE')) setor = 'ZONE';
+      else if (raw.includes('GOLD')) setor = 'GOLD';
+      else if (raw.includes('BLACK')) setor = 'BLACK';
+      else setor = 'FULLPASS';
+    }
+
+    const setorNome = (SET[setor] || { nome: setor }).nome || setor;
+    let nomeLote = '';
+
+    // 1. Convocação (L1, L2, Extra, etc.)
+    if (raw.includes('CONVOCA') || raw.includes('CONVOCACAO')) {
+      nomeLote = `${setorNome.toUpperCase()} — CONVOCAÇÃO`;
+    }
+    // 2. Lote 2 / Segundo Lote
+    else if (raw.includes('2º') || raw.includes('2ª') || raw.includes('2 LOTE') || raw.includes('LOTE 2') || raw.includes('SEGUNDO LOTE')) {
+      nomeLote = `${setorNome.toUpperCase()} — 2º LOTE`;
+    }
+    // 3. Lote 3 / Terceiro Lote
+    else if (raw.includes('3º') || raw.includes('3ª') || raw.includes('3 LOTE') || raw.includes('LOTE 3') || raw.includes('TERCEIRO LOTE')) {
+      nomeLote = `${setorNome.toUpperCase()} — 3º LOTE`;
+    }
+    // 4. Lote 1 / Primeiro Lote
+    else if (raw.includes('1º') || raw.includes('1ª') || raw.includes('1 LOTE') || raw.includes('LOTE 1') || raw.includes('PRIMEIRO LOTE')) {
+      nomeLote = `${setorNome.toUpperCase()} — 1º LOTE`;
+    }
+    // 5. Lote Wix
+    else if (raw.includes('WIX')) {
+      nomeLote = `${setorNome.toUpperCase()} — LOTE WIX`;
+    }
+    // 6. Outros
+    else {
+      nomeLote = raw;
+    }
+
+    const chave = `${setor}|${nomeLote}`;
+    if (!mapa[chave]) {
+      mapa[chave] = { lote: nomeLote, setor, total: 0 };
+    }
+    mapa[chave].total += total;
+  }
+
+  return Object.values(mapa).sort((a, b) => b.total - a.total);
+}
+
 async function getFullResumo(env, supabaseUrl, supabaseAnon) {
   const rpcRes = await fetch(`${supabaseUrl}/rest/v1/rpc/moving_excluir_resumo`, {
     method: 'POST',
@@ -273,6 +333,11 @@ async function getFullResumo(env, supabaseUrl, supabaseAnon) {
   });
 
   let data = rpcRes.ok ? await rpcRes.json() : {};
+
+  // Lotes consolidados e normalizados (Convocação unificada, Lote 2/2º Lote unificado)
+  if (data.lotes) {
+    data.lotes = normalizarLotes(data.lotes);
+  }
 
   // Buscar dados de vendas diárias
   const diarioRes = await fetch(`${supabaseUrl}/rest/v1/moving_excluir_vendas?select=data_compra,plataforma,setor,tipo,valor&status=eq.CONFIRMADO&limit=10000`, {

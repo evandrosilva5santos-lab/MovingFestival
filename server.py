@@ -415,6 +415,58 @@ def get_vendas_diarias():
         print(f"[!] Erro ao agregar vendas diárias: {e}")
         return DIARIO_CACHE.get('data', [])
 
+def normalizar_lotes(lista_lotes):
+    if not isinstance(lista_lotes, list):
+        return []
+    setores_map = {
+        'FULLPASS': 'Full Pass',
+        'ZONE': 'Zone',
+        'GOLD': 'Gold',
+        'BLACK': 'Black'
+    }
+    mapa = {}
+    for item in lista_lotes:
+        raw = str(item.get('lote') or '').strip().upper()
+        setor = str(item.get('setor') or '').strip().upper()
+        total = int(item.get('total') or 0)
+
+        if not setor:
+            if 'FULLPASS' in raw or 'FULL PASS' in raw:
+                setor = 'FULLPASS'
+            elif 'ZONE' in raw:
+                setor = 'ZONE'
+            elif 'GOLD' in raw:
+                setor = 'GOLD'
+            elif 'BLACK' in raw:
+                setor = 'BLACK'
+            else:
+                setor = 'FULLPASS'
+
+        setor_nome = setores_map.get(setor, setor)
+        nome_lote = ''
+
+        if 'CONVOCA' in raw or 'CONVOCACAO' in raw:
+            nome_lote = f"{setor_nome.upper()} — CONVOCAÇÃO"
+        elif any(k in raw for k in ['2º', '2ª', '2 LOTE', 'LOTE 2', 'SEGUNDO LOTE']):
+            nome_lote = f"{setor_nome.upper()} — 2º LOTE"
+        elif any(k in raw for k in ['3º', '3ª', '3 LOTE', 'LOTE 3', 'TERCEIRO LOTE']):
+            nome_lote = f"{setor_nome.upper()} — 3º LOTE"
+        elif any(k in raw for k in ['1º', '1ª', '1 LOTE', 'LOTE 1', 'PRIMEIRO LOTE']):
+            nome_lote = f"{setor_nome.upper()} — 1º LOTE"
+        elif 'WIX' in raw:
+            nome_lote = f"{setor_nome.upper()} — LOTE WIX"
+        else:
+            nome_lote = raw
+
+        chave = f"{setor}|{nome_lote}"
+        if chave not in mapa:
+            mapa[chave] = {'lote': nome_lote, 'setor': setor, 'total': 0}
+        mapa[chave]['total'] += total
+
+    res = list(mapa.values())
+    res.sort(key=lambda x: x['total'], reverse=True)
+    return res
+
 class PlatformHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIR, **kwargs)
@@ -462,6 +514,7 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 # Injetar cupons agregados e inteligência de Ações Start Inc vs Outras
                 cupons_list = get_aggregated_coupons()
                 resumo_obj['cupons'] = cupons_list
+                resumo_obj['lotes'] = normalizar_lotes(resumo_obj.get('lotes', []))
                 resumo_obj['totals_uticket'] = CUPONS_CACHE.get('totals_uticket', {})
                 resumo_obj['start_inc'] = CUPONS_CACHE.get('start_inc_summary', {})
                 resumo_obj['outras_acoes'] = CUPONS_CACHE.get('outras_acoes_summary', {})

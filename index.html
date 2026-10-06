@@ -765,7 +765,7 @@
   var SNAPSHOT = {"atualizado_em":"2026-10-06T20:14:37.759854+00:00","total":5168,"pagos":5095,"cortesias":73,"receita":652231,
     "setores":[{"setor":"BLACK","total":145,"pagos":145,"cortesias":0,"uticket":52,"sympla":44,"wix":49},{"setor":"FULLPASS","total":4017,"pagos":3980,"cortesias":37,"uticket":3320,"sympla":500,"wix":197},{"setor":"ZONE","total":546,"pagos":546,"cortesias":0,"uticket":262,"sympla":220,"wix":64},{"setor":"GOLD","total":460,"pagos":424,"cortesias":36,"uticket":270,"sympla":134,"wix":56}],
     "extras":[{"tipo":"CAMPING","total":1030,"uticket":1030,"sympla":0,"wix":0},{"tipo":"COPO","total":75,"uticket":75,"sympla":0,"wix":0}],
-    "lotes":[{"lote":"FULLPASS CONVOCAÇAO L2 - PROMOCIONAL","setor":"FULLPASS","total":1440},{"lote":"FULLPASS CONVOCAÇAO L1 - PROMOCIONAL","setor":"FULLPASS","total":1011},{"lote":"FULLPASS CONVOCAÇAO EXTRA - PROMOCIONAL","setor":"FULLPASS","total":433},{"lote":"FULLPASS - 2º LOTE","setor":"FULLPASS","total":258},{"lote":"FULLPASS LOTE 2","setor":"FULLPASS","total":257},{"lote":"FULLPASS - LOTE WIX","setor":"FULLPASS","total":197},{"lote":"ZONE - 2º LOTE","setor":"ZONE","total":139},{"lote":"FULLPASS 3 LOTE","setor":"FULLPASS","total":118},{"lote":"GOLD LOTE 2","setor":"GOLD","total":105},{"lote":"GOLD (VIP) CONVOCAÇAO - PROMOCIONAL","setor":"GOLD","total":103}],
+    "lotes":[{"lote":"FULL PASS — CONVOCAÇÃO","setor":"FULLPASS","total":2918},{"lote":"FULL PASS — 2º LOTE","setor":"FULLPASS","total":515},{"lote":"FULL PASS — LOTE WIX","setor":"FULLPASS","total":197},{"lote":"ZONE — 2º LOTE","setor":"ZONE","total":139},{"lote":"FULL PASS — 3º LOTE","setor":"FULLPASS","total":119},{"lote":"GOLD — 2º LOTE","setor":"GOLD","total":105},{"lote":"GOLD — CONVOCAÇÃO","setor":"GOLD","total":103}],
     "canais":[{"canal":"GRUPO_VIP","total":2126},{"canal":"DIRETO","total":980},{"canal":"AFILIADO_PROMOTER","total":592},{"canal":"ORGANICO","total":556},{"canal":"DESCONHECIDO","total":454},{"canal":"ANTIGO_MKT","total":186},{"canal":"ANIVERSARIANTE","total":153},{"canal":"META_ADS","total":57},{"canal":"PARCERIA","total":35},{"canal":"CUPOM_CAMPANHA","total":14},{"canal":"EMAIL","total":9},{"canal":"MEIA_ENTRADA","total":6}],
     "promoters":[{"promoter":"JONATAN","total":121},{"promoter":"DANIELASILVA","total":64},{"promoter":"FRANCIELES","total":58},{"promoter":"CAROLINANEVES","total":53},{"promoter":"LEOMARTINS","total":46},{"promoter":"CLAITIANE","total":31},{"promoter":"EGLAI","total":30},{"promoter":"ANDRESSALEMOS","total":27},{"promoter":"JEFERSONB","total":24},{"promoter":"SABRINASOUZA","total":21},{"promoter":"FULLDIVULGAÇAO","total":21},{"promoter":"STARTELEICAO","total":20},{"promoter":"Festasrs","total":18},{"promoter":"GOLDDIVULGAÇAO","total":15},{"promoter":"NATANIELE","total":12},{"promoter":"KARENV","total":11},{"promoter":"Kioma","total":5},{"promoter":"Triptrance","total":5},{"promoter":"GUTO","total":5},{"promoter":"KIOMA","total":5}],
     "por_dia":[{"dia":"2026-09-07","total":13},{"dia":"2026-09-08","total":29},{"dia":"2026-09-09","total":37},{"dia":"2026-09-10","total":41},{"dia":"2026-09-11","total":18},{"dia":"2026-09-12","total":25},{"dia":"2026-09-13","total":7},{"dia":"2026-09-14","total":25},{"dia":"2026-09-15","total":56},{"dia":"2026-09-16","total":28},{"dia":"2026-09-17","total":41},{"dia":"2026-09-18","total":40},{"dia":"2026-09-19","total":31},{"dia":"2026-09-20","total":25},{"dia":"2026-09-21","total":20},{"dia":"2026-09-22","total":22},{"dia":"2026-09-23","total":23},{"dia":"2026-09-24","total":31},{"dia":"2026-09-25","total":20},{"dia":"2026-09-26","total":19},{"dia":"2026-09-27","total":2},{"dia":"2026-09-28","total":11},{"dia":"2026-09-29","total":1284},{"dia":"2026-09-30","total":490},{"dia":"2026-10-01","total":758},{"dia":"2026-10-02","total":176},{"dia":"2026-10-03","total":85},{"dia":"2026-10-04","total":123},{"dia":"2026-10-05","total":122},{"dia":"2026-10-06","total":92}],
@@ -824,6 +824,62 @@
   function hojeSP(offsetDias){
     var d = new Date(Date.now() - (offsetDias||0)*864e5);
     return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+  }
+
+  function normalizarLotes(listaLotes){
+    if(!Array.isArray(listaLotes)) return [];
+    var mapa = {};
+    listaLotes.forEach(function(item){
+      var raw = String(item.lote || '').trim().toUpperCase();
+      var setor = String(item.setor || '').trim().toUpperCase();
+      var total = Number(item.total) || 0;
+
+      if(!setor){
+        if(raw.indexOf('FULLPASS') > -1 || raw.indexOf('FULL PASS') > -1) setor = 'FULLPASS';
+        else if(raw.indexOf('ZONE') > -1) setor = 'ZONE';
+        else if(raw.indexOf('GOLD') > -1) setor = 'GOLD';
+        else if(raw.indexOf('BLACK') > -1) setor = 'BLACK';
+        else setor = 'FULLPASS';
+      }
+
+      var setorNome = (SET[setor] || { nome: setor }).nome || setor;
+      var nomeLote = '';
+
+      // 1. Convocação (L1, L2, Extra, etc.)
+      if(raw.indexOf('CONVOCA') > -1 || raw.indexOf('CONVOCACAO') > -1){
+        nomeLote = setorNome.toUpperCase() + ' — CONVOCAÇÃO';
+      }
+      // 2. Lote 2 / Segundo Lote
+      else if(raw.indexOf('2º') > -1 || raw.indexOf('2ª') > -1 || raw.indexOf('2 LOTE') > -1 || raw.indexOf('LOTE 2') > -1 || raw.indexOf('SEGUNDO LOTE') > -1){
+        nomeLote = setorNome.toUpperCase() + ' — 2º LOTE';
+      }
+      // 3. Lote 3 / Terceiro Lote
+      else if(raw.indexOf('3º') > -1 || raw.indexOf('3ª') > -1 || raw.indexOf('3 LOTE') > -1 || raw.indexOf('LOTE 3') > -1 || raw.indexOf('TERCEIRO LOTE') > -1){
+        nomeLote = setorNome.toUpperCase() + ' — 3º LOTE';
+      }
+      // 4. Lote 1 / Primeiro Lote
+      else if(raw.indexOf('1º') > -1 || raw.indexOf('1ª') > -1 || raw.indexOf('1 LOTE') > -1 || raw.indexOf('LOTE 1') > -1 || raw.indexOf('PRIMEIRO LOTE') > -1){
+        nomeLote = setorNome.toUpperCase() + ' — 1º LOTE';
+      }
+      // 5. Lote Wix
+      else if(raw.indexOf('WIX') > -1){
+        nomeLote = setorNome.toUpperCase() + ' — LOTE WIX';
+      }
+      // 6. Outros Lotes
+      else {
+        nomeLote = raw;
+      }
+
+      var chave = setor + '|' + nomeLote;
+      if(!mapa[chave]){
+        mapa[chave] = { lote: nomeLote, setor: setor, total: 0 };
+      }
+      mapa[chave].total += total;
+    });
+
+    return Object.values(mapa).sort(function(a, b){
+      return b.total - a.total;
+    });
   }
 
   // ===== Navegação =====
@@ -978,8 +1034,8 @@
       }).join('') : '<li class="empty">Nenhum promoter identificado ainda.</li>';
     }
 
-    // Lotes
-    var lt = (d.lotes||[]).filter(function(l){ return !f || l.setor===f; });
+    // Lotes normalizados e consolidados (sem duplicação de Convocação e 2º Lote)
+    var lt = normalizarLotes(d.lotes || []).filter(function(l){ return !f || l.setor === f; });
     var lmax = lt.length ? lt[0].total : 1;
     $('lotes').innerHTML = lt.length ? lt.map(function(l,i){
       var c = (SET[l.setor]||{cor:'var(--accent)'}).cor, sn=(SET[l.setor]||{nome:l.setor}).nome;
