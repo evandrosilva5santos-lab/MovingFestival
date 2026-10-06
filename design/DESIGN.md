@@ -192,3 +192,30 @@ Card com borda esquerda azul de 3px, texto 12px. Usado para "dados de exemplo".
 - Camping e Copo nunca somam nos totais, metas ou gráficos de ingressos.
 - Números sempre no formato brasileiro (4.963 · R$ 1.250,00).
 - Textos curtos e diretos, em português.
+
+---
+
+## LAYOUT POR DISPOSITIVO (obrigatório)
+
+| Aparelho | Largura | Menu | Cabeçalho | Sincronizar |
+|---|---|---|---|---|
+| Mac / computador | ≥ 1200px | Barra lateral aberta (logo, nomes, tema no rodapé) | Título + filtro de setor (só na Visão geral) | Botão no topo |
+| iPad / tablet | 768–1199px | Coluna de ícones de 76px à esquerda, tema embaixo | Título em cima, controles na linha de baixo | Botão no topo |
+| iPhone 17 (402px) / XR (414px) | ≤ 767px | Abas fixas embaixo: Geral · Por dia · Plataformas · Cupons · Ingressos · Tendências | Logo Moving + tema | Botão redondo flutuante, só o ícone, acima das abas |
+
+**Regras**
+- Nunca rolagem lateral da página em nenhum aparelho.
+- Tablet **nunca** usa barra horizontal rolável no menu.
+- iPhone: cartões em 1 coluna; régua de metas mostra só 5k, 6k, 7k, 8k, 9k, 10k, sem nomes (o nível aparece no selo "Nível atual").
+- iPad: régua sem os nomes das metas "meio" (7,5k, 8,5k, 9,5k).
+- Respeitar a área segura do iPhone (`env(safe-area-inset-*)`).
+- Mesmo visual claro do Mac em todos os aparelhos; mesmas cores e tokens.
+- Testar sempre em 402px, 414px, 820px e 1440px.
+- Imagem de referência: `design/dispositivos/formatos.png` (telas separadas na mesma pasta: mac, ipad, iphone17, iphonexr, iphone17_por_dia).
+- Código de referência: bloco `/* RESPONSIVO POR DISPOSITIVO */` no `index.html`. Detalhes de correção em `../CORRECOES.md`.
+
+## GRÁFICO "VENDAS POR DIA" — passagem de mês
+- Embaixo de cada barra só o número do dia (28, 29, 30, 01…), sem "/mês".
+- Cada mês alterna um tom suave (mês ímpar: barras cinza; mês seguinte: cinza levemente azulado e fundo azul bem leve).
+- Linha pontilhada vertical marca a virada do mês; embaixo, um traço fino por mês com o nome (SET, OUT).
+- O pico continua azul cheio.

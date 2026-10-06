@@ -1414,7 +1414,7 @@
       if(!listaDias.length || totFiltro === 0){
         chartEl.innerHTML = '<div class="empty" style="text-align:center;padding:36px">Nenhuma venda encontrada para os filtros selecionados.</div>';
       } else {
-        var W = 900, H = 210, base = 175, topPad = 25;
+        var W = 900, H = 236, base = 175, topPad = 25; // MES_PASSAGEM
         var maxVal = Math.max.apply(null, listaDias.map(function(x){ return x.total; })) || 1;
         var barCount = listaDias.length;
         var barWidth = Math.max(3, Math.min(26, (W - 40) / barCount - 2));
@@ -1425,15 +1425,36 @@
         svgHtml += '<line class="ax" x1="10" y1="' + base + '" x2="' + (W - 10) + '" y2="' + base + '"/>';
         svgHtml += '<line x1="10" y1="' + (base - (base-topPad)*0.5) + '" x2="' + (W - 10) + '" y2="' + (base - (base-topPad)*0.5) + '" stroke="var(--border)" stroke-dasharray="3,3" opacity="0.4"/>';
 
+        // Meses: cor suave alternada + passagem de um mês para o outro
+        var MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+        var grupos = [];
+        listaDias.forEach(function(item, idx){
+          var m = item.dia.slice(0, 7), g = grupos[grupos.length - 1];
+          if(!g || g.m !== m) grupos.push(g = { m:m, ini:idx, fim:idx }); else g.fim = idx;
+        });
+        var parMes = {};
+        grupos.forEach(function(g, gi){
+          parMes[g.m] = gi % 2;
+          var x0 = startX + g.ini * (barWidth + 2) - 1, x1 = startX + g.fim * (barWidth + 2) + barWidth + 1;
+          if(gi % 2) svgHtml += '<rect x="' + x0 + '" y="' + topPad + '" width="' + (x1 - x0) + '" height="' + (base - topPad) + '" rx="6" fill="var(--accent)" opacity="0.035"/>';
+          if(gi > 0) svgHtml += '<line x1="' + x0 + '" y1="' + (topPad - 6) + '" x2="' + x0 + '" y2="' + (base + 40) + '" stroke="var(--border)" stroke-width="1" stroke-dasharray="2,4"/>';
+          var cor = gi % 2 ? 'color-mix(in srgb, var(--accent) 45%, var(--border))' : 'var(--border)';
+          svgHtml += '<rect x="' + (x0 + 3) + '" y="' + (base + 23) + '" width="' + Math.max(4, x1 - x0 - 6) + '" height="3" rx="1.5" fill="' + cor + '"/>';
+          var pm = g.m.split('-');
+          svgHtml += '<text x="' + ((x0 + x1) / 2) + '" y="' + (base + 39) + '" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="0.06em" fill="var(--fg-faint)">' + (MESES[+pm[1] - 1] || pm[1]).toUpperCase() + '</text>';
+        });
+
         listaDias.forEach(function(item, idx){
           var x = startX + idx * (barWidth + 2);
+          var mesAlt = parMes[item.dia.slice(0, 7)] === 1;
           var h = Math.max(2, (item.total / maxVal) * (base - topPad));
           var y = base - h;
           var isPeak = item.total === maxVal && maxVal > 0;
           var partes = item.dia.split('-');
           var dLabel = partes.length === 3 ? (partes[2] + '/' + partes[1]) : item.dia;
+          var dCurto = partes.length === 3 ? partes[2] : item.dia;
 
-          var corBarra = isPeak ? 'var(--accent)' : 'var(--bar-muted)';
+          var corBarra = isPeak ? 'var(--accent)' : (mesAlt ? 'color-mix(in srgb, var(--accent) 20%, var(--bar-muted))' : 'var(--bar-muted)');
 
           svgHtml += '<rect data-dia="' + item.dia + '" style="cursor:pointer" x="' + x + '" y="' + y + '" width="' + barWidth + '" height="' + h + '" rx="3" fill="' + corBarra + '">' +
             '<title>' + dLabel + ': ' + num(item.total) + ' vendas (' + brl(item.receita) + ')</title>' +
@@ -1445,7 +1466,7 @@
 
           var step = barCount > 35 ? 5 : (barCount > 20 ? 3 : 1);
           if(idx % step === 0 || idx === barCount - 1){
-            svgHtml += '<text class="lbl" x="' + (x + barWidth/2) + '" y="' + (base + 14) + '" text-anchor="middle" font-size="9">' + dLabel + '</text>';
+            svgHtml += '<text class="lbl" x="' + (x + barWidth/2) + '" y="' + (base + 14) + '" text-anchor="middle" font-size="9"' + (mesAlt ? ' style="fill:color-mix(in srgb, var(--accent) 55%, var(--fg-muted))"' : '') + '>' + dCurto + '</text>';
           }
         });
 
