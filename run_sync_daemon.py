@@ -10,7 +10,7 @@ import subprocess
 import sys
 import os
 
-INTERVALO_SEGUNDOS = 300  # 5 minutos
+INTERVALO_SEGUNDOS = 900  # 15 minutos
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 worker_path = os.path.join(script_dir, "sync_worker.py")

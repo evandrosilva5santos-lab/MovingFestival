@@ -1,6 +1,10 @@
-name = "moving-festival-painel"
+name = "movingfestival"
+main = "_worker.js"
 compatibility_date = "2024-10-01"
-pages_build_output_dir = "."
+
+[assets]
+directory = "."
+binding = "ASSETS"
 
 [vars]
 SUPABASE_URL = "https://etjqbqorawnnvdlmztka.supabase.co"

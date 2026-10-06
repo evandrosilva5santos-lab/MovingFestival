@@ -1,0 +1,9 @@
+_worker.js
+*.py
+*.xlsx
+*.log
+.env*
+*.md
+wrangler.toml
+_to_delete/
+__pycache__/

@@ -51,6 +51,11 @@
 **[Moving_Excluir]** Resumo agregado para o painel: totais, setores, extras, lotes, canais, promoters, vendas por dia/hora/dia da semana e metas. **Não retorna dados pessoais.**
 Chamada pelo painel: `POST /rest/v1/rpc/moving_excluir_resumo`
 
+**Campos extras no resumo (06/10):**
+- `vendas_diarias`: `[{dia, plataforma, setor, total, receita}]` — todas as vendas confirmadas por dia, plataforma e setor (camping/copo vêm com `setor` = CAMPING/COPO). Alimenta a tela **Vendas por Dia**.
+- `vendas_hora_dia`: `[{dia, hora, plataforma, setor, total}]` — últimos 60 dias, por hora. Alimenta o gráfico **Ondas de venda do dia** (pico, vale e média do período).
+
+
 ---
 
 ## Segurança

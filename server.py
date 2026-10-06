@@ -12,6 +12,7 @@ import urllib.request
 import urllib.error
 import subprocess
 import time
+import threading
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 PORT = 7777
@@ -59,7 +60,7 @@ def classify_cupom(cupom_raw):
     elif 'BDAY' in u:
         origem = 'ANIVERSARIANTE'
     elif 'MANIACO' in u:
-        origem = 'COMUNIDADE'
+        origem = 'ANTIGA_GESTAO'
     elif any(k in u for k in ['FESTASRS', 'TRIPTRANCE', 'KIOMA', 'GUTO']):
         origem = 'PARCERIA'
     else:
@@ -82,8 +83,10 @@ def classify_cupom(cupom_raw):
         canal = 'CAMPANHA_CASAMENTO'
     elif 'START' in u:
         canal = 'START_OUTROS'
-    elif origem == 'COMUNIDADE':
-        canal = 'COMUNIDADE'
+    elif 'MANIACO' in u:
+        canal = 'ANTIGO_MKT'
+    elif origem == 'ANTIGA_GESTAO':
+        canal = 'ANTIGO_MKT'
     elif origem == 'ANIVERSARIANTE':
         canal = 'ANIVERSARIANTE'
     elif origem == 'PARCERIA':
@@ -283,6 +286,11 @@ def get_aggregated_coupons():
             'ingressos': sum(c['total'] for c in combined if c['origem'] == 'PROMOTER'),
             'receita': sum(c['receita'] for c in combined if c['origem'] == 'PROMOTER'),
             'cupons_count': len([c for c in combined if c['origem'] == 'PROMOTER'])
+        },
+        'antiga_gestao': {
+            'ingressos': sum(c['total'] for c in combined if c['origem'] == 'ANTIGA_GESTAO'),
+            'receita': sum(c['receita'] for c in combined if c['origem'] == 'ANTIGA_GESTAO'),
+            'cupons_count': len([c for c in combined if c['origem'] == 'ANTIGA_GESTAO'])
         },
         'comunidade': {
             'ingressos': sum(c['total'] for c in combined if c['origem'] == 'COMUNIDADE'),
@@ -544,12 +552,33 @@ class PlatformHandler(SimpleHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
 
+def start_periodic_sync(interval_seconds=900):
+    """Executa o sync_worker a cada 15 minutos em background de forma segura e transparente."""
+    def _worker_loop():
+        print(f"[*] ⏰ Motor de sincronização periódica ativo (intervalo: {interval_seconds // 60} minutos).")
+        while True:
+            time.sleep(interval_seconds)
+            try:
+                print(f"\n[{time.strftime('%Y-%m-%d %H:%M:%S')}] ⏰ Executando sincronização periódica automática (15 min)...")
+                worker_script = os.path.join(DIR, 'sync_worker.py')
+                subprocess.run([sys.executable, worker_script], capture_output=True, text=True, timeout=120)
+                CUPONS_CACHE['timestamp'] = 0
+                DIARIO_CACHE['timestamp'] = 0
+                print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] [✓] Sincronização periódica de 15 min concluída com sucesso!")
+            except Exception as e:
+                print(f"[!] Erro no motor automático de sincronização periódica: {e}")
+
+    t = threading.Thread(target=_worker_loop, daemon=True)
+    t.start()
+
 def run_server():
+    start_periodic_sync(900)  # Motor automático: sincroniza a cada 15 minutos
     server_address = ('0.0.0.0', PORT)
     httpd = HTTPServer(server_address, PlatformHandler)
     print("=" * 60)
     print(f"🚀 PAINEL MOVING FESTIVAL 2026 INICIADO NA PORTA {PORT}")
     print(f"👉 Acesse no seu navegador: http://localhost:{PORT}")
+    print("⏰ Motor de scraping ativo: executando a cada 15 minutos automaticamente")
     print("=" * 60)
     try:
         httpd.serve_forever()

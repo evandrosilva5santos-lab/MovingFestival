@@ -278,7 +278,7 @@ def extract_uticket_records(xlsx_bytes):
             elif 'EMAIL' in cup_u:
                 canal = 'EMAIL'
             elif 'MANIACO' in cup_u:
-                canal = 'COMUNIDADE'
+                canal = 'ANTIGO_MKT'
             else:
                 canal = 'AFILIADO_PROMOTER'
                 promoter = cupom_raw

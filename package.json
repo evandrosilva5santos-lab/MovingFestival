@@ -1,0 +1,12 @@
+{
+  "name": "movingfestival",
+  "version": "1.0.0",
+  "description": "Painel Moving Festival 2026 - Cloudflare Worker",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.148.0"
+  }
+}
