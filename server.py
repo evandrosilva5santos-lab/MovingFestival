@@ -508,6 +508,13 @@ class PlatformHandler(SimpleHTTPRequestHandler):
             worker_script = os.path.join(DIR, 'sync_worker.py')
             try:
                 proc = subprocess.run([sys.executable, worker_script], capture_output=True, text=True, timeout=120)
+                saida = (proc.stdout or '') + '\n' + (proc.stderr or '')
+                sync_ok = proc.returncode == 0 and 'SINCRONIZAÇÃO CONCLUÍDA' in saida
+                sync_erro = None
+                if not sync_ok:
+                    linhas = [l.strip() for l in saida.splitlines() if l.strip()]
+                    falhas = [l for l in linhas if any(k in l for k in ('FALHA', 'ERRO', 'Erro', 'Error', 'Traceback', 'falhou'))]
+                    sync_erro = (falhas[-1] if falhas else (linhas[-1] if linhas else 'o sync_worker terminou sem confirmar'))[:300]
                 
                 # Invalidar caches em memória para recarregar com dados novos instantaneamente
                 CUPONS_CACHE['timestamp'] = 0
@@ -537,7 +544,8 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps({
-                    'status': 'OK',
+                    'status': 'OK' if sync_ok else 'ERRO',
+                    'erro': sync_erro,
                     'resumo': resumo_data,
                     'log': proc.stdout
                 }).encode('utf-8'))
@@ -546,7 +554,8 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
-                self.wfile.write(json.dumps({'error': str(e)}).encode('utf-8'))
+                motivo = 'a sincronização passou de 2 minutos' if isinstance(e, subprocess.TimeoutExpired) else str(e)
+                self.wfile.write(json.dumps({'status': 'ERRO', 'erro': motivo}).encode('utf-8'))
             return
             
         self.send_response(404)

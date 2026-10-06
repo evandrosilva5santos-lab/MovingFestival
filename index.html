@@ -1652,7 +1652,7 @@
       var pal = String(m.classificacao).split(' '), corte = Math.ceil(pal.length/2);
       var q = pal.length > 1 ? esc(pal.slice(0,corte).join(' '))+'<br>'+esc(pal.slice(corte).join(' ')) : esc(m.classificacao);
       if(last) q += ' 🍾';
-      return '<div class="t" title="'+num(m.valor)+' ingressos · '+esc(m.classificacao)+'" style="left:'+pct(m.valor)+'%;--tc:'+c[1]+';--tc2:'+c[0]+'"><b>'+kFmt(m.valor)+'</b><span class="q">'+q+'</span></div>';
+      return '<div class="t'+(m.valor%1000?' t-meio':'')+'" title="'+num(m.valor)+' ingressos · '+esc(m.classificacao)+'" style="left:'+pct(m.valor)+'%;--tc:'+c[1]+';--tc2:'+c[0]+'"><b>'+kFmt(m.valor)+'</b><span class="q">'+q+'</span></div>';
     }).join('');
     var hit=null, nxt=null;
     metas.forEach(function(m){ if(cur>=m.valor) hit=m; else if(!nxt) nxt=m; });
@@ -1695,18 +1695,57 @@
     if(FILTRO==='CAMPING'){ try{ $('extrasHead').scrollIntoView({behavior:'smooth',block:'center'}); }catch(err){} }
   });
 
+  // Sincronizar: mostra de verdade se deu certo ou não
+  var SYNC_ERRO = false;
+  function horaAgora(){ return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+  function avisoSync(tipo, titulo, texto){
+    var el = document.createElement('div'); el.className = 'meta-toast';
+    el.setAttribute('role', tipo==='erro' ? 'alert' : 'status');
+    el.style.setProperty('--mc', tipo==='erro' ? '#DC2626' : '#16A34A');
+    el.innerHTML = '<span class="em">' + (tipo==='erro' ? '⚠️' : '✅') + '</span><div><b>' + esc(titulo) + '</b><small>' + esc(texto) + '</small></div>';
+    document.body.appendChild(el);
+    requestAnimationFrame(function(){ el.classList.add('on'); });
+    setTimeout(function(){ el.classList.remove('on'); setTimeout(function(){ el.remove(); }, 400); }, tipo==='erro' ? 8000 : 4500);
+  }
   $('sync').addEventListener('click', function(){
-    var btn=$('sync'), lbl=btn.querySelector('span'); btn.disabled=true; lbl.textContent='Sincronizando…';
-    fetch(API_SYNC,{method:'POST'}).then(function(r){ return r.json(); })
-      .then(function(j){ if(j && j.resumo && typeof j.resumo.total==='number'){ DATA=j.resumo; render(); setStatus('live', j.resumo.atualizado_em || new Date().toISOString()); } else { return carregar(); } })
-      .catch(function(){ var bn=$('banner'); bn.hidden=false; bn.className='banner err'; bn.textContent='Não consegui sincronizar agora. Confira se o server.py está rodando e tente de novo.'; })
-      .then(function(){ btn.disabled=false; lbl.textContent='Sincronizar'; });
+    var btn = $('sync'), lbl = btn.querySelector('span');
+    if(btn.disabled) return;
+    var antes = (DATA && DATA !== SNAPSHOT && typeof DATA.total === 'number') ? DATA.total : null;
+    btn.disabled = true; if(lbl) lbl.textContent = 'Sincronizando…';
+    $('pulse').className = 'pulse'; $('ago').textContent = 'sincronizando…';
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var limite = setTimeout(function(){ if(ctrl) ctrl.abort(); }, 150000);
+    function falhou(motivo){
+      SYNC_ERRO = true;
+      $('pulse').className = 'pulse bad'; $('ago').textContent = 'erro às ' + horaAgora();
+      avisoSync('erro', 'Não sincronizou', motivo);
+    }
+    fetch(API_SYNC, { method:'POST', signal: ctrl ? ctrl.signal : undefined })
+      .then(function(r){ return r.json().catch(function(){ return { status:'ERRO', erro:'o servidor respondeu sem dados (HTTP ' + r.status + ')' }; }); })
+      .then(function(j){
+        var temResumo = j && j.resumo && typeof j.resumo.total === 'number';
+        if(temResumo){ DATA = j.resumo; render(); }
+        if(temResumo && j.status === 'OK'){
+          SYNC_ERRO = false;
+          setStatus('live', j.resumo.atualizado_em || new Date().toISOString());
+          var dif = antes === null ? null : j.resumo.total - antes;
+          var txt = (dif === null ? '' : (dif > 0 ? '+' + num(dif) + ' ingressos novos · ' : (dif < 0 ? num(dif) + ' ingressos (cancelamentos) · ' : 'Nenhuma venda nova · '))) + 'total ' + num(j.resumo.total);
+          avisoSync('ok', 'Sincronizado às ' + horaAgora(), txt);
+        } else {
+          falhou((j && (j.erro || j.error)) || 'o servidor não confirmou a sincronização');
+        }
+      })
+      .catch(function(e){
+        falhou(e && e.name === 'AbortError' ? 'demorou mais de 2 minutos e foi interrompida' : 'sem conexão com o servidor do painel. Confira se o server.py está rodando.');
+      })
+      .then(function(){ clearTimeout(limite); btn.disabled = false; if(lbl) lbl.textContent = 'Sincronizar'; });
   });
 
-  DATA = SNAPSHOT; render(); setStatus('snap', SNAPSHOT.atualizado_em); $('banner').hidden=true;
+  // Ao abrir (F5): não mostra o retrato salvo; espera o dado real. O retrato só entra se o servidor falhar.
+  $('pulse').className = 'pulse off'; $('ago').textContent = 'carregando…';
   carregar();
   setInterval(carregar, REFRESH_MS);
-  setInterval(function(){ if(DATA) setStatus($('pulse').className.indexOf('off')>-1?'snap':'live', DATA.atualizado_em); }, 30000);
+  setInterval(function(){ if(DATA && !SYNC_ERRO) setStatus($('pulse').className.indexOf('off')>-1?'snap':'live', DATA.atualizado_em); }, 30000);
 })();
 </script>
 
@@ -2042,3 +2081,92 @@
   .mk.mk-foto{ background:none; padding:0; overflow:hidden; box-shadow:0 0 0 1px var(--border); }
   .mk.mk-foto img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:inherit; }
 </style>
+
+<style>
+  /* RESPONSIVO POR DISPOSITIVO */
+  .mob-head{ display:none; }
+
+  /* ---------- iPad e telas médias (768–1199): coluna de ícones ---------- */
+  @media (min-width:768px) and (max-width:1199px){
+    .app{ grid-template-columns:76px minmax(0,1fr) !important; }
+    .sidebar{ position:sticky !important; top:0 !important; height:100vh !important; width:76px !important;
+      flex-direction:column !important; align-items:stretch !important; gap:6px !important;
+      padding:14px 10px !important; overflow:visible !important;
+      border-right:1px solid var(--border) !important; border-bottom:0 !important; }
+    .sidebar .brand{ justify-content:center !important; padding:2px 0 12px !important; }
+    .sidebar .brand-left{ justify-content:center; }
+    .sidebar .nm, .sidebar .navlbl, .sidebar .nav-txt, #btnSideToggle,
+    .sidebar .side-foot .who, .sidebar .side-foot .avatar{ display:none !important; }
+    .sidebar .nav{ flex-direction:column !important; gap:6px !important; }
+    .sidebar .nav a{ justify-content:center !important; padding:12px 0 !important; border-radius:12px; }
+    .sidebar .nav a svg{ width:22px; height:22px; }
+    .sidebar .side-foot{ display:flex !important; justify-content:center !important; margin-top:auto !important;
+      padding:12px 0 0 !important; border-top:1px solid var(--border) !important; }
+    .sidebar .side-foot .theme-toggle{ margin:0 !important; }
+    .topbar{ padding:16px 22px !important; }
+    .topbar .right{ width:100%; margin-left:0 !important; justify-content:space-between; }
+    .content{ padding-inline:22px !important; }
+    #metas [style*="min-width:860px"]{ min-width:0 !important; padding-inline:36px !important; }
+    .ticks .t-meio .q{ display:none; }
+  }
+
+  /* ---------- iPhone (até 767): abas embaixo + cabeçalho com logo ---------- */
+  @media (max-width:767px){
+    .app{ grid-template-columns:minmax(0,1fr) !important; }
+    .mob-head{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:calc(10px + env(safe-area-inset-top,0px)) 16px 4px; }
+    .mob-brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:800; font-size:16px; }
+    .mob-brand img{ width:36px; height:36px; border-radius:10px; object-fit:cover; box-shadow:0 0 0 1px var(--border); }
+    .mob-brand small{ display:block; font-family:var(--font-body); font-weight:500; font-size:11px; color:var(--fg-faint); }
+    .mob-head .theme-toggle{ padding:8px !important; }
+    .mob-head .theme-toggle #themeToggleTxt, .mob-head .theme-toggle span{ display:none !important; }
+
+    .sidebar{ position:fixed !important; left:0; right:0; bottom:0; top:auto !important; height:auto !important; width:auto !important;
+      z-index:70; flex-direction:row !important; align-items:stretch !important; gap:0 !important; overflow:visible !important;
+      padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)) !important;
+      border:0 !important; border-top:1px solid var(--border) !important;
+      background:color-mix(in srgb, var(--surface) 94%, transparent) !important; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+    .sidebar .brand, .sidebar .navlbl, .sidebar .side-foot{ display:none !important; }
+    .sidebar .nav{ flex:1; flex-direction:row !important; justify-content:space-between; gap:2px !important; }
+    .sidebar .nav a{ flex:1 1 0; min-width:0; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+      padding:6px 2px !important; border-radius:10px; font-size:10px !important; font-weight:600; }
+    .sidebar .nav a svg{ width:22px; height:22px; }
+    .sidebar .nav a .nav-txt{ display:none !important; }
+    .sidebar .nav a::after{ content:attr(data-curto); display:block; font-size:10px; line-height:1.1; white-space:nowrap; }
+    .sidebar .nav a.active{ background:transparent !important; color:var(--accent) !important; }
+
+    .topbar{ position:static !important; padding:6px 16px 12px !important; border-bottom:0 !important; }
+    .topbar h1{ font-size:22px !important; }
+    .topbar .right{ width:100%; margin-left:0 !important; flex-wrap:wrap; gap:10px !important; }
+    .topbar .seg{ max-width:100%; }
+    .content{ padding:8px 16px calc(150px + env(safe-area-inset-bottom,0px)) !important; }
+    #sync{ bottom:calc(84px + env(safe-area-inset-bottom,0px)) !important; }
+
+    #metas [style*="min-width:860px"]{ min-width:0 !important; padding-inline:16px !important; }
+    #metas > div[style*="overflow-x"]{ overflow:visible !important; }
+    .ticks{ height:30px !important; }
+    .ticks .t-meio{ display:none !important; }
+    .ticks .t .q{ display:none !important; }
+    .ticks .t{ width:44px !important; margin-left:-22px !important; }
+    .metas .head{ gap:10px !important; }
+    .metas .next{ margin-left:0 !important; text-align:left !important; width:100%; }
+    .meta-toast{ top:calc(12px + env(safe-area-inset-top,0px)); }
+  }
+</style>
+<script>
+// Cabeçalho do celular (logo + tema) e nomes curtos das abas
+(function(){
+  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Tendências' };
+  [].slice.call(document.querySelectorAll('#nav a[data-view]')).forEach(function(a){
+    a.setAttribute('data-curto', CURTO[a.getAttribute('data-view')] || (a.textContent||'').trim());
+  });
+  var main = document.querySelector('main'); if(!main || document.querySelector('.mob-head')) return;
+  var logo = document.querySelector('.mk img'), tema = document.getElementById('themeToggle');
+  var h = document.createElement('div'); h.className = 'mob-head';
+  h.innerHTML = '<div class="mob-brand">' + (logo ? '<img src="' + logo.getAttribute('src') + '" alt="">' : '') +
+    '<div>Moving 2026<small>Painel de vendas</small></div></div>' +
+    (tema ? '<button type="button" class="theme-toggle" aria-label="Alternar tema claro/escuro">' + tema.innerHTML + '</button>' : '');
+  main.insertBefore(h, main.firstChild);
+  var b = h.querySelector('button'); if(b && tema) b.addEventListener('click', function(){ tema.click(); });
+})();
+</script>

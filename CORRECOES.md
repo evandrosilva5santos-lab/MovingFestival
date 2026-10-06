@@ -1,0 +1,65 @@
+# CORREÇÕES — o que já foi corrigido e NÃO pode voltar
+
+> Leia antes de mexer no `index.html` ou no `server.py`.
+> Cada item diz o problema, a causa, como está corrigido e a regra para não quebrar de novo.
+
+---
+
+## 1. F5 mostrava número velho (5.168 em vez do real)
+- **Problema:** ao atualizar a página, aparecia primeiro o total antigo e só depois o real.
+- **Causa:** o painel desenhava o `SNAPSHOT` (retrato salvo dentro do HTML, de 06/10 17:14) antes de o `/api/resumo` responder.
+- **Correção:** ao abrir, o painel mostra "—" e status "carregando…". Só desenha quando o `/api/resumo` responde. O `SNAPSHOT` só entra se o servidor falhar, com o aviso amarelo "Sem conexão com o servidor".
+- **Regra:** **nunca** chamar `render()` com o `SNAPSHOT` no carregamento. Linha de referência no código: `// Ao abrir (F5): não mostra o retrato salvo`.
+
+## 2. Botão Sincronizar não dizia se deu certo
+- **Problema:** clicava, nada acontecia na tela e o "há X min" não mudava.
+- **Causa:** o `server.py` sempre respondia `status: 'OK'`, mesmo quando o `sync_worker.py` falhava.
+- **Correção no servidor:** `/api/sync` confere se a saída do `sync_worker.py` tem "SINCRONIZAÇÃO CONCLUÍDA". Se não tiver, responde `status: 'ERRO'` e `erro: <motivo>`. Se passar de 2 minutos, também responde ERRO.
+- **Correção no painel:**
+  - Ao clicar, o botão fica "Sincronizando…" (ícone girando) e o status fica "sincronizando…".
+  - **Sucesso:** aviso verde "✅ Sincronizado às HH:MM · +N ingressos novos · total X". O status vira "agora".
+  - **Erro:** aviso vermelho "⚠️ Não sincronizou · <motivo>". O status fica "erro às HH:MM" e não volta sozinho para o horário antigo (variável `SYNC_ERRO`).
+- **Regra:** o `/api/sync` **sempre** devolve `status` = `OK` ou `ERRO`, e `erro` com o motivo. O painel só mostra sucesso com `status === 'OK'`.
+- **Depois de mexer no `server.py`, reiniciar:** Ctrl+C no Terminal e `python3 server.py`.
+
+## 3. Elementos com `hidden` continuavam aparecendo
+- **Problema:** o filtro de setores do topo aparecia em "Vendas por Dia" mesmo marcado como escondido.
+- **Causa:** `.seg{display:flex}` passava por cima do atributo `hidden`.
+- **Correção:** regra global `[hidden]{ display:none !important; }`.
+- **Regra:** não remover essa regra. Para esconder algo, usar `el.hidden = true`.
+
+## 4. Filtro de setores do topo
+- Aparece **só na Visão geral**. Nas outras telas fica escondido e volta para "Todos" (script "Filtro de setor só aparece na Visão geral").
+
+## 5. Layout por aparelho (`/* RESPONSIVO POR DISPOSITIVO */`)
+| Aparelho | Largura | Menu |
+|---|---|---|
+| Mac / computador | ≥ 1200px | Barra lateral aberta |
+| iPad / tablet | 768–1199px | Coluna de ícones (76px) à esquerda; tema embaixo |
+| iPhone 17 (402px) / XR (414px) | ≤ 767px | Abas embaixo (Geral, Por dia, Plataformas, Cupons, Ingressos, Tendências); cabeçalho com logo + tema; botão Sincronizar flutuante acima das abas |
+
+- No iPhone, a régua de metas mostra só 5k, 6k, 7k, 8k, 9k e 10k, sem nomes (o nível aparece no selo). Sem rolagem lateral.
+- **Regra:** não voltar o menu do tablet para barra horizontal rolável. Testar sempre em 402px, 414px, 820px e 1440px, sem rolagem lateral da página.
+
+## 6. Acentos quebrados ("Â·", "PrÃ³xima")
+- **Causa:** faltava `<meta charset="utf-8">` quando o painel é servido pelo `server.py`.
+- **Regra:** manter `<meta charset="utf-8">` no topo do `index.html`.
+
+## 7. Régua de metas
+- Faixas de uma meta até a próxima, com a cor da meta (ver `design/DESIGN.md`). Valores em k. Selo "Nível atual · X".
+- Classes `.trilho` / `.faixa`. **Nunca** usar `.seg` na régua, porque é o nome do filtro de setor.
+- Confete uma vez por meta, por navegador (`moving_metas_comemoradas`).
+
+## 8. Tela "Vendas por Dia"
+- Usa `vendas_diarias` (dia, plataforma, setor, total, receita) e `vendas_hora_dia` (últimos 60 dias). Os dois vêm do banco.
+- **Não** usar o cálculo inventado `receita = total × 130` nem tratar tudo como Uticket/Full Pass.
+- O Detalhamento Diário lista as plataformas **em linhas embaixo de cada dia**, não em colunas.
+- O gráfico "Ondas de venda do dia" mostra pico, vale e a média do período.
+
+---
+
+## Como testar depois de qualquer mudança
+1. `python3 server.py` e abrir `http://localhost:7777`.
+2. F5: tem que aparecer "carregando…" e depois o número real, sem piscar o número antigo.
+3. Clicar em Sincronizar: tem que aparecer o aviso verde ou vermelho.
+4. Diminuir a janela até a largura de celular (402px) e de iPad (820px): sem rolagem lateral, com o menu certo para cada tamanho.

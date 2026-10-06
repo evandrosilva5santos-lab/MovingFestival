@@ -1,5 +1,8 @@
 # CLAUDE.md — Contexto do projeto para IAs
 
+> ## ⚠️ ANTES DE MEXER NO PAINEL OU NO SERVIDOR
+> Leia **`CORRECOES.md`**: lista o que já foi corrigido (F5 com número velho, botão Sincronizar, `hidden`, layout iPhone/iPad/Mac, acentos, régua, Vendas por Dia) e as regras para não quebrar de novo.
+
 > ## ⚠️ REGRAS DE VISUAL — OBRIGATÓRIAS
 > 1. O visual do painel é **LIGHT, limpo, estilo ManyChat**: fundo `#F5F6F8`, cards brancos, azul `#2B6CF6`, fontes **Plus Jakarta Sans + Inter**.
 > 2. **Proibido** dark mode neon, glassmorphism, fundo `#0A0D14`, fonte Outfit. Esse visual foi descartado pelo Evandro.
