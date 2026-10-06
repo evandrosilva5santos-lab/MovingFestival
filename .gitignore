@@ -1,0 +1,25 @@
+# Segurança — NUNCA comitar segredos e chaves
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Mac OS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Pastas de backup / lixo
+_to_delete/
+*.log
+
+# Wrangler / Cloudflare
+.wrangler/
+dist/

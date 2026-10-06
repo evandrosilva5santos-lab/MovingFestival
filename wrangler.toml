@@ -1,0 +1,7 @@
+name = "moving-festival-painel"
+compatibility_date = "2024-10-01"
+pages_build_output_dir = "."
+
+[vars]
+SUPABASE_URL = "https://etjqbqorawnnvdlmztka.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0anFicW9yYXdubnZkbG16dGthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMDQ3MzYsImV4cCI6MjA4ODY4MDczNn0.LuLbWvZEt90ha53_36LgWQ_9tXY4tm0Fd03Q5lIruz0"

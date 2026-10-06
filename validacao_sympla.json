@@ -1,0 +1,102 @@
+{
+  "gerado_em": "2026-10-06T18:44:31.658601-03:00",
+  "evento": "3419289",
+  "api": {
+    "ingressos_confirmados": 811,
+    "por_setor": {
+      "GOLD": {
+        "total": 124,
+        "pagos": 124,
+        "cortesias": 0,
+        "receita": 20952.66
+      },
+      "ZONE": {
+        "total": 193,
+        "pagos": 193,
+        "cortesias": 0,
+        "receita": 25197.35
+      },
+      "FULLPASS": {
+        "total": 452,
+        "pagos": 452,
+        "cortesias": 0,
+        "receita": 66763.7
+      },
+      "BLACK": {
+        "total": 42,
+        "pagos": 42,
+        "cortesias": 0,
+        "receita": 12879.26
+      }
+    }
+  },
+  "planilha": {
+    "ingressos": 810,
+    "por_setor": {
+      "BLACK": {
+        "total": 42,
+        "pagos": 42,
+        "cortesias": 0,
+        "receita": 12692.5
+      },
+      "FULLPASS": {
+        "total": 452,
+        "pagos": 452,
+        "cortesias": 0,
+        "receita": 64882.75
+      },
+      "ZONE": {
+        "total": 192,
+        "pagos": 192,
+        "cortesias": 0,
+        "receita": 24468.5
+      },
+      "GOLD": {
+        "total": 124,
+        "pagos": 124,
+        "cortesias": 0,
+        "receita": 20096.5
+      }
+    }
+  },
+  "batem": false,
+  "so_na_api": {
+    "qtd": 1,
+    "exemplos": [
+      "SYMPLA-UVRV-06-GJYM"
+    ]
+  },
+  "so_na_planilha": {
+    "qtd": 0,
+    "exemplos": []
+  },
+  "valor_diferente": {
+    "qtd": 303,
+    "exemplos": [
+      "SYMPLA-UQGS-FK-2J5M",
+      "SYMPLA-UVFH-42-5ZXU",
+      "SYMPLA-UTNY-WP-ZQ6C",
+      "SYMPLA-URWA-59-9XZK",
+      "SYMPLA-UV7B-MH-4JWA",
+      "SYMPLA-URBC-PS-3WXS",
+      "SYMPLA-UVFG-4F-89JS",
+      "SYMPLA-UUSG-MG-TMJY",
+      "SYMPLA-UVAQ-VM-BGE3",
+      "SYMPLA-UV77-1L-FWU0",
+      "SYMPLA-URLR-Z7-K01S",
+      "SYMPLA-UVL6-UP-8EMD",
+      "SYMPLA-UUU6-K2-56AN",
+      "SYMPLA-UU0X-JD-FEBR",
+      "SYMPLA-UVKX-J0-HJEC",
+      "SYMPLA-URTM-EP-097K",
+      "SYMPLA-UT5X-HC-Y4SG",
+      "SYMPLA-UR6H-7F-DAH7",
+      "SYMPLA-UURF-HL-Q0MK",
+      "SYMPLA-UTD5-SW-BEFD"
+    ]
+  },
+  "setor_diferente": {
+    "qtd": 0,
+    "exemplos": []
+  }
+}
