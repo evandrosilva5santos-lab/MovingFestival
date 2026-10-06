@@ -46,7 +46,8 @@ async function fetchUticketCouponsLive(env) {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Origin': 'https://uticket.com.br',
-        'Referer': 'https://uticket.com.br/'
+        'Referer': 'https://uticket.com.br/',
+        'Accept': 'application/json, text/plain, */*'
       },
       body: JSON.stringify({ email, password })
     });
@@ -61,9 +62,10 @@ async function fetchUticketCouponsLive(env) {
     const coupRes = await fetch(`https://api.uticket.com.br/event/${eventId}/coupons`, {
       headers: {
         'Authorization': `Basic ${authBasic}`,
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Origin': 'https://uticket.com.br',
-        'Referer': `https://uticket.com.br/admin/event/${eventId}/coupons`
+        'Referer': `https://uticket.com.br/admin/event/${eventId}/coupons`,
+        'Accept': 'application/json, text/plain, */*'
       }
     });
 
@@ -72,18 +74,22 @@ async function fetchUticketCouponsLive(env) {
     const eventCoupons = data?.eventCoupons || [];
 
     return eventCoupons.map(c => {
-      const code = c.code || '';
+      const code = String(c.name || '').trim();
       const { origem, canal } = classifyCupom(code);
-      const usage = Number(c.usageCount) || Number(c.usage_count) || 0;
-      const val = Number(c.totalValue) || Number(c.total_amount) || (usage * 182.68);
+      const total = Number(c.ticketCount) || 0;
+      const pedidos = Number(c.totalSell) || 0;
+      const val = Number(c.totalPrice) || 0;
+      const desc = Number(c.totalDiscount) || 0;
       return {
         cupom: code,
         plataforma: 'UTICKET',
         origem,
         canal,
-        total: usage,
-        pedidos: usage,
-        receita: val
+        total,
+        pedidos,
+        receita: val,
+        desconto: desc,
+        ativo: c.active !== false
       };
     });
   } catch (err) {
@@ -97,31 +103,59 @@ async function fetchSymplaCouponsLive(env) {
     const token = env?.SYMPLA_API_TOKEN || 'REMOVIDO';
     const eventId = env?.SYMPLA_EVENT_ID || '3419289';
 
-    const res = await fetch(`https://api.sympla.com.br/public/v3/events/${eventId}/coupons?page=1`, {
-      headers: {
-        's_token': token,
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
+    // 8 páginas em paralelo
+    const pages = [1, 2, 3, 4, 5, 6, 7, 8];
+    const results = await Promise.all(pages.map(async p => {
+      try {
+        const res = await fetch(`https://api.sympla.com.br/public/v3/events/${eventId}/participants?page=${p}&page_size=100`, {
+          headers: {
+            's_token': token,
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
+          }
+        });
+        if (!res.ok) return [];
+        const j = await res.json();
+        return j.data || [];
+      } catch {
+        return [];
       }
-    });
+    }));
 
-    if (!res.ok) return [];
-    const json = await res.json();
-    const data = json?.data || [];
+    const allParts = results.flat();
+    const coupons = {};
 
-    return data.map(c => {
-      const code = c.code || '';
-      const { origem, canal } = classifyCupom(code);
-      const usage = Number(c.total_usage) || 0;
-      const val = Number(c.total_amount) || (usage * 115.42);
-      return {
-        cupom: code,
-        plataforma: 'SYMPLA',
-        origem,
-        canal,
-        total: usage,
-        pedidos: usage,
-        receita: val
-      };
+    for (const p of allParts) {
+      if (p.order_status !== 'A') continue;
+      const disc = p.order_discount;
+      if (!disc) continue;
+      const m = disc.match(/-\s*(.+)$/);
+      let code = (m ? m[1] : disc).trim().toUpperCase();
+      const price = Number(p.ticket_sale_price) || 0;
+      const orderId = p.order_id;
+
+      if (!coupons[code]) {
+        const { origem, canal } = classifyCupom(code);
+        coupons[code] = {
+          cupom: code,
+          plataforma: 'SYMPLA',
+          origem,
+          canal,
+          pedidos_set: new Set(),
+          total: 0,
+          receita: 0.0,
+          desconto: 0.0,
+          ativo: true
+        };
+      }
+      coupons[code].total += 1;
+      coupons[code].receita += price;
+      if (orderId) coupons[code].pedidos_set.add(orderId);
+    }
+
+    return Object.values(coupons).map(c => {
+      const pedidos = c.pedidos_set.size;
+      delete c.pedidos_set;
+      return { ...c, pedidos };
     });
   } catch (err) {
     console.error('Erro fetchSymplaCouponsLive:', err);
