@@ -376,7 +376,19 @@ export default {
 
     // 3. Arquivos estáticos (index.html, etc)
     if (env && env.ASSETS) {
-      return env.ASSETS.fetch(request);
+      const assetRes = await env.ASSETS.fetch(request);
+      if (url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname === '') {
+        const h = new Headers(assetRes.headers);
+        h.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        h.set('Pragma', 'no-cache');
+        h.set('Expires', '0');
+        return new Response(assetRes.body, {
+          status: assetRes.status,
+          statusText: assetRes.statusText,
+          headers: h
+        });
+      }
+      return assetRes;
     }
 
     return new Response('Not found', { status: 404 });

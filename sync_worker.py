@@ -443,7 +443,7 @@ def upsert_to_supabase(records):
     """Envia registros em lotes para o Supabase com merge anti-duplicação."""
     if not records:
         return 0
-    url = f"{SUPABASE_URL}/rest/v1/moving_excluir_vendas"
+    url = f"{SUPABASE_URL}/rest/v1/moving_excluir_vendas?on_conflict=id"
     headers = {
         'apikey': SUPABASE_KEY,
         'Authorization': f'Bearer {SUPABASE_KEY}',

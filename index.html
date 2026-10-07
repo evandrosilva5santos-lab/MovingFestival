@@ -1412,11 +1412,6 @@
     if(!d) return;
     var vendas = d.vendas_diarias || [];
     window.__movingDados = d; setTimeout(function(){ if(window.movingOnda) window.movingOnda(); }, 0);
-    if(!vendas.length && d.por_dia){
-      vendas = (d.por_dia||[]).map(function(p){
-        return { dia: p.dia, plataforma: 'UTICKET', setor: 'FULLPASS', total: p.total, receita: p.receita || 0 };
-      });
-    }
 
     // Badge de filtros ativos
     var platNome = DIARIO_PLAT === 'ALL' ? 'Todas as Plataformas' : (DIARIO_PLAT === 'UTICKET' ? 'Uticket' : (DIARIO_PLAT === 'SYMPLA' ? 'Sympla' : 'Wix'));
