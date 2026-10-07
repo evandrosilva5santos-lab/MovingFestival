@@ -84,3 +84,7 @@
 - **Wix (366 ingressos fixos):** Não possui API aberta. Mantido como lote estático de pré-lançamento (01/06) com 366 ingressos (197 Full Pass, 64 Zone, 56 Gold, 49 Black = R$ 52.750,00), protegido via chave única `WIX-HIST-*`.
 - **Suite de Validação (`motores_validacao.py`):** Ferramenta com 5 motores autônomos que cruza os dados ao vivo, gera `relatorio_validacao_cruzada.json` e audita discrepâncias.
 
+
+## 10. Monitores largos (3440×1440, 2048×858, 1920×1080, 1720×720)
+- Bloco `TELAS_GRANDES` no fim do `index.html`: conteúdo centralizado com largura máxima por faixa (1440 → 1720 → 2560 → 3000px) e compactação vertical quando a altura é ≤ 900px / ≤ 760px.
+- Prints de referência em `design/dispositivos/monitor_*.jpg`. Não remover esse bloco ao mexer em `.content`.

@@ -2541,3 +2541,21 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();
 </script>
+
+<style>
+/* TELAS_GRANDES: monitores largos (1920x1080, 2048x858, 1720x720, 3440x1440) */
+@media (min-width:1500px){ .content{ margin-inline:auto; max-width:1440px; padding-inline:36px; } }
+@media (min-width:1900px){ .content{ max-width:1720px; } .grid{ gap:20px; } .grid + .grid{ margin-top:20px; } }
+@media (min-width:2400px){ .content{ max-width:2560px; padding:34px 56px 70px; } .grid{ gap:26px; } .grid + .grid{ margin-top:26px; }
+  .card{ padding-block:22px; } }
+@media (min-width:3000px){ .content{ max-width:3000px; } }
+/* telas largas e baixas (altura até 900px): compacta na vertical para caber mais sem rolar */
+@media (min-width:1200px) and (max-height:900px){
+  .content{ padding-top:16px; padding-bottom:36px; }
+  .grid{ gap:12px; } .grid + .grid{ margin-top:12px; }
+  .card{ padding-block:12px; }
+}
+@media (min-width:1200px) and (max-height:760px){
+  .card{ padding-block:9px; } .content{ padding-top:10px; }
+}
+</style>
