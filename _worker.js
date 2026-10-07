@@ -118,10 +118,12 @@ const CUPOM_UNIFICADO = new Set(Object.values(ALIAS_CUPOM));
 
 function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
-    const original = String(c.cupom || '').trim().toUpperCase();
-    const code = nomeCupom(c.cupom);
-    const { origem, canal, promoter, grupo, gestao } = classifyCupom(code);
-    return { cupom: code, promoter: promoter || code, nomes: [`${original} (${plataforma === 'UTICKET' ? 'Uticket' : 'Sympla'})`], plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
+    const code = String(c.cupom || '').trim();
+    const base = nomeCupom(code);   // nome comum (ex.: CUPOMGUTO -> GUTO) só para classificar e somar na análise
+    const { origem, canal, promoter, grupo, gestao } = classifyCupom(base);
+    const irmaos = Object.entries(ALIAS_CUPOM).filter(([a, b]) => b === base.toUpperCase());
+    const nomes = irmaos.length ? [...irmaos.map(([a]) => `${a} (Uticket)`), `${base.toUpperCase()} (Sympla)`] : [`${code.toUpperCase()} (${plataforma === 'UTICKET' ? 'Uticket' : 'Sympla'})`];
+    return { cupom: code, base, promoter: promoter || base, nomes, plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
              receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
   });
 }
@@ -133,8 +135,8 @@ async function consolidateLiveSources(env) {
 
   const map = new Map();
   for (const c of [...utCupons, ...syCupons]) {
-    const unif = CUPOM_UNIFICADO.has(c.cupom.toUpperCase());
-    const k = unif ? `${c.cupom.toUpperCase()}|*` : `${c.cupom}|${c.plataforma}`;
+    // cada cupom fica na sua linha, igual à ticketeira (CUPOMGUTO na Uticket, GUTO na Sympla)
+    const k = `${c.cupom}|${c.plataforma}`;
     if (!map.has(k)) {
       map.set(k, { ...c, plataformas: [c.plataforma], nomes: [...(c.nomes || [])] });
     } else {
@@ -189,7 +191,7 @@ async function consolidateLiveSources(env) {
   const porCupom = (lst) => {
     const m = new Map();
     for (const c of lst) {
-      const k = c.cupom.toUpperCase();
+      const k = String(c.base || c.cupom).toUpperCase();
       const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[semAcento(k)] || analisePorRegra(semAcento(k)) || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
       r.ingressos += c.total; r.receita += c.receita; r.pedidos += c.pedidos;
       for (const pl of (c.plataformas || [c.plataforma])) if (!r.plataformas.includes(pl)) r.plataformas.push(pl);
