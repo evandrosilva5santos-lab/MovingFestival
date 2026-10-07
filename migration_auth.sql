@@ -498,7 +498,7 @@ values (
   'Evandro Silva',
   crypt('Ev@12101034', gen_salt('bf')),
   'superadmin',
-  array['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias'],
+  array['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias', 'conferencia'],
   true
 )
 on conflict (login) do update
@@ -513,7 +513,7 @@ values (
   'Moving Admin',
   crypt('Moving@2026', gen_salt('bf')),
   'admin',
-  array['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias'],
+  array['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias', 'conferencia'],
   true
 )
 on conflict (login) do update
