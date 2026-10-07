@@ -165,3 +165,11 @@
 - **Sympla sem taxa (Edge Function v5):** valor do ingresso = `ticket_sale_price × (order_total_net_value ÷ order_total_sale_price)` do pedido. Remove a taxa de conveniência de 10% que o comprador paga.
 - **Análise com IA:** `POST /api/ia` (exige sessão ou acesso livre) usa `GEMINI_API_KEY` (modelo `GEMINI_MODEL`, padrão `gemini-2.5-flash`) ou `ANTHROPIC_API_KEY` (modelo `CLAUDE_MODEL`). Sem chave, responde 501 com instrução. Botões "Analisar com IA" no Resumo do Faturamento e no resultado da Conferência; só manda o texto com números da tela (sem nomes, e-mails ou códigos).
 - Uticket financeiro: testados 20 endpoints prováveis da API (`/financial`, `/transfers`, `/withdraws`, …) — todos 404. Falta a chamada real da página Financeiro.
+
+## 18. Entrar com código por e-mail / Esqueci minha senha
+- Tela de login ganhou "Entrar com código por e-mail" e "Esqueci minha senha" (o segundo pede uma senha nova depois do código).
+- Banco: `migration_codigo_email.sql` (tabela `moving_excluir_codigos`, coluna `via_codigo` em `moving_excluir_sessoes`, RPCs `moving_excluir_codigo_enviar`, `moving_excluir_codigo_entrar`, `moving_excluir_senha_redefinir`).
+- O código (6 dígitos, 10 min, 5 tentativas, até 3 pedidos a cada 15 min) é gerado e enviado **pelo próprio banco** (pg_net → Resend), então nunca passa pelo Worker nem pelo navegador. Chave no cofre: `moving_excluir_resend_key`; remetente: `moving_excluir_email_remetente`.
+- Senha nova sem a atual só vale numa sessão aberta por código há menos de 15 min; derruba as outras sessões do usuário.
+- Worker: `POST /api/login/codigo`, `POST /api/login/codigo/entrar`, `POST /api/senha/redefinir`.
+- Só funciona para usuários cujo login é um e-mail (o `movingadmin` não recebe código).

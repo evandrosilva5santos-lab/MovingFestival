@@ -594,6 +594,36 @@
         <span class="btn-login-txt">Acessar Painel</span>
         <span class="btn-login-spinner" style="display:none;"></span>
       </button>
+      <div class="login-links">
+        <button type="button" class="login-link" data-codigo="entrar">Entrar com código por e-mail</button>
+        <span>·</span>
+        <button type="button" class="login-link" data-codigo="senha">Esqueci minha senha</button>
+      </div>
+    </form>
+    <!-- LOGIN_CODIGO -->
+    <form class="login-form" id="codigoForm" hidden autocomplete="on">
+      <p class="login-cod-tit" id="codTitulo">Entrar com código por e-mail</p>
+      <div class="login-field" id="codPassoEmail">
+        <label for="codEmail">Seu e-mail de acesso</label>
+        <div class="input-wrap"><input type="email" id="codEmail" placeholder="ex: evandro@startinc.com.br" autocomplete="email" spellcheck="false" autocapitalize="none"></div>
+      </div>
+      <div class="login-field" id="codPassoCodigo" hidden>
+        <label for="codCodigo">Código de 6 dígitos que chegou no e-mail</label>
+        <div class="input-wrap"><input type="text" id="codCodigo" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000" class="login-cod-input"></div>
+      </div>
+      <div class="login-field" id="codPassoSenha" hidden>
+        <label for="codNova">Crie uma senha nova</label>
+        <div class="input-wrap"><input type="password" id="codNova" autocomplete="new-password" placeholder="mínimo 6 caracteres"></div>
+        <label for="codNova2" style="margin-top:8px">Repita a senha nova</label>
+        <div class="input-wrap"><input type="password" id="codNova2" autocomplete="new-password" placeholder="repita a senha"></div>
+      </div>
+      <div class="login-alert" id="codAlerta" role="alert" style="display:none;"></div>
+      <button type="submit" class="btn-login-submit" id="codBotao"><span class="btn-login-txt">Enviar código</span></button>
+      <div class="login-links">
+        <button type="button" class="login-link" id="codReenviar" hidden>Reenviar código</button>
+        <button type="button" class="login-link" id="codPular" hidden>Agora não, entrar no painel</button>
+        <button type="button" class="login-link" id="codVoltar">← Voltar para login com senha</button>
+      </div>
     </form>
   </div>
 </div>
@@ -4654,6 +4684,67 @@
   }
 
   // =========================================================================
+  // LOGIN_CODIGO: entrar com código por e-mail e "esqueci minha senha"
+  // =========================================================================
+  (function(){
+    var F=$('codigoForm'), L=$('loginForm'); if(!F||!L) return;
+    var modo='entrar', passo='email', email='', tokenNovo=null, dadosNovos=null;
+    function alerta(t,ok){ var a=$('codAlerta'); if(!t){ a.style.display='none'; return; } a.textContent=t; a.className='login-alert'+(ok?' ok':''); a.style.display='block'; }
+    function botao(t,dis){ var b=$('codBotao'); b.disabled=!!dis; b.querySelector('.btn-login-txt').textContent=t; }
+    function mostrar(p){ passo=p;
+      $('codPassoEmail').hidden = p!=='email'; $('codPassoCodigo').hidden = p!=='codigo'; $('codPassoSenha').hidden = p!=='senha';
+      $('codReenviar').hidden = p!=='codigo'; $('codPular').hidden = p!=='senha'; $('codVoltar').hidden = p==='senha';
+      botao(p==='email'?'Enviar código':(p==='codigo'?'Entrar':'Salvar senha nova'));
+      setTimeout(function(){ var f=p==='email'?$('codEmail'):(p==='codigo'?$('codCodigo'):$('codNova')); if(f) f.focus(); },50);
+    }
+    function abrir(m){ modo=m; L.hidden=true; F.hidden=false; alerta('');
+      $('codTitulo').textContent = m==='senha' ? 'Esqueci minha senha: vamos mandar um código para o seu e-mail' : 'Entrar com código por e-mail';
+      var u=($('loginUser').value||'').trim(); if(u.indexOf('@')>0) $('codEmail').value=u; $('codCodigo').value=''; $('codNova').value=''; $('codNova2').value=''; mostrar('email'); }
+    function fechar(){ F.hidden=true; L.hidden=false; alerta(''); }
+    function entrarNoPainel(){
+      localStorage.setItem(TOKEN_KEY, tokenNovo); usuarioAtual=dadosNovos; window.movingUsuario=usuarioAtual;
+      fechar(); esconderLogin(); aplicarPermissoes(usuarioAtual); if(window.movingRecarregarDados) window.movingRecarregarDados();
+    }
+    function post(url,corpo,tk){ var h={'Content-Type':'application/json'}; if(tk) h['X-Moving-Token']=tk;
+      return fetch(url,{method:'POST',headers:h,body:JSON.stringify(corpo)}).then(function(r){ return r.json().catch(function(){ return {ok:false,erro:'Resposta inválida ('+r.status+')'}; }); }); }
+    function enviar(){
+      email=($('codEmail').value||'').trim().toLowerCase();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ alerta('Digite um e-mail válido.'); return; }
+      botao('Enviando…',true);
+      post('/api/login/codigo',{email:email}).then(function(j){
+        if(!j.ok){ mostrar('email'); alerta(j.erro||'Não consegui enviar o código.'); return; }
+        mostrar('codigo'); alerta((j.mensagem||'Enviamos um código.')+' Confira também o spam.',true);
+      }).catch(function(){ mostrar('email'); alerta('Sem conexão. Tente de novo.'); });
+    }
+    document.querySelectorAll('[data-codigo]').forEach(function(b){ b.addEventListener('click',function(){ abrir(b.getAttribute('data-codigo')); }); });
+    $('codVoltar').addEventListener('click',fechar);
+    $('codReenviar').addEventListener('click',enviar);
+    $('codPular').addEventListener('click',entrarNoPainel);
+    F.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(passo==='email') return enviar();
+      if(passo==='codigo'){
+        var c=($('codCodigo').value||'').replace(/\D/g,''); if(c.length!==6){ alerta('O código tem 6 números.'); return; }
+        botao('Conferindo…',true);
+        post('/api/login/codigo/entrar',{email:email,codigo:c}).then(function(j){
+          if(!j.ok||!j.token){ mostrar('codigo'); alerta(j.erro||'Código inválido.'); return; }
+          tokenNovo=j.token; dadosNovos=j.usuario;
+          if(modo==='senha'){ alerta(''); mostrar('senha'); } else entrarNoPainel();
+        }).catch(function(){ mostrar('codigo'); alerta('Sem conexão. Tente de novo.'); });
+        return;
+      }
+      var n1=$('codNova').value||'', n2=$('codNova2').value||'';
+      if(n1.length<6){ alerta('A senha nova precisa ter pelo menos 6 caracteres.'); return; }
+      if(n1!==n2){ alerta('As duas senhas não são iguais.'); return; }
+      botao('Salvando…',true);
+      post('/api/senha/redefinir',{nova:n1},tokenNovo).then(function(j){
+        if(!j.ok){ mostrar('senha'); alerta(j.erro||'Não consegui salvar a senha.'); return; }
+        alerta('Senha nova salva! Entrando…',true); setTimeout(entrarNoPainel,700);
+      }).catch(function(){ mostrar('senha'); alerta('Sem conexão. Tente de novo.'); });
+    });
+  })();
+
+  // =========================================================================
   // INICIALIZAÇÃO DO ESTADO DE SESSÃO
   // =========================================================================
   var tokenSalvo = localStorage.getItem(TOKEN_KEY);
@@ -4732,3 +4823,14 @@
   });
 })();
 </script>
+
+<style>
+/* LOGIN_CODIGO */
+.login-links{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px 10px; margin-top:12px; font-size:12.5px; color:var(--fg-faint); }
+.login-link{ background:none; border:0; padding:2px 0; font:inherit; font-size:12.5px; font-weight:600; color:var(--accent); cursor:pointer; }
+.login-link:hover{ text-decoration:underline; }
+.login-link[hidden],#codigoForm[hidden],#loginForm[hidden],#codigoForm [hidden]{ display:none!important; }
+.login-cod-tit{ font-weight:700; font-size:14px; margin:0 0 4px; text-align:left; }
+.login-cod-input{ letter-spacing:8px; font-size:20px!important; font-weight:700; text-align:center; }
+.login-alert.ok{ background:rgba(22,163,74,.12)!important; color:var(--c-success)!important; }
+</style>

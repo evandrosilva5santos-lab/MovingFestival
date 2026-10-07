@@ -406,6 +406,26 @@ export default {
       }
     }
 
+    // LOGIN_CODIGO: entrar com código por e-mail / esqueci a senha
+    if (url.pathname === '/api/login/codigo' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_codigo_enviar', { p_email: String(body.email || '').slice(0, 120) });
+      if (res && res.ok === false && /PGRST202|Could not find the function|\(404\)/.test(String(res.erro || ''))) {
+        return new Response(JSON.stringify({ ok: false, erro: 'O login por código ainda não foi ativado. Rode o migration_codigo_email.sql no Supabase.' }), { status: 503, headers: corsHeaders() });
+      }
+      return new Response(JSON.stringify(res), { status: res && res.ok ? 200 : 400, headers: corsHeaders() });
+    }
+    if (url.pathname === '/api/login/codigo/entrar' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_codigo_entrar', { p_email: String(body.email || '').slice(0, 120), p_codigo: String(body.codigo || '').slice(0, 12) });
+      return new Response(JSON.stringify(res), { status: res && res.ok ? 200 : 401, headers: corsHeaders() });
+    }
+    if (url.pathname === '/api/senha/redefinir' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_senha_redefinir', { p_token: extrairToken(request) || '', p_nova: String(body.nova || '') });
+      return new Response(JSON.stringify(res), { status: res && res.ok ? 200 : 400, headers: corsHeaders() });
+    }
+
     // 2. GET /api/me
     if (url.pathname === '/api/me' && request.method === 'GET') {
       const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
