@@ -804,7 +804,7 @@
           <div class="filter-bar" style="margin-bottom:0">
             <!-- PLATAFORMA -->
             <div class="chip-group" id="diarioPlatChips">
-              <button class="chip-btn" aria-pressed="true" data-plat="ALL">Todas as Plataformas</button>
+              <button class="chip-btn" aria-pressed="true" data-plat="ALL">Uticket + Sympla</button>
               <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket</button>
               <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla</button>
               <button class="chip-btn" aria-pressed="false" data-plat="WIX">🌐 Wix</button>
@@ -1104,28 +1104,28 @@
           </div>
 
           <div class="filter-bar">
-            <!-- FILTRO DE PLATAFORMA (DIVISÃO CLARA) -->
-            <div class="chip-group" id="platFilterGroup" hidden>
-              <button class="chip-btn" aria-pressed="true" data-plat="ALL">Todas as Plataformas</button>
-              <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket (1 a cada 10)</button>
-              <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla (Comissão 7%)</button>
-            </div>
+            
 
             <!-- FILTRO DE ORIGEM (SEM PARCERIAS) -->
             <div class="chip-group" id="origemFilterGroup">
-              <button class="chip-btn" aria-pressed="true" data-orig="ALL">Todas as Ações</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="PROMOTER">👥 Promoters (Todos)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="PREMIADOS_UTICKET">🎁 Uticket Premiados (Full Pass)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="COMISSAO_SYMPLA">💰 Sympla Comissionados (7%)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes (Sympla)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="MARKETING">📣 Marketing (Uticket)</button>
+              <button class="chip-btn" aria-pressed="true" data-orig="ALL">Todos</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="PROMOTER">👥 Promoter / Afiliados</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="MARKETING">📣 Marketing</button>
+            </div>
+
+            <!-- SUBFILTRO DE PROMOTER / AFILIADOS: Uticket x Sympla -->
+            <div class="chip-group" id="platFilterGroup" hidden>
+              <button class="chip-btn" aria-pressed="true" data-plat="ALL">Uticket + Sympla</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket (1 a cada 10)</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla (Comissão 7%)</button>
             </div>
 
             <!-- SUBFILTRO DE MARKETING: Start Inc. x Antiga Gestão -->
             <div class="chip-group" id="mktSubGroup" hidden>
               <button class="chip-btn" aria-pressed="true" data-mkt="MARKETING">Todo o marketing</button>
-              <button class="chip-btn" aria-pressed="false" data-mkt="START_INC">🚀 Start Inc.</button>
-              <button class="chip-btn" aria-pressed="false" data-mkt="ANTIGA_GESTAO">🏛️ Antiga Gestão</button>
+              <button class="chip-btn" aria-pressed="false" data-mkt="START_INC">🚀 Start Inc. (Champions League)</button>
+              <button class="chip-btn" aria-pressed="false" data-mkt="ANTIGA_GESTAO">🦖 Jurássico (Íbis)</button>
             </div>
 
             <!-- BUSCA INSTANTÂNEA -->
@@ -1990,7 +1990,7 @@
       // Filtros de Origem / Regras Especiais
       if(CUPOM_ORIG_FILTER === 'MARKETING' && c.origem !== 'START_INC' && c.origem !== 'ANTIGA_GESTAO') return false;
       if(CUPOM_ORIG_FILTER === 'START_INC' && c.origem !== 'START_INC') return false;
-      if(CUPOM_ORIG_FILTER === 'PROMOTER' && c.origem !== 'PROMOTER') return false;
+      if(CUPOM_ORIG_FILTER === 'PROMOTER' && c.origem !== 'PROMOTER' && c.origem !== 'PARCERIA' && c.origem !== 'EQUIPE_FRAN') return false;
       if(CUPOM_ORIG_FILTER === 'ANTIGA_GESTAO' && c.origem !== 'ANTIGA_GESTAO' && c.origem !== 'COMUNIDADE') return false;
       if(CUPOM_ORIG_FILTER === 'PREMIADOS_UTICKET'){
         if(c.plataforma !== 'UTICKET' || c.origem !== 'PROMOTER') return false;

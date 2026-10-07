@@ -190,3 +190,7 @@
 - CUPOMGUTO (Uticket) e GUTO (Sympla) são o mesmo afiliado: na lista cada um fica na sua linha (igual à ticketeira, com a nota "mesmo cupom"); na análise de canais são somados. Novos pares: `ALIAS_CUPOM`.
 - 07/10 (Carol): FULLDIVULGAÇÃO e GOLDDIVULGAÇÃO = equipe interna Moving; "DIVULGADOR + nome" = equipe Fran Saval (Júlia gera); BDAY e MEIA = atendimento WhatsApp da Carol; 5035 e códigos "___…" = origem não identificada. Regras em `analisePorRegra` (`_worker.js`). Acentos são ignorados na comparação.
 - 07/10: Programa de afiliados = TRIPTRANCE, TRIP, NATANIELE5, KIOMA, KIOMA2, HELENA15, GUTO, GUTO2, DALETOUR, ALEMOA, FESTASRS (Lais). Lista `AFILIADOS` no `_worker.js`; origem PARCERIA (card renomeado "Programa de afiliados"). NATANIELE (Uticket, sem o 5) continua promoter.
+
+## 21. Filtros da lista de cupons — 07/10
+- 4 abas: Todos · Promoter / Afiliados (submenu Uticket 1 a cada 10 / Sympla 7%; inclui promoters, afiliados e equipe Fran Saval) · Aniversariantes (só Sympla) · Marketing (submenu Start Inc. "Champions League" / Jurássico "Íbis" = antiga gestão, só Uticket).
+- O submenu de ticketeira só aparece em Promoter / Afiliados; ao sair dele volta para "Uticket + Sympla".
