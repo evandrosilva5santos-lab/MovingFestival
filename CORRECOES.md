@@ -78,9 +78,21 @@
 - **Não voltar:** `sync_worker.py`, `run_sync_daemon.py` e `server.py` são só para uso local de teste; não são a fonte oficial.
 - Depois de mexer no `index.html`, copiar para `public/index.html` (é a pasta que a Cloudflare publica).
 
-## 10. Reconciliação Temporal Uticket (3.793 vs 3.960), Lote Wix e Motores de Validação
-- **Divergência aparente Uticket (3.960 vs 3.793):** O número 3.793 era a contagem congelada na auditoria de 05/10 às 21:59. Entre 05/10 22:00 e 06/10 22:35, o festival vendeu +167 ingressos reais ao vivo (140 vendas apenas no dia 06/10), chegando a 3.960 ingressos válidos. Não há erro nem duplicidade.
-- **Estrutura Uticket (5.073 linhas):** A API Uticket entrega 5.073 registros brutos no total: 3.960 ingressos oficiais + 1.038 campings (acomodações que não contam como ingresso) + 75 copos avulsos = 5.073. Reconciliação 100% matemática.
-- **Wix (366 ingressos fixos):** Não possui API aberta. Mantido como lote estático de pré-lançamento (01/06) com 366 ingressos (197 Full Pass, 64 Zone, 56 Gold, 49 Black = R$ 52.750,00), protegido via chave única `WIX-HIST-*`.
-- **Suite de Validação (`motores_validacao.py`):** Ferramenta com 5 motores autônomos que cruza os dados ao vivo, gera `relatorio_validacao_cruzada.json` e audita discrepâncias.
+## 11. Sistema de Autenticação, Perfis de Acesso (RBAC) e Gestão de Usuários
+- **Objetivo:** Acesso restrito ao painel com controle granular por tipo de usuário e personalização de telas visíveis para cada colaborador.
+- **Banco Supabase (`etjqbqorawnnvdlmztka`):**
+  - Tabela `moving_excluir_usuarios`: `id` (uuid), `login` (único, minúsculo), `nome`, `senha_hash` (bcrypt via `pgcrypto crypt(..., gen_salt('bf'))`), `papel` (superadmin | admin | usuario), `telas` (text[]), `ativo` (boolean), `tentativas` (int), `bloqueado_ate` (timestamptz), `ultimo_acesso` (timestamptz).
+  - Tabela `moving_excluir_sessoes`: guarda tokens em hash SHA256 (`token_hash`, `usuario_id`, `expira_em`).
+  - Funções `SECURITY DEFINER`: `moving_excluir_login`, `moving_excluir_me`, `moving_excluir_logout`, `moving_excluir_usuarios_listar`, `moving_excluir_usuario_salvar`, `moving_excluir_usuario_excluir`, `moving_excluir_senha_trocar`.
+- **Proteção contra Brute Force:** Bloqueio automático de 15 minutos ao errar a senha 6 vezes.
+- **Hierarquia de Papéis:**
+  - `superadmin`: Acesso irrestrito a todas as telas + tela exclusiva de Gestão de Usuários (`#navUsuarios`). Permissão para criar, editar, alterar status e excluir usuários (salvaguarda: nunca permite excluir a si mesmo nem deixar o sistema sem superadmin ativo).
+  - `admin`: Acesso a todos os relatórios analíticos de vendas e botão Sincronizar. Não tem acesso à tela de gestão de usuários.
+  - `usuario`: Acesso restrito estritamente às telas autorizadas no seu cadastro (`telas text[]`). Botão Sincronizar ocultado na interface e bloqueado com 403 no backend.
+- **Usuários Iniciais Configurados:**
+  1. `evandro@startinc.com.br` | `superadmin` | `Ev@12101034` (acesso total + gestão de usuários)
+  2. `movingadmin` | `admin` | `Moving@2026` (acesso total aos relatórios + sync)
+  3. `carolamandoneves@gmail.com` | `usuario` | `Moving@1234` | telas iniciais: `['overview', 'diario']` (personalizáveis pelo SuperADMIN)
+- **Segurança de Endpoints:** Todas as rotas de API no Cloudflare Worker (`_worker.js`) e no servidor local (`server.py`) exigem o header `X-Moving-Token`. Sessões inválidas respondem HTTP 401 e redirecionam para a tela de login.
+- **Sincronia de Arquivos:** `index.html` e `public/index.html` mantidos rigorosamente idênticos.
 

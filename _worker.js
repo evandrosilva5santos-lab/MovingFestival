@@ -293,6 +293,59 @@ async function getFullResumo(env, supabaseUrl, supabaseAnon) {
   return data;
 }
 
+// ==============================================================================
+// AUTH HELPERS (Supabase RPCs com prefixo moving_excluir_)
+// ==============================================================================
+async function chamarRpc(supabaseUrl, supabaseAnon, rpcName, params = {}) {
+  const res = await fetch(`${supabaseUrl}/rest/v1/rpc/${rpcName}`, {
+    method: 'POST',
+    headers: {
+      'apikey': supabaseAnon,
+      'Authorization': `Bearer ${supabaseAnon}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(params)
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    return { ok: false, erro: `Falha na API (${res.status}): ${errText}` };
+  }
+  return await res.json();
+}
+
+function extrairToken(request) {
+  const headerToken = request.headers.get('X-Moving-Token');
+  if (headerToken) return headerToken.trim();
+  const auth = request.headers.get('Authorization');
+  if (auth && auth.startsWith('Bearer ')) {
+    return auth.slice(7).trim();
+  }
+  return null;
+}
+
+async function autenticarUsuario(request, supabaseUrl, supabaseAnon) {
+  const token = extrairToken(request);
+  if (!token) return null;
+  try {
+    const meRes = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_me', { p_token: token });
+    if (meRes && meRes.ok && meRes.usuario) {
+      return { token, usuario: meRes.usuario };
+    }
+  } catch (err) {
+    console.error('[Auth] Erro ao validar token:', err);
+  }
+  return null;
+}
+
+function corsHeaders() {
+  return {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Moving-Token'
+  };
+}
+
 export default {
   // Disparo Agendado (Cron Trigger na Cloudflare a cada 15 min 24/7)
   async scheduled(event, env, ctx) {
@@ -305,8 +358,142 @@ export default {
     const supabaseUrl = env?.SUPABASE_URL || SUPABASE_DEFAULT_URL;
     const supabaseAnon = env?.SUPABASE_ANON_KEY || SUPABASE_DEFAULT_ANON;
 
-    // Rota POST /api/sync (Disparo manual na nuvem)
+    // Resposta para pré-voo CORS
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: corsHeaders() });
+    }
+
+    // ============================================================================
+    // ROTAS DE AUTENTICAÇÃO E CONTROLE DE ACESSO
+    // ============================================================================
+
+    // 1. POST /api/login
+    if (url.pathname === '/api/login' && request.method === 'POST') {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const login = String(body.login || '').trim();
+        const senha = String(body.senha || '').trim();
+        const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_login', { p_login: login, p_senha: senha });
+        const status = res.ok ? 200 : 401;
+        return new Response(JSON.stringify(res), { status, headers: corsHeaders() });
+      } catch (err) {
+        return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
+      }
+    }
+
+    // 2. GET /api/me
+    if (url.pathname === '/api/me' && request.method === 'GET') {
+      const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!auth) {
+        return new Response(JSON.stringify({ ok: false, erro: 'Não autenticado ou sessão expirada' }), { status: 401, headers: corsHeaders() });
+      }
+      return new Response(JSON.stringify({ ok: true, usuario: auth.usuario }), { status: 200, headers: corsHeaders() });
+    }
+
+    // 3. POST /api/logout
+    if (url.pathname === '/api/logout' && request.method === 'POST') {
+      const token = extrairToken(request);
+      if (token) {
+        await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_logout', { p_token: token }).catch(() => null);
+      }
+      return new Response(JSON.stringify({ ok: true }), { status: 200, headers: corsHeaders() });
+    }
+
+    // 4. POST /api/senha (Alterar minha senha)
+    if (url.pathname === '/api/senha' && request.method === 'POST') {
+      const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!auth) {
+        return new Response(JSON.stringify({ ok: false, erro: 'Não autenticado' }), { status: 401, headers: corsHeaders() });
+      }
+      try {
+        const body = await request.json().catch(() => ({}));
+        const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_senha_trocar', {
+          p_token: auth.token,
+          p_atual: String(body.atual || ''),
+          p_nova: String(body.nova || '')
+        });
+        const status = res.ok ? 200 : 400;
+        return new Response(JSON.stringify(res), { status, headers: corsHeaders() });
+      } catch (err) {
+        return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
+      }
+    }
+
+    // 5. GESTÃO DE USUÁRIOS (Apenas Superadmin)
+    if (url.pathname === '/api/usuarios') {
+      const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!auth) {
+        return new Response(JSON.stringify({ ok: false, erro: 'Não autenticado' }), { status: 401, headers: corsHeaders() });
+      }
+      if (auth.usuario.papel !== 'superadmin') {
+        return new Response(JSON.stringify({ ok: false, erro: 'Acesso negado: apenas superadmin pode gerenciar usuários' }), { status: 403, headers: corsHeaders() });
+      }
+
+      // 5.1 GET /api/usuarios
+      if (request.method === 'GET') {
+        const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_usuarios_listar', { p_token: auth.token });
+        const status = res.ok ? 200 : 400;
+        return new Response(JSON.stringify(res), { status, headers: corsHeaders() });
+      }
+
+      // 5.2 POST /api/usuarios (Salvar / Editar)
+      if (request.method === 'POST') {
+        try {
+          const body = await request.json().catch(() => ({}));
+          const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_usuario_salvar', {
+            p_token: auth.token,
+            p_id: body.id || null,
+            p_login: String(body.login || ''),
+            p_nome: String(body.nome || ''),
+            p_senha: String(body.senha || ''),
+            p_papel: String(body.papel || 'usuario'),
+            p_telas: Array.isArray(body.telas) ? body.telas : [],
+            p_ativo: body.ativo !== false
+          });
+          const status = res.ok ? 200 : 400;
+          return new Response(JSON.stringify(res), { status, headers: corsHeaders() });
+        } catch (err) {
+          return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
+        }
+      }
+
+      // 5.3 DELETE /api/usuarios
+      if (request.method === 'DELETE') {
+        try {
+          let id = url.searchParams.get('id');
+          if (!id) {
+            const body = await request.json().catch(() => ({}));
+            id = body.id;
+          }
+          if (!id) {
+            return new Response(JSON.stringify({ ok: false, erro: 'ID do usuário não fornecido' }), { status: 400, headers: corsHeaders() });
+          }
+          const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_usuario_excluir', {
+            p_token: auth.token,
+            p_id: id
+          });
+          const status = res.ok ? 200 : 400;
+          return new Response(JSON.stringify(res), { status, headers: corsHeaders() });
+        } catch (err) {
+          return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
+        }
+      }
+    }
+
+    // ============================================================================
+    // ROTAS DE DADOS PROTEGIDAS POR X-Moving-Token
+    // ============================================================================
+
+    // 6. Rota POST /api/sync (Disparo manual protegido - Admin ou Superadmin)
     if (url.pathname === '/api/sync') {
+      const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!auth) {
+        return new Response(JSON.stringify({ status: 'ERRO', erro: 'Não autorizado. Faça login.' }), { status: 401, headers: corsHeaders() });
+      }
+      if (auth.usuario.papel !== 'admin' && auth.usuario.papel !== 'superadmin') {
+        return new Response(JSON.stringify({ status: 'ERRO', erro: 'Acesso negado: apenas administradores podem sincronizar.' }), { status: 403, headers: corsHeaders() });
+      }
+
       try {
         const sync = await chamarSyncNuvem(env);
         const resumoData = await getFullResumo(env, supabaseUrl, supabaseAnon);
@@ -316,65 +503,53 @@ export default {
           fontes: sync.fontes || null,
           pulou: sync.pulou || null,
           resumo: resumoData
-        }), {
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
+        }), { headers: corsHeaders() });
       } catch (err) {
-        return new Response(JSON.stringify({ status: 'ERRO', erro: String(err) }), {
-          status: 500,
+        return new Response(JSON.stringify({ status: 'ERRO', erro: String(err) }), { status: 500, headers: corsHeaders() });
+      }
+    }
+
+    // 7. Endpoint /api/resumo (Protegido por login)
+    if (url.pathname === '/api/resumo') {
+      const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!auth) {
+        return new Response(JSON.stringify({ error: 'Não autorizado. Faça login para acessar o painel.' }), {
+          status: 401,
           headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' }
         });
       }
-    }
 
-    // 1. Endpoint /api/resumo
-    if (url.pathname === '/api/resumo') {
       try {
         const data = await getFullResumo(env, supabaseUrl, supabaseAnon);
-        return new Response(JSON.stringify(data), {
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-store'
-          }
-        });
+        const headers = corsHeaders();
+        headers['Cache-Control'] = 'no-store, no-cache, must-revalidate';
+        return new Response(JSON.stringify(data), { headers });
       } catch (err) {
-        return new Response(JSON.stringify({ error: String(err) }), {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
+        return new Response(JSON.stringify({ error: String(err) }), { status: 500, headers: corsHeaders() });
       }
     }
 
-    // 2. Endpoint /api/vendas_diarias
+    // 8. Endpoint /api/vendas_diarias (Protegido por login)
     if (url.pathname === '/api/vendas_diarias') {
+      const auth = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!auth) {
+        return new Response(JSON.stringify({ error: 'Não autorizado. Faça login para acessar os dados.' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' }
+        });
+      }
+
       try {
         const full = await getFullResumo(env, supabaseUrl, supabaseAnon);
-        return new Response(JSON.stringify({ vendas_diarias: full.vendas_diarias || [] }), {
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-store'
-          }
-        });
+        const headers = corsHeaders();
+        headers['Cache-Control'] = 'no-store, no-cache, must-revalidate';
+        return new Response(JSON.stringify({ vendas_diarias: full.vendas_diarias || [] }), { headers });
       } catch (err) {
-        return new Response(JSON.stringify({ error: String(err) }), {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
+        return new Response(JSON.stringify({ error: String(err) }), { status: 500, headers: corsHeaders() });
       }
     }
 
-    // 3. Arquivos estáticos (index.html, etc)
+    // 9. Arquivos estáticos (index.html, etc)
     if (env && env.ASSETS) {
       const assetRes = await env.ASSETS.fetch(request);
       if (url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname === '') {

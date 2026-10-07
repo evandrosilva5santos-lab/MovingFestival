@@ -316,7 +316,287 @@
   .btn-clear-filter:hover{ background:var(--surface-2); color:var(--c-danger); border-color:var(--c-danger); }
   .badge-setor-pill{ display:inline-block; padding:2px 6px; border-radius:4px; font-size:10.5px; font-weight:700; }
   .tbl-diario tfoot td{ font-weight:800; border-top:2px solid var(--border); background:var(--surface-2); }
+
+  /* ==========================================================================
+     AUTH & GESTÃO DE USUÁRIOS (MANYCHAT CLEAN STYLE)
+     ========================================================================== */
+  .login-overlay{
+    position:fixed; inset:0; z-index:10000;
+    background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    transition:opacity .25s ease;
+  }
+  .login-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:24px;
+    box-shadow:0 24px 60px -12px rgba(15,23,42,0.22), 0 4px 12px rgba(0,0,0,0.06);
+    width:100%; max-width:410px;
+    padding:36px 32px 32px;
+    box-sizing:border-box;
+    position:relative;
+  }
+  .login-brand{ text-align:center; margin-bottom:26px; }
+  .login-logo{
+    width:64px; height:64px; border-radius:18px; margin:0 auto 14px;
+    overflow:hidden; box-shadow:0 8px 24px -4px rgba(43,108,246,0.3);
+    border:2px solid var(--border);
+  }
+  .login-logo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .login-badge{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); background:rgba(43,108,246,0.12);
+    border:1px solid rgba(43,108,246,0.25); border-radius:999px;
+    padding:3px 10px; margin-bottom:10px;
+  }
+  .login-brand h2{
+    font-family:var(--font-display); font-size:22px; font-weight:800;
+    color:var(--fg); margin:0 0 6px; letter-spacing:-.02em;
+  }
+  .login-brand p{
+    font-size:12.5px; color:var(--fg-muted); margin:0; line-height:1.45;
+  }
+  .login-form{ display:flex; flex-direction:column; gap:16px; }
+  .login-field{ display:flex; flex-direction:column; gap:6px; text-align:left; }
+  .login-field label{
+    font-size:11.5px; font-weight:700; color:var(--fg-muted);
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .input-wrap{
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface-2); border:1px solid var(--border);
+    border-radius:12px; padding:0 12px; height:46px;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .input-wrap:focus-within{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(43,108,246,0.18);
+  }
+  .input-wrap svg{ color:var(--fg-faint); flex:none; }
+  .input-wrap input{
+    flex:1; background:transparent; border:0; outline:none;
+    color:var(--fg); font-family:var(--font-body); font-size:13.5px; font-weight:600;
+    min-width:0;
+  }
+  .btn-toggle-pass{
+    background:transparent; border:0; color:var(--fg-muted);
+    cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center;
+    transition:color .15s;
+  }
+  .btn-toggle-pass:hover{ color:var(--fg); }
+  .login-alert{
+    background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.3);
+    color:var(--c-danger); border-radius:10px; padding:10px 14px;
+    font-size:12px; line-height:1.4; display:flex; align-items:center; gap:8px;
+  }
+  .btn-login-submit{
+    height:46px; border-radius:12px; border:0;
+    background:var(--accent); color:#fff;
+    font-family:var(--font-display); font-size:14px; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:all .15s ease; box-shadow:0 4px 14px -2px rgba(43,108,246,0.4);
+    margin-top:4px;
+  }
+  .btn-login-submit:hover{
+    opacity:.93; transform:translateY(-1px);
+    box-shadow:0 6px 20px -2px rgba(43,108,246,0.5);
+  }
+  .btn-login-submit:disabled{
+    opacity:.7; cursor:not-allowed; transform:none;
+  }
+
+  /* MODAL */
+  .modal-backdrop{
+    position:fixed; inset:0; z-index:9000;
+    background:rgba(15,23,42,0.65); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+    display:flex; align-items:center; justify-content:center;
+    padding:16px; box-sizing:border-box;
+    animation:fadeInModal .2s ease;
+  }
+  @keyframes fadeInModal { from{ opacity:0; } to{ opacity:1; } }
+  .modal-card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:20px; box-shadow:0 24px 64px -12px rgba(0,0,0,0.32);
+    width:100%; max-width:540px; max-height:92vh;
+    display:flex; flex-direction:column; overflow:hidden;
+    box-sizing:border-box;
+  }
+  .modal-head{
+    padding:18px 22px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--surface);
+  }
+  .modal-head h3{
+    font-family:var(--font-display); font-size:16.5px; font-weight:800;
+    color:var(--fg); margin:0;
+  }
+  .btn-modal-close{
+    background:transparent; border:0; color:var(--fg-muted);
+    cursor:pointer; width:30px; height:30px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s;
+  }
+  .btn-modal-close:hover{ background:var(--surface-2); color:var(--fg); }
+  .modal-body{
+    padding:22px; overflow-y:auto; flex:1;
+    display:flex; flex-direction:column; gap:16px;
+    box-sizing:border-box;
+  }
+  .modal-foot{
+    padding:14px 22px; border-top:1px solid var(--border);
+    background:var(--surface-2); display:flex; justify-content:flex-end; gap:10px;
+  }
+  .form-group{ display:flex; flex-direction:column; gap:6px; }
+  .form-label{
+    font-size:11.5px; font-weight:700; color:var(--fg-muted);
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .form-input, .form-select{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:10px 14px;
+    color:var(--fg); font-family:var(--font-body); font-size:13px; font-weight:600;
+    outline:none; transition:border-color .15s, box-shadow .15s;
+    box-sizing:border-box; width:100%;
+  }
+  .form-input:focus, .form-select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(43,108,246,0.18);
+  }
+  .form-hint{ font-size:11px; color:var(--fg-faint); margin-top:2px; }
+
+  /* SELEÇÃO DE TELAS */
+  .telas-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;
+  }
+  @media(max-width:540px){ .telas-grid{ grid-template-columns:1fr; } }
+  .tela-item-card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:10px 12px; cursor:pointer;
+    display:flex; align-items:flex-start; gap:10px;
+    transition:all .15s;
+  }
+  .tela-item-card:hover{ border-color:var(--accent); }
+  .tela-item-card.checked{
+    background:rgba(43,108,246,0.06); border-color:var(--accent);
+  }
+  .tela-item-card input[type="checkbox"]{
+    margin-top:2px; accent-color:var(--accent); cursor:pointer;
+  }
+  .tela-item-txt b{ display:block; font-size:12.5px; font-weight:700; color:var(--fg); }
+  .tela-item-txt small{ font-size:11px; color:var(--fg-muted); line-height:1.25; display:block; }
+
+  /* SIDEBAR USER FOOTER */
+  .side-user-box{
+    display:flex; flex-direction:column; gap:10px; width:100%;
+  }
+  .side-user-profile{
+    display:flex; align-items:center; gap:10px;
+  }
+  .side-user-avatar{
+    width:36px; height:36px; border-radius:10px;
+    background:linear-gradient(135deg, var(--accent) 0%, #1e40af 100%);
+    color:#fff; font-family:var(--font-display); font-weight:800; font-size:13px;
+    display:flex; align-items:center; justify-content:center; flex:none;
+    box-shadow:0 3px 10px rgba(43,108,246,0.25);
+  }
+  .side-user-details{ flex:1; min-width:0; }
+  .side-user-name{
+    font-weight:700; font-size:13px; color:var(--fg);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .side-user-badge{
+    display:inline-block; font-size:10px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.04em;
+    padding:1px 6px; border-radius:4px; margin-top:2px;
+  }
+  .badge-papel-superadmin{ background:rgba(217,119,6,0.16); color:#D97706; border:1px solid rgba(217,119,6,0.3); }
+  .badge-papel-admin{ background:rgba(43,108,246,0.16); color:var(--accent); border:1px solid rgba(43,108,246,0.3); }
+  .badge-papel-usuario{ background:var(--surface-2); color:var(--fg-muted); border:1px solid var(--border); }
+
+  .side-user-actions{
+    display:flex; align-items:center; gap:6px;
+  }
+  .btn-side-action{
+    flex:1; height:32px; border-radius:8px;
+    background:var(--surface-2); border:1px solid var(--border);
+    color:var(--fg-muted); font-size:11.5px; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
+    transition:all .15s;
+  }
+  .btn-side-action:hover{ background:var(--surface); color:var(--fg); border-color:var(--accent); }
+  .btn-side-action.danger:hover{ background:rgba(220,38,38,0.1); color:var(--c-danger); border-color:var(--c-danger); }
+  .sidebar.collapsed .side-user-details, .sidebar.collapsed .side-user-actions span{ display:none; }
+  .sidebar.collapsed .side-user-actions{ flex-direction:column; width:100%; }
+
+  /* TABELA USUÁRIOS */
+  .tbl-usuarios th{ font-weight:700; }
+  .tbl-usuarios td{ padding:12px; vertical-align:middle; border-bottom:1px solid var(--border); }
+  .tbl-usuarios tr:hover td{ background:var(--surface-2); }
+  .user-cell{ display:flex; align-items:center; gap:10px; }
+  .user-avatar-tbl{
+    width:32px; height:32px; border-radius:8px;
+    background:var(--surface-2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:12px; color:var(--fg);
+  }
+  .telas-badges-list{ display:flex; flex-wrap:wrap; gap:4px; max-width:280px; }
+  .tag-tela{
+    display:inline-block; font-size:10px; font-weight:700;
+    padding:2px 6px; border-radius:5px;
+    background:var(--surface-2); border:1px solid var(--border);
+    color:var(--fg-muted);
+  }
+  .tag-tela.todas{
+    background:rgba(22,163,74,0.12); color:var(--c-success); border-color:rgba(22,163,74,0.25);
+  }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;
+  }
+  .status-pill.ativo{ background:rgba(22,163,74,0.14); color:var(--c-success); }
+  .status-pill.inativo{ background:rgba(220,38,38,0.14); color:var(--c-danger); }
+  .status-pill .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
 </style>
+
+<!-- TELA DE LOGIN (ESTILO MANYCHAT CLEAN) -->
+<div class="login-overlay" id="loginOverlay" style="display:none;">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwQDAwQEBAQFBQQFBwsHBwYGBw4KCggLEA4RERAOEA8SFBoWEhMYEw8QFh8XGBsbHR0dERYgIh8cIhocHRz/2wBDAQUFBQcGBw0HBw0cEhASHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBz/wAARCACgAKADASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAABQYDBAcCAQAI/8QASRAAAQMDAwIDBQQHAwcNAAAAAQIDBAAFEQYSIRMxIkFRB2FxgZEUMkKhFSMzYrHB0RZSshckJkNjc+ElNEZTZIKEkqKjwtLx/8QAGwEAAgMBAQEAAAAAAAAAAAAABQYCAwQHAQD/xAA+EQABAwIDBQUFBAgHAAAAAAABAgMEABEFITEGEkFRcRMiYYGhMpGxwdEU4fDxFSNCYoOSstIWNENSgqLy/9oADAMBAAIRAxEAPwCbBxXoBpm1bpORpi7yYqmnfsyXCGnVpwFj40BDddoafQ8gOINwa5C8lbKy24LEVEBUiRmp2Yq3j4U5Hr2FFI9mbIBfkbR6ITn8zUXH0I9o0Qw7BsQxL/KMlQ56D3mw9aEJRUgRxTPHtdmGA4Zaz+6tI/lRZrT2npScIeuTCz2KghY/lWNWINjUH3UbXsNjSU37MdN4UjBs4roN04SdBzAkrgPImo/upGxf0NLjkZcd1TbqFIcScKSoYIPwqbclt32Delqdh0uAvclNlJ8dD0OhqslGOa7AqbZgV8EE89qnvVjCq4SDUqU812ls8VKluoFVWJVXTSc1eabJqFlGDRFgDIrM4qtrKxerEdrdjii8WP2qtGSnijcRpa+G2lLP7ozQt9y1HIyhViLHHBPFGIykI7Y+JoIX1IUUrBSR+EjGKtMrUvHPFDnElWZoww+BpTNHlpQRt5PqaOwLkrKR3J8zSjH8IBPf0osh3oox+NX5UMfaScqMsPHjQz2sWSZe9PMtwon2hxCwtRT95IArAGrfhXj8u4PYfH+laTqb2oyrk0uFbiuNDUMLc7OOD0/dFD7FoC6amguzWwGITaSpBUOXSPJI/nRjDH3cPi9k+QkXy550ROycNx8Ylid7Aezztpfien5UmhWVdOOjJT3WrgD+lSJDaOVlTy/jhI/maZm9E3uVELzNreDCDjbjBz8O5+NLzkdTSyhSSlQOCD3Bo2yWlk965GudLGO7bTwAxhyOwa4G1iR4cB5e+pW5ryP2fTQP3UCrjV6nNkfrsj0UgEfwoclGKtfZUsI6kp1DCMZHUOFH4DvVqkN6EClGJKxie9aO44tXgo/G9hTBbtWvR1guNI480DA+lTX2fC1VjqIbjTW04Q+o4Cv3VH09D5Vns3U0VpSm4vUeUO5aRk/U8Cgrt7W6vcqDvP8A2mQSPomqxBQlXaeyfxwrpUDDZrsZUbG1pWkjIftDxv8An1pnDaUq2qdaSfesUQj2r7Qjcmbb0+5yWhJ/M0nfpyQoAsxLUyPL9R1D9TRGxztVXSezCtzEF6Q6SEtohtjsMkknsKqm4gxFRvuOBPX8fOh7WwmHHLtVE+X9tHHo7cde1UqKs/7N4LH1FeojLWnchO4eqeaCHWV4SSh1FtDiSUqbegtggjyIxU7GvpLbg61ktLwHBU2hTR+W04qSXypIIsfP7h8a8d2GgWsh5QPj/wCR8aMJQUnBGD76tNHBFRRfaNZXiG7lZZLCTx1G1h1I+uSPrTFBj6b1CjdZ700h7/qpHA+GfL51Wt8gXWkgc9R6XoJK2NlsAqjKDgHkfiR61QEgMtLc/ujNRWfUspianc4dpPkcYq3crLNtR6cxhSErHhX3SseoI4NCY9tCXQd4AzWCWyH0d3MUsvh9lwIUCkjgcq1e8Smrtaocw7PtLZ6SikcqHlmhTK0oA9aFR5aUsNsN52I5JPcmiUFgvhTi1pQhPcqoX3YMUrkq3Up1J4CmOGt2StKUC6jRJh4jxq8uwqy3JJO8+VeQp9vktOwnFpQkAFL238X9K4nQlxy2hpfWQ4MhSEmg2F7QQMWUpEdY3gSLcbDj0NMcqDJhJBcGXz5UB0h7M4UVSJV+cS+/3THSfAk+8+f8K1GNKRDUG0YDSQAAkcAUnF11CgopVj1xRu0zOuQhXIPFbpqFvXWs3+XSiDmJOy13dOdNDD7bu5TZJ9Qaxj2oaebt95TLZSlLU0FRSO4V5n51q0eQzDcWnIJ8qCaysDep4SX46VGdH+4N2E488/SqMLf+ySgomyTkfl60KxqIZcRSEC6hmPx0r85Xq4XK1NtqhxvA631A8BkhO4pHw5Se31rPJ94myHwFpcefdVtSg5JUfh/XNbkI3Us1qASVEwWDgDOclZ/nSJqGxzI98tVwgxWj9n39bqOoaxkcHxEe/tTwqcpCVJQnPOiksLwyCWoCM0gWAGZOVyeJPGlg2y5xoAuElCBFQoIWAvlCiraBj3n09DTDBtkFm8RRcHEiKDuWtagltJTz4s/h4rqXDkz2tkNhCXVqytRdU4AM5ICQNoyec17L0fdbtbXIa29oVjCgOcg55zS19nxabEejzHAgqKglSciEnTK+o/HOq8PkSXVoUppQAAvvWzPHS2XLKutWN2KNdYztiJehOMh1byHNzQWok7UjuAB6+vupx9nntJtulok1i7PqU0lSfs7bEfe4Sc7ueOO3c0rW72Y3pCI7aEpU00nGxaxg0cZ9kt5cWHBFZz6F7/hQbEdmTJjtsOv7xRbvFQvl1J50Tu+HFL3cjwr72jX6NrG4sTra+zIt7DaShsx+msrP39xIyT2HoPzqDRulbVrZ+SmfJNumoBZZZQtIClKTlKwM5UU85HajCfZpqFtktiGwR/vv+FK929iep5y+o1llwLSsLQAVZHvBBrejCltwkQ40gNlP7Vx55X41e1LlAFlaRuE+FxQCbCTDQt1LwkRw50m3G0EF3nAO08jPp3qq1a5cyS0hiPIjy1pDjYdSW1lJOArnkA4OPWj6/ZDqSO7GUpt1TbCg4ELSvAWkgpPGexH5093JrUGonIEy9rYRdIjXS6kZvpoVySTtVzzkcZ8uMZoi89KYdSlmyk2zVfO/Qc6wS0uNNqUybq4UhQvaBqbRjrkC6NfbYiThxh4BWR6j1+PeneyXux6ubLtmkBuUlO5yA6cOJHnt9R7u/wAaBXWxuvTFyJaVvLVgb9vGBSq5EFl1/pCVHR0upLShzbxuG9Iwfko1vjul3JYsojUcTbiOPx8axrZRiCEszU3J0PEHrWwRmwCPSjNv5cIJ8BB49a7h2KZNceEZorDSiCe3Y0y2zSjbkfbKeLbx/CPw0LxJTL7C2XDkoEc9fClnC4j7byXEJ9k35aeNBrbagmUlwYcCVAqA7CtBiSo7J6aG049TSe9Jgae3R1zW1rzkhPJ/KqyNX2pK/HIWjHmWzilPCNkmMN31Rd5QVbUcvLjTs7JlSkguotblXNnvG9IWgko80K5pqTb0zIpkxUhDnfw9lVi1jvRSttAOd3FaoxenLNpO4T21JW4wwtYaV5qA8I+ZxXpDjMhKWzqdKQMGmFxe6TlQO86pjWUnrqUuQezST4vn6Ug6g9rF1MZaIsoQmzweiBuI9CtX8sUgfabxqO4SX57ztvR1f1inEZdeJ5JGeE/E5+FNDFobsTCLpChRZqUcuF/K5BHqlaiRn3YGfdTs+0mGgFpjtl9QE35Z6+QPWnJrEMMjL7N126uNrn7vnQa2y7tPSBFtkqUkAJSoblJAHbB+6B86IO2rUfTIdRb4WR/r3kZHyTuNMM7Vhmxoybc4FmQjqBfkhHrj191I03U8iPNXHiRptwkowpxMZpThTnzVjt86xQMQxbEGVSnw3Gb/AHhc62ud4gAX568rUy9o0R+qTvUxWnTd0kr2r1Vbys/gaStRH+GmD+wcpLTj72o20NNpKlrLJAAHnkrpWsl6t+pUGPJZKXkHBCgUOtK+PCkmrsi8zYkG+2G5uFchuMpyO8eC81nHI/vA8HHfg+dB8bRjcZIfak77eWiUDI8RYG48b1dGWh5XZ2sffRCPboCXWGTqOSlbx/VlUcALPuJNNjHs8fdQladQySDyCEJFKdsgJuWlp6HezMVTyD5haRlJz6ggEVpeipjk3TlvfdP6xxlKjj1IBoJjMmfh8gIEhSknna+XQUQxGMhlJLfA2NwPpQY+zyagcajkD4oFB5ERVvlGMnWLv2kHBQhtSiPdwqm7XV4ds2l7rNaOHGI61pPvANZp7MIiHIKZDmVvLaU4pauSpZRkqz65NeYTLnznFjtyEoFzkCTfQC4/HKq4URLrK33NBwAH0pvhuX1tzpRdWxpLm3dsXuyB6nBOPnRZD+uGEAq/R81B8tyTn6pH8ay/2TPK/tLcAe5Uj/Amtc1hqiPoy2qkqSXHHAlLDCe7jiiQEisjGMYitKVAhZUbW3Re97C1qU2MSDs12Ipsd0kA9OdD3r3NQMXbRiHkea2Gs/mgqoLKR7Pr1LYXKjSbdOjLDjSlJ39JYIOQk8jsPKuLI3e9RK+3XO4LQnG4oaWUMtj0A7q+J7+gor+kbQ8v7Gq4tSvLpykBxs/XJFObAxFAusJ3uSSoW65KTW4qjk90HqNPWm60uykxibdIhXOOSVlyKQh3nnKkf/lLmop1yuUgQoKXUSFDLmQUhse80GvltsdkjJnsTZNnmdTY23GKndyyMgJR3ORz4SOKu6a1beLipEa/QVKSTtYubSeRnsHE99vr6e/vVEKehx1XcO8NQR8x3T6eANXJhqba7dpO8OFxb7j5VZtujGYycyHlvOnlRTxz8aJp0laHRl1lQB/fOc1cLpTyOD51wqUSnaK3qffWb7xoC5NcUbrVWFaeK25SFLztz50b9od7fjW1C2VkR2Gg+pA7KVuIGfkDU0CyuOKSEI59aF+1CMIlglMhYUdjKDj3lRxXmDs9piCFqGQ/KuX9g4ywojSlrXJcY0+h5GQ5IT1MjvR3TKZUbRFzZnuFyREY3FXv4/riqevkAW60sgcdNofVdMIZ3WHVCUjlQ2f4aOuylmU0xfukEnyWgD0JrTHjpS249xBA/wCqifUClDRCP9FJ08+JxtpTgB95JxWlaItce32GGGkpUt5CX3V+bi1gEqJ+f0ArHtB3B62W8RZgxHfLiEHyUAogj4imu1Xy76fZRDgqiyICOGS8VBbSfJPHCgPI8HFA9tsKl4vGCcPIUAq9r2vbLpdJuCPGut4JJbTDbJyulPwFFtcW6PG1jaZUVIRIkx1iQE/jAUNqj7+SPlQD2kPJGoLKGz+uMGQHj+7s8/mE1YcuKWZL93u0tLkjbklWEpSkdgPQCg7sOVd4V51PNaW0FR+hEQ4MK2FQysjy3cYHoPfVCmxg2CtRZagV2KQOZUb5eCb5nn1opCT2kntBpcfKtBsLga0tdAQdy4TgGPXaaddBq2aYtoz2Yb/wis+tj4Xp6TGQra/IjqaQrP3SoYyR596jtFx1baoDMREy3LQyhKASwQTgYz9/3UD2kwuVMeSuOi9r3zA5cyKZZkNT6VpBAO9x6U5e1eUyzoW99VYSFxlpGT3JBwKVfZ2FQbPl1JHTjkH3EI5+lDrnarpqdxpy/XBDsVlQWI7aNjW4HIUfUj4491XVLVNAsdqJJdG150dkI/ESfhVOHRlYPFefmEAqtle+l8upvkK+ZjhiKpkm9zcngBQ/2Xjp6pnj/dH/ANtNEfbrLcRqrRMXcem4h9wj1UNoH+I1W0aWrfry7MqOzxo2A/3dgA/gfpXnt9P+lWgHEnPhkgn/AMlYtkylcli/M/A1xwLP6TkEcVK+dahBt6ZlijRTkNPkJc2nBKQntWO670NG0PqGDNtAUxCnqLbjCT4UuAZCgPLIBz8q2/Tykm3QBnxE5A922kr23IH2KzOHsmann4pUKMOSXWsfa3VEAkAjhYkj6e4U4RD+r3OtD7isT9K2q4uDMiJJTHCz32ucEfUCi141S1pSDa47LYXJlIU5tKColA4HuGT60AmSEt+zSW6D+xlx1n4B1Of41JqWKbpCsF0jpK0RyqM7tGdoUQpJ+GcimeewVJ3Wzu3Uc8vA8etHcGSl5tDbx7oUoelx608aenvXGG5OlCSwypYSGJLCW9hI3eFQPiT3GTjtRgLjlJUFp2ihM1CmdJRzg7kuo5+IVSr13tpTvUEnyzUGmO3BUDaxtXNMenJhTFMpTcVeMko+7x8KQ9fyRNhzo4S4pTYbWsgDAyDt/gac1JNKF7s1wl3N15qKy6yQnBW4PIY+6fn39aKsoOfZKCVWyJzF+lxf3igcFmPLcLUxW6i3MDPzpenXxq/77SJD0RmQwGeuA9uxtIKsAA8+786Nv6utkNMrozEJRLASsOMrKSR2PA4NU3LfdmShKbeopHJKVJx8MA0Eu8e/IWyFW+O2HVlKCt4HOBnnHbgULd2dfeeS+7OVvJBA3QgZHMi1jfQa30pkIwWGypJKSk2Juq+Yy4deFWYly0smyi3y5YlELU5ubZWkJUVE5HGRjPegb71vQrbG1PLabz2ciKWR88CuJFsvkZW51iEEKx4tyiM+n3anipvCT4WLcrHqs/0qDGzSIq1uNz3UlZJNlJAJOptuWv5URYxWI02lKUgJAAGunDWiNm/simS3JudxuF0ebIUht2OUspPrsAwT7znFOl21fpy62eVbXBNQ0+jaFNsqCknyPalOHIvROBEtJx/t8fyo3GevmUlNstSs9j9o7/lWGXspBfc7Z+S4tXMrTf8AprcnH46bELAtSehmMCOnqa6JA7f8nqog2sj/AKUXM/G3Ofyp6jz9StkA2K1Y9TKI/wDjRJu66sBwNP2ogess8/8AprxeEJ4S3D/ET/bRD/GZP+oD/LSHCXaeoFXC/wB3fR5pTDWjPzxTzaNZ6SscboRGn20nlSlR17le8nFWkXPVq+VaatCvd9rBx+VTpn6nAz/ZSzL/APEJ/wDrQ6Ts3FkG7zy1Ec3En3XGXlVL+0wkCzjmXX6UrX+8aTvUpE2Pc5FtuKBjrNsE7h6KSRyKGX2RZNUizqlajWl+2OOKaJhL8QUADn6A1oguGoSATpCxbfUyEd/pUyLtfwnKtGWIpHf/ADpvj08qqjbORojgdjvKSofvo+FrUNLkJb3blKSrneqNm19pyyspS5cXZD2AnqKYWkAegGOBX2sL/pbW1iXBdvUeK8Slxl1R5QtJyCQfKryr5cgMuaJ08rnHM5kc/SoBcpEp/pf5O7A6+TjYiewVE/DFfLwELe+0F9W9e97o1Gh1GlaxOaGaU6cjWeptlylabu1rRe7EPtCUlAEvKVKSoKABxxnbjntmiWh9SXK0NGJOtUlaF+DYhIdB+aSR8Dmj13vTVvKBcfZW3tVkJLD6F9u/3ajtt20XdGS5K0Pcbe8FYCUMqJ+OaLrZxRad4OBY8UJP9Kxn42rTGx2K22pkgEE31F705u3E3LTMvqxlxXWXmcsrGCkEKx291KqlDNdxLjCYaucGC1dExZKmltJlxykNbM5BWTzknjivo0KRMdS2w0txazgBI86LQG3Gmj2wsdfDQc651tO8h+dvMZggaZ88uNPWq9Ox7RDXcIyD0WhlaO5+NKtsv0S4DYtlvafPAzWrXWAq7WeXDCglT7ZQCRwCRWAxtMXi23l2C3GdecZOFFtJIx5HNDcOfDzakur7w+FdFweHEcbWhaUgjwGlPr+kkyGftMdR6R7isz1w7Esz9vTLktNDqKI3nGRtIrWrPOmW1pcCYFNhQ3BLgx9KRdX2OHd561PZDgTtCsBSSnvgpUCDyfjRLD31LcKXTl4Un7SYDEbSVK7iVG105+INvLO1I1v1HCLcNKHgpLUouuuZOAgAYOAcKHuPbvXsW6xT9k3TGl9O69danHVKJaV0wNu4ZIGDkHsAfSoL17NGvsr0uPCt7yWUlwtMpWwteO58JIPGaS02VLEqO0piegyklTPQm5QvHJCVKGM4/DnNEzhrb5K2l0WwqdMEJEZlSHEIAFzvJNhpfWtAgS9q7aVTI64ztwLsgOOJOxvcrppI77eckjtxRS0vKXepLa1JLS1NbH3FtLLafF+HsponvjxDjNJQ0dd2mOumNqQNYyFIabeTj/u5oahyTHkKZXc7kytpRSUO21RKCO4OBwawuwEo1dT76KjFsQBzaSf4h+aPP7q1lgbn5m5wB1LTRbJbS4f2niwlXByBj51dgyo7rNwkOrQ1KlqfVGa3eJtDR8KM+8BfHw71mkSW+laCNVhC+w6tudz8uKKCYtH7XWUBCic+OC4kE+vPnVBw5ahdKgff9KDMuzGWBGcYSUgKHtZ94knhyNvnwpz+3oZsxTFebW+5FiISkICShTnh3hfdWScEHse9GLs7Fb01Nj2yQCIqFsHoAkpKQMEjg5IPNZ0JkkJGda2YN++Mrzrly9SmNyhraAAeCpEVzj0GcVA4a6c7/H6VZLkSJSCn7OATbPeHA5cOvvp9hrYXPtDj6Y8dooeQlj9WpClBpOFIWOCnI43c5NSQnoLSXjcUpU4zcVSQkpSo4SlO1KtvByFfDj3Vn8WXIlkBGsS4Cc7Y9tdXk/AJoqqDJQ2VyNQ6j6YHJas60jHxWBVRhG9t8ev0oirFJfGOB/z8b/7adEONR2rd0YynmjNKVHpeFkB5St+MZ5TgZ7YNFLHco6HHH+mtCApslT42rJ6ZB3HABOf5VkKF2q4XAW9q66tlyikLLaUssYSfMqJ8IwM8+XNEbdpaPdUsqZtU51K/Ehc+7nt67W0c/WpKwogd9Xp9SKySsTldmpLwQkLvbM8eWQvWh6lvVtuciLDizGHJgJPRChvxjnihUiBJjKSHEkFXbBzVqx6Fj2h5ub0YLT6c/wDNGMHtjlaipR+WKOMyyp4bIzj20kBe3PFWtLDKAhrMCkyVhza133iSeQ+WulDLVZVzlJTsUpaxlITWnWdmPZYTUfpBCkjKie5NA7CJTK33lxei2rhOfvD5VLc5y3OecUOluLkL7M6USgxW4yN+2fiKNNXBtLeSoZ9KibmYfKlYTu5OB3pWReEoVtCRt99XjPZMdx9Sgjppz4jwTQt5hMdCnXMgBc0YQ52h3U60xSYsK7J2utpWsAgKI5FZrqjTb9qdQ8pYcbc4BA7Ypssmo41wkNtssuhxQ8Xon30bvKG3LZI6yN6Qg44zWXBMbZeIciq3k6Go4pDccYLDptbMVjTIUhYIJGPMUm6ksbVkW669GMjTMxYU6lB2qhPZ4Wk/h55SodjweMU+KbxUrLgShxp1tLjLiSlbaxlKge4IPcU+tvqbVvD8ffypWwuaqC7vDQ60vWLU7lgZbaurokW107WLqlIDa89kvAfs1+/7p91V9T2NEB5++wpKBDXhx5CifCSQMpIzuBJH1qrM03c9MF2Xp9sz7S4D1rWs7loT5hGfvp/dPPxoXbU2q/RHI9juH6PCjlyzyjujlQOcBBIKDn+6R8KH41gMPGYykOC6T6HmbZpPofAU8IdTJaLsRQ3rZX0vwv8AjpWwaB0y2RFvT8xEh0o3sNoJwjPG45wc9+McUJ9ueurlpa0Q7fZnOlcriVfryMqabTgEpz+Ik4z5c1Xh+0SdYIzES/aSltRWUhCJNqAeaCR28HCh+dZ/7aNb6Z1Pa7dNttydXdIK1JEZ5hxCy2rBUDuTgYIB+tLULZZyBH+ywm7DmM8+ZOfrQnFGpjsdQHtkAZetqGaHl6pt8pue3dJbrpUCsPuFxC/coHyrY/aFEk6p0pZbnGaWpLai69FbyTkjaSAO+0g/I1+Yrb7UnGWUsJaeQFYCvCa3K3e2+2Q7LBhWOx3W5T22UpO9rpoC/PKuT3J7CqnNksSktORnwd1Yt08b6fWs2CQ5EQi6T5550b0X0YzSVj9Wryycq+lCtd+0EXd3+zunR+k7q8oJW4nxtNH94/iV+6OB5nypcuFv1XqcOTNTXCNpu0OcqZaVsU4n0J+8v4dvdR2xWiFDgfZ7LFdttrUNrkxwbZUoeiB/q0H17+lENmNkYuzyVKLnaqJ0HsjqeJ8B8KZ50lsJDr+QFcaQ0gxAQ/D6gkKWsm6TQc9VfcsIV58/fUPLwjzp96EbK3EIS2AOSOAkCl9UnosNx4rQYiNDahCBgAVSuVxfEUtBfid8AHbNMrqXZC95R1pPdxIT5KWwOlR3nWm0LaZdKGAcJ2/ec959BVK16u2qG90k+/ypEu3UTJeRnd0ztJHbNd6dtU29XNmFERuecPHoB6n3UZGHsIZJOQppixw0PCt6sGr9qkqdKXmfNI4Ioxe7hHkQlyYySUJ5IA8q70bouFYoTf2lCJE7b+sWeUg+gFNkZmMylTTDDaW/MJTxSRJkR0vFTQJt5A1CSthdwE3rGkPncM0VZQ3Ma6ToyPL41TVD2+JPb+FWIw2edaJkdmWypl0XSdRQpKXYjtjkRTDpyzJgupfD4So/eRjIIpvafQ4SjgikVicpod6sIua93hJGfSl2Ds+zh7XZRhYdePP8q2OzC8reXrRs2GA1cFyA0FFRyEn7oPuqzL09brh4nI6QvGMp4qBiahEcKUrcr0q5HuQdUBt4rUtbwNwo5VT2DRFt0Z1m94hLs89yOlWUg5SfdStqHStk1MevLiFq4geGZHVsd92T+L51st8081eHGXd4bI4UoDkigE/QxZjrdjyC4pIztIxkUbiYm2AklVlUEciS47qlxtOtYzGt+tNL8Wm6IucQdmX1BK8fBXH0NeTNdT0p2X7Q6HvVfQPPzAxTupJScHvXyXVIOASPhRrtkKN1tgnmO6feKmztG+gbrqQr0+70rOUamsDy90L2f75HkA2SM/IUbiT9Xz07YkCDYIx/EGx1MfDk/wAKclPZRjcc/GqxXivFOtq0R/MSr45elWPbSO2s0gD1+lB4unmmHxLmOvXGf368o7sH91PYURLjhXlRJHoaspkKSBkAipERnJiv1TefU9gPnVK3d0bzmQHuH0oBIeelr3lLKlcvpUyZzD7BZcbCUDtjvSrqtKER2FMk/eIz6cU8xdJvScZkNJz5DKqtTfZpInRVMmS0M8pUUng1hj4tCS53HL9Lmi+HMSm5LbrzeQ45aVk+i9Ev6ulyEKeLERs5cexnnyAHrWyWXQ1k0s4l+H1FTQ3sU4pfB9TirNk0+xpa1JiICQ9955aT99XrVZ6a2latyiT8a9mYg9LWQ2ohHLn1plkyyVFKTlRZE4sqwV8VdF0T4Q3wPOk12USTtVkVZgzNixu5FDnItxesiXs7UfudkalqDzQCCT48DvVb9H25ptKVNneD3zyasMXNAQQTz6ULfSpcgkOANk5yazNBz2VGwFXuub9ic6KP2SNLYCmAG3B+dBH7bIhp3OI8PqKLMPGNtV1dyBX0m4mSCg46fpU21upNtRVSkpOfGhLTiuBnijMBwoIOK5t6Y4XsKAc+Zoo4w1DHUSBtPlVch0E7tqk2kjO9SOLW5sKUq474qywStBC+x4waqMzx51YdX1WipH3hWBQOlqtoZK0zbZCHEpZSlauQQexrPLhbXrfIW24hQCTgKI4NaShxbbwK+xry9whc7e4hCQpzumiMSctlYS4bg+lDJ2HNvougWUOXGspwc110yqib0BTDqkLThae4NdNRgpQHqaYe2Friln7Kq9jQxTQab6ixx5D1quma5vSMk47JHaiF4HUJ6eA20MfGqNlSFXeNvQSkKrl2NY05OlCOk2QTYe+16b4GHIiovbvcTWlWpTcWC3u/bkAknyoiLwlholasq8hS3NcUDkGhS3FqUck04x8ObQgJTkK9W8QaKXK5mSpSge9LshxSlHFXNpVUK2PFRZlKWxYVkcJVnVVC1Zq6zuUQB3rlLITUqFdPtU1qvpXiRbWv/9k=" alt="Moving Festival 2026"></div>
+      <div class="login-badge">Acesso Restrito</div>
+      <h2>Painel Moving 2026</h2>
+      <p>Insira seu login e senha para gerenciar as vendas</p>
+    </div>
+    <form class="login-form" id="loginForm" autocomplete="on">
+      <div class="login-field">
+        <label for="loginUser">Login ou E-mail</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" id="loginUser" name="username" placeholder="ex: evandro@startinc.com.br" required autocomplete="username" spellcheck="false" autocapitalize="none">
+        </div>
+      </div>
+      <div class="login-field">
+        <label for="loginPass">Senha</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="loginPass" name="password" placeholder="Sua senha de acesso" required autocomplete="current-password">
+          <button type="button" class="btn-toggle-pass" id="btnTogglePass" title="Mostrar/ocultar senha" tabindex="-1">
+            <svg id="eyeShow" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeHide" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="login-alert" id="loginAlert" role="alert" style="display:none;"></div>
+      <button type="submit" class="btn-login-submit" id="btnLoginSubmit">
+        <span class="btn-login-txt">Acessar Painel</span>
+        <span class="btn-login-spinner" style="display:none;"></span>
+      </button>
+    </form>
+  </div>
+</div>
 
 <div class="app" id="appRoot">
   <!-- SIDEBAR -->
@@ -338,12 +618,34 @@
       <a data-view="promoters" title="Ações Start & Cupons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Ações Start & Cupons</span></a>
       <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
       <a data-view="tendencias" title="Tendências"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="nav-txt">Tendências</span></a>
+      <a data-view="usuarios" id="navUsuarios" title="Gestão de Usuários" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Usuários</span></a>
     </nav>
-    <div class="side-foot"><div class="avatar">EG</div><div class="who">Evandro & Gê<small>Start Inc.</small></div><button class="theme-toggle" id="themeToggle" type="button" title="Alternar tema claro/escuro">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-          <span id="themeToggleTxt">Tema</span>
-        </button></div>
+    <div class="side-foot">
+      <div class="side-user-box">
+        <div class="side-user-profile">
+          <div class="side-user-avatar" id="sideUserAvatar">--</div>
+          <div class="side-user-details">
+            <div class="side-user-name" id="sideUserName">Carregando…</div>
+            <span class="side-user-badge badge-papel-usuario" id="sideUserBadge">Usuário</span>
+          </div>
+        </div>
+        <div class="side-user-actions">
+          <button class="btn-side-action" id="btnTrocarSenha" type="button" title="Alterar minha senha">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Senha</span>
+          </button>
+          <button class="btn-side-action danger" id="btnLogout" type="button" title="Sair do painel">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Sair</span>
+          </button>
+          <button class="theme-toggle" id="themeToggle" type="button" title="Alternar tema claro/escuro">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <span id="themeToggleTxt">Tema</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </aside>
 
   <!-- MAIN -->
@@ -785,6 +1087,42 @@
         </div>
       </section>
 
+      <!-- USUÁRIOS (SUPERADMIN) -->
+      <section data-view="usuarios" hidden>
+        <div class="card card-usuarios">
+          <div class="ttl" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h2 style="font-size:18px; font-weight:800; margin:0;">Gestão de Usuários & Acessos</h2>
+                <span class="badge" style="background:rgba(43,108,246,0.12); color:var(--accent); font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;">SuperADMIN</span>
+              </div>
+              <span class="sub" style="font-size:12.5px; color:var(--fg-muted);">Cadastre colaboradores, defina níveis de acesso e escolha quais relatórios cada um pode visualizar</span>
+            </div>
+            <button class="btn" id="btnNovoUsuario" type="button" style="background:var(--accent); color:#fff; border:0; display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:10px; font-weight:700; cursor:pointer;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Novo Usuário</span>
+            </button>
+          </div>
+          <div class="table-responsive" style="margin-top:16px; overflow-x:auto;">
+            <table class="tbl tbl-usuarios" style="width:100%; border-collapse:collapse; min-width:720px;">
+              <thead>
+                <tr style="text-align:left; border-bottom:1px solid var(--border); font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-faint);">
+                  <th style="padding:10px 12px;">Colaborador</th>
+                  <th style="padding:10px 12px;">Papel</th>
+                  <th style="padding:10px 12px;">Telas Permitidas</th>
+                  <th style="padding:10px 12px;">Status</th>
+                  <th style="padding:10px 12px;">Último Acesso</th>
+                  <th style="padding:10px 12px; text-align:right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaUsuariosBody">
+                <tr><td colspan="6" style="text-align:center; padding:32px; color:var(--fg-muted);">Carregando usuários...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
 </div>
@@ -924,16 +1262,34 @@
     plataformas:['Plataformas & canais','De onde vêm as vendas'],
     promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
     ingressos:['Ingressos','Ticket médio e lotes que mais vendem'],
-    tendencias:['Tendências','Vendas por dia, hora e dia da semana']
+    tendencias:['Tendências','Vendas por dia, hora e dia da semana'],
+    usuarios:['Gestão de Usuários & Acessos','Controle de permissões e relatórios permitidos']
   };
   var views = [].slice.call(document.querySelectorAll('section[data-view]'));
   var links = [].slice.call(document.querySelectorAll('#nav a'));
   function show(v){
+    // Restrição defensiva para usuários comuns
+    if(window.MOVING_AUTH && window.MOVING_AUTH.usuario && window.MOVING_AUTH.usuario.papel === 'usuario'){
+      var telasPermitidas = window.MOVING_AUTH.usuario.telas || ['overview','diario'];
+      if(telasPermitidas.indexOf(v) === -1){
+        v = telasPermitidas[0] || 'overview';
+      }
+    }
+    // Restrição para tela de gestão de usuários (somente superadmin)
+    if(v === 'usuarios' && window.MOVING_AUTH && window.MOVING_AUTH.usuario && window.MOVING_AUTH.usuario.papel !== 'superadmin'){
+      v = 'overview';
+    }
+
     views.forEach(function(s){ s.hidden = s.getAttribute('data-view')!==v; });
     links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('data-view')===v); });
     var t = titles[v]||['',''];
     $('pageTitle').textContent = t[0]; $('pageSub').textContent = t[1];
+
+    if(v === 'usuarios' && window.carregarUsuarios){
+      window.carregarUsuarios();
+    }
   }
+  window.movingShowView = show;
   $('nav').addEventListener('click', function(e){ var a=e.target.closest('a'); if(!a) return; e.preventDefault(); show(a.getAttribute('data-view')); });
 
   // ===== Gráficos =====
@@ -1790,10 +2146,22 @@
 
   // ===== Dados =====
   function carregar(){
-    return fetch(API_RESUMO,{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-      .then(function(j){ if(!j || j.error || typeof j.total!=='number') throw new Error(j && j.error || 'resposta inválida'); DATA=j; render(); setStatus('live', j.atualizado_em); })
-      .catch(function(){ if(!DATA || DATA===SNAPSHOT){ DATA=SNAPSHOT; render(); setStatus('snap', SNAPSHOT.atualizado_em); } });
+    var hdrs = (window.MOVING_AUTH && window.MOVING_AUTH.getHeaders) ? window.MOVING_AUTH.getHeaders() : {};
+    return fetch(API_RESUMO, { cache:'no-store', headers: hdrs }).then(function(r){
+      if(r.status === 401){
+        if(window.MOVING_AUTH && window.MOVING_AUTH.logoutLocal) window.MOVING_AUTH.logoutLocal();
+        throw new Error('Sessao expirada');
+      }
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    })
+    .then(function(j){ if(!j || j.error || typeof j.total!=='number') throw new Error(j && j.error || 'resposta inválida'); DATA=j; render(); setStatus('live', j.atualizado_em); })
+    .catch(function(e){
+      if(e && e.message === 'Sessao expirada') return;
+      if(!DATA || DATA===SNAPSHOT){ DATA=SNAPSHOT; render(); setStatus('snap', SNAPSHOT.atualizado_em); }
+    });
   }
+  window.movingRecarregarDados = carregar;
 
   $('seg').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return;
@@ -1830,8 +2198,19 @@
       $('pulse').className = 'pulse bad'; $('ago').textContent = 'erro às ' + horaAgora();
       avisoSync('erro', 'Não sincronizou', motivo);
     }
-    fetch(API_SYNC, { method:'POST', signal: ctrl ? ctrl.signal : undefined })
-      .then(function(r){ /* SYNC_DIAG */ var cod = r.status; return r.json().then(function(j){ if(j && typeof j==='object') j.__http = cod; return j; }).catch(function(){ return { status:'ERRO', erro:'o servidor respondeu sem dados (HTTP ' + cod + ')' }; }); })
+    var hdrs = (window.MOVING_AUTH && window.MOVING_AUTH.getHeaders) ? window.MOVING_AUTH.getHeaders() : {};
+    fetch(API_SYNC, { method:'POST', headers: hdrs, signal: ctrl ? ctrl.signal : undefined })
+      .then(function(r){
+        var cod = r.status;
+        if(cod === 401){
+          if(window.MOVING_AUTH && window.MOVING_AUTH.logoutLocal) window.MOVING_AUTH.logoutLocal();
+          return { status:'ERRO', erro:'Sessão expirada. Faça login novamente.' };
+        }
+        if(cod === 403){
+          return { status:'ERRO', erro:'Apenas administradores podem acionar a sincronização.' };
+        }
+        return r.json().then(function(j){ if(j && typeof j==='object') j.__http = cod; return j; }).catch(function(){ return { status:'ERRO', erro:'o servidor respondeu sem dados (HTTP ' + cod + ')' }; });
+      })
       .then(function(j){
         var temResumo = j && j.resumo && typeof j.resumo.total === 'number';
         if(temResumo){ DATA = j.resumo; render(); }
@@ -1854,10 +2233,11 @@
       .then(function(){ clearTimeout(limite); btn.disabled = false; if(lbl) lbl.textContent = 'Sincronizar'; });
   });
 
-  // Ao abrir (F5): não mostra o retrato salvo; espera o dado real. O retrato só entra se o servidor falhar.
+  // Ao abrir (F5): status inicial; carregamento real condicionado à sessão do MOVING_AUTH
   $('pulse').className = 'pulse off'; $('ago').textContent = 'carregando…';
-  carregar();
-  setInterval(carregar, REFRESH_MS);
+  setInterval(function(){
+    if(window.MOVING_AUTH && window.MOVING_AUTH.usuario) carregar();
+  }, REFRESH_MS);
   setInterval(function(){ if(DATA && !SYNC_ERRO) setStatus($('pulse').className.indexOf('off')>-1?'snap':'live', DATA.atualizado_em); }, 30000);
 })();
 </script>
@@ -1927,7 +2307,6 @@
   }
 })();
 </script>
-</html>
 <script>
 // Filtro de setor só aparece na Visão geral. Ao sair dela, volta para "Todos".
 (function(){
@@ -2541,3 +2920,842 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();
 </script>
+
+<!-- MODAL DE CRIAÇÃO / EDIÇÃO DE USUÁRIO -->
+<div class="modal-backdrop" id="modalUsuario" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalUsuarioTitulo">Novo Usuário</h3>
+      <button type="button" class="btn-modal-close" id="btnFecharModalUsuario" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form id="formUsuario">
+      <input type="hidden" id="usuarioId" value="">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="usuarioNome">Nome Completo</label>
+          <input type="text" class="form-input" id="usuarioNome" placeholder="ex: Carol Amando Neves" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="usuarioLogin">Login ou E-mail</label>
+          <input type="text" class="form-input" id="usuarioLogin" placeholder="ex: carolamandoneves@gmail.com" required autocapitalize="none" spellcheck="false">
+          <span class="form-hint">O login é único e sempre gravado em minúsculas.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="usuarioSenha">Senha de Acesso</label>
+          <input type="password" class="form-input" id="usuarioSenha" placeholder="Digite uma senha segura (mín. 6 caracteres)">
+          <span class="form-hint" id="usuarioSenhaHint">Obrigatória para novos usuários. Em edições, deixe em branco para manter a senha atual.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="usuarioPapel">Papel / Nível de Acesso</label>
+          <select class="form-select" id="usuarioPapel">
+            <option value="usuario">Usuário Comum (Acesso restrito às telas escolhidas)</option>
+            <option value="admin">Administrador (Acesso a todos os relatórios + Sincronização)</option>
+            <option value="superadmin">SuperADMIN (Acesso total irrestrito + Gestão de Usuários)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="telasPickerGroup">
+          <label class="form-label">Telas e Relatórios Permitidos</label>
+          <div class="telas-grid" id="telasGrid">
+            <label class="tela-item-card checked" data-tela="overview">
+              <input type="checkbox" name="tela" value="overview" checked>
+              <div class="tela-item-txt">
+                <b>Visão Geral</b>
+                <small>Metas, receita, ticket médio e resumo geral</small>
+              </div>
+            </label>
+            <label class="tela-item-card checked" data-tela="diario">
+              <input type="checkbox" name="tela" value="diario" checked>
+              <div class="tela-item-txt">
+                <b>Vendas por Dia</b>
+                <small>Evolução diária com filtros de data e setor</small>
+              </div>
+            </label>
+            <label class="tela-item-card" data-tela="plataformas">
+              <input type="checkbox" name="tela" value="plataformas">
+              <div class="tela-item-txt">
+                <b>Plataformas</b>
+                <small>Uticket, Sympla, Wix e distribuição geográfica</small>
+              </div>
+            </label>
+            <label class="tela-item-card" data-tela="promoters">
+              <input type="checkbox" name="tela" value="promoters">
+              <div class="tela-item-txt">
+                <b>Ações & Cupons</b>
+                <small>Performance Start Inc., promoters e campanhas</small>
+              </div>
+            </label>
+            <label class="tela-item-card" data-tela="ingressos">
+              <input type="checkbox" name="tela" value="ingressos">
+              <div class="tela-item-txt">
+                <b>Ingressos</b>
+                <small>Análise detalhada por setor e lotes</small>
+              </div>
+            </label>
+            <label class="tela-item-card" data-tela="tendencias">
+              <input type="checkbox" name="tela" value="tendencias">
+              <div class="tela-item-txt">
+                <b>Tendências</b>
+                <small>Horários de pico e dias da semana</small>
+              </div>
+            </label>
+          </div>
+          <span class="form-hint" id="telasPickerHint">Selecione uma ou mais telas que este colaborador poderá visualizar no menu.</span>
+        </div>
+
+        <div class="form-group" style="flex-direction:row; align-items:center; gap:10px; margin-top:4px;">
+          <input type="checkbox" id="usuarioAtivo" checked style="width:18px; height:18px; accent-color:var(--accent); cursor:pointer;">
+          <label for="usuarioAtivo" style="font-size:13px; font-weight:700; color:var(--fg); cursor:pointer;">Conta ativa (desmarque para bloquear o acesso)</label>
+        </div>
+
+        <div class="login-alert" id="usuarioModalAlert" style="display:none;"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="btnCancelarUsuario" style="background:transparent; border:1px solid var(--border); color:var(--fg);">Cancelar</button>
+        <button type="submit" class="btn" id="btnSalvarUsuario" style="background:var(--accent); color:#fff; border:0; font-weight:700;">Salvar Usuário</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL DE TROCA DE SENHA DO PRÓPRIO USUÁRIO -->
+<div class="modal-backdrop" id="modalTrocarSenha" style="display:none;">
+  <div class="modal-card" style="max-width:440px;">
+    <div class="modal-head">
+      <h3>Alterar Minha Senha</h3>
+      <button type="button" class="btn-modal-close" id="btnFecharModalTrocarSenha" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form id="formTrocarSenha">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="senhaAtual">Senha Atual</label>
+          <input type="password" class="form-input" id="senhaAtual" placeholder="Digite sua senha atual" required autocomplete="current-password">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="senhaNova">Nova Senha</label>
+          <input type="password" class="form-input" id="senhaNova" placeholder="Mínimo de 6 caracteres" required autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="senhaConfirma">Confirmar Nova Senha</label>
+          <input type="password" class="form-input" id="senhaConfirma" placeholder="Digite novamente a nova senha" required autocomplete="new-password">
+        </div>
+        <div class="login-alert" id="trocarSenhaAlert" style="display:none;"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="btnCancelarTrocarSenha" style="background:transparent; border:1px solid var(--border); color:var(--fg);">Cancelar</button>
+        <button type="submit" class="btn" id="btnSalvarTrocarSenha" style="background:var(--accent); color:#fff; border:0; font-weight:700;">Atualizar Senha</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// =========================================================================
+// SISTEMA DE AUTENTICAÇÃO, CONTROLE DE ACESSO (RBAC) E GESTÃO DE USUÁRIOS
+// Moving Festival 2026 — Padrão ManyChat Clean
+// =========================================================================
+(function(){
+  var TOKEN_KEY = 'moving_token';
+  var usuarioAtual = null;
+
+  // Telas disponíveis e seus rótulos amigáveis
+  var LABELS_TELAS = {
+    overview: 'Visão Geral',
+    diario: 'Vendas por Dia',
+    plataformas: 'Plataformas',
+    promoters: 'Ações Start & Cupons',
+    ingressos: 'Ingressos',
+    tendencias: 'Tendências'
+  };
+
+  // Objeto global de Auth
+  window.MOVING_AUTH = {
+    get usuario(){ return usuarioAtual; },
+    getHeaders: function(){
+      var tk = localStorage.getItem(TOKEN_KEY);
+      return tk ? { 'X-Moving-Token': tk } : {};
+    },
+    logoutLocal: function(){
+      localStorage.removeItem(TOKEN_KEY);
+      usuarioAtual = null;
+      mostrarLogin();
+    }
+  };
+
+  function $(id){ return document.getElementById(id); }
+
+  function getIniciais(nome){
+    if(!nome) return '--';
+    var partes = String(nome).trim().split(/\s+/);
+    if(partes.length === 1) return partes[0].slice(0,2).toUpperCase();
+    return (partes[0][0] + partes[partes.length-1][0]).toUpperCase();
+  }
+
+  // ===== Exibir / Esconder Tela de Login =====
+  function mostrarLogin(){
+    var overlay = $('loginOverlay');
+    if(overlay){
+      overlay.style.display = 'flex';
+      $('loginAlert').style.display = 'none';
+      var uInput = $('loginUser');
+      if(uInput) setTimeout(function(){ uInput.focus(); }, 100);
+    }
+  }
+
+  function esconderLogin(){
+    var overlay = $('loginOverlay');
+    if(overlay) overlay.style.display = 'none';
+  }
+
+  // Toggle visualizar senha no login
+  var btnTogglePass = $('btnTogglePass');
+  if(btnTogglePass){
+    btnTogglePass.addEventListener('click', function(){
+      var inp = $('loginPass');
+      var sShow = $('eyeShow');
+      var sHide = $('eyeHide');
+      if(!inp) return;
+      if(inp.type === 'password'){
+        inp.type = 'text';
+        if(sShow) sShow.style.display = 'none';
+        if(sHide) sHide.style.display = 'block';
+      } else {
+        inp.type = 'password';
+        if(sShow) sShow.style.display = 'block';
+        if(sHide) sHide.style.display = 'none';
+      }
+    });
+  }
+
+  // ===== Submissão do Formulário de Login =====
+  var loginForm = $('loginForm');
+  if(loginForm){
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var u = ($('loginUser').value || '').trim();
+      var p = ($('loginPass').value || '').trim();
+      var alertBox = $('loginAlert');
+      var submitBtn = $('btnLoginSubmit');
+      var spinner = submitBtn.querySelector('.btn-login-spinner');
+      var txtSpan = submitBtn.querySelector('.btn-login-txt');
+
+      if(!u || !p){
+        alertBox.textContent = 'Informe seu login e senha para entrar.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      alertBox.style.display = 'none';
+      submitBtn.disabled = true;
+      if(spinner) spinner.style.display = 'inline-block';
+      if(txtSpan) txtSpan.textContent = 'Autenticando…';
+
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login: u, senha: p })
+      })
+      .then(function(r){
+        return r.json().then(function(data){ return { ok: r.ok, status: r.status, data: data }; });
+      })
+      .then(function(res){
+        submitBtn.disabled = false;
+        if(spinner) spinner.style.display = 'none';
+        if(txtSpan) txtSpan.textContent = 'Acessar Painel';
+
+        if(res.ok && res.data && (res.data.token || res.data.status === 'ok')){
+          localStorage.setItem(TOKEN_KEY, res.data.token);
+          usuarioAtual = res.data.usuario;
+          esconderLogin();
+          aplicarPermissoes(usuarioAtual);
+          if(window.movingRecarregarDados) window.movingRecarregarDados();
+        } else {
+          var erroMsg = (res.data && (res.data.erro || res.data.error)) || 'Falha ao autenticar. Verifique seus dados.';
+          alertBox.textContent = erroMsg;
+          alertBox.style.display = 'block';
+          $('loginPass').value = '';
+          $('loginPass').focus();
+        }
+      })
+      .catch(function(err){
+        submitBtn.disabled = false;
+        if(spinner) spinner.style.display = 'none';
+        if(txtSpan) txtSpan.textContent = 'Acessar Painel';
+        alertBox.textContent = 'Erro de comunicação com o servidor de autenticação.';
+        alertBox.style.display = 'block';
+      });
+    });
+  }
+
+  // ===== Aplicação de Permissões e Perfil na Interface =====
+  function aplicarPermissoes(user){
+    if(!user) return;
+
+    // Perfil na sidebar
+    var avatarEl = $('sideUserAvatar');
+    var nameEl   = $('sideUserName');
+    var badgeEl  = $('sideUserBadge');
+
+    if(avatarEl) avatarEl.textContent = getIniciais(user.nome || user.login);
+    if(nameEl)   nameEl.textContent   = user.nome || user.login;
+    if(badgeEl){
+      badgeEl.className = 'side-user-badge ' + (
+        user.papel === 'superadmin' ? 'badge-papel-superadmin' :
+        (user.papel === 'admin' ? 'badge-papel-admin' : 'badge-papel-usuario')
+      );
+      badgeEl.textContent = user.papel === 'superadmin' ? 'SuperADMIN' :
+        (user.papel === 'admin' ? 'Administrador' : 'Usuário');
+    }
+
+    // Tela de gestão de usuários (somente superadmin)
+    var navUsuarios = $('navUsuarios');
+    if(navUsuarios){
+      navUsuarios.style.display = (user.papel === 'superadmin') ? 'flex' : 'none';
+    }
+
+    // Botão de sincronização
+    var btnSync = $('sync');
+    if(btnSync){
+      if(user.papel === 'usuario'){
+        btnSync.style.display = 'none';
+      } else {
+        btnSync.style.display = '';
+        btnSync.disabled = false;
+      }
+    }
+
+    // Filtragem de abas de relatórios para usuário comum
+    var navLinks = [].slice.call(document.querySelectorAll('#nav a[data-view]'));
+    var telasPermitidas = Array.isArray(user.telas) ? user.telas : ['overview', 'diario'];
+
+    navLinks.forEach(function(link){
+      var v = link.getAttribute('data-view');
+      if(v === 'usuarios') return; // já tratado acima
+      if(user.papel === 'usuario'){
+        if(telasPermitidas.indexOf(v) > -1){
+          link.style.display = '';
+        } else {
+          link.style.display = 'none';
+        }
+      } else {
+        link.style.display = '';
+      }
+    });
+
+    // Se estiver em uma tela proibida para o usuário, direcionar para a primeira permitida
+    var linkAtivo = document.querySelector('#nav a.active');
+    var viewAtiva = linkAtivo ? linkAtivo.getAttribute('data-view') : 'overview';
+
+    if(user.papel === 'usuario' && telasPermitidas.indexOf(viewAtiva) === -1){
+      if(window.movingShowView) window.movingShowView(telasPermitidas[0] || 'overview');
+    } else if(user.papel !== 'superadmin' && viewAtiva === 'usuarios'){
+      if(window.movingShowView) window.movingShowView('overview');
+    }
+  }
+
+  // ===== Logout =====
+  var btnLogout = $('btnLogout');
+  if(btnLogout){
+    btnLogout.addEventListener('click', function(){
+      if(confirm('Deseja realmente sair do Painel Moving 2026?')){
+        fetch('/api/logout', {
+          method: 'POST',
+          headers: window.MOVING_AUTH.getHeaders()
+        }).finally(function(){
+          window.MOVING_AUTH.logoutLocal();
+        });
+      }
+    });
+  }
+
+  // ===== Modal de Troca de Senha Própria =====
+  var btnTrocarSenha = $('btnTrocarSenha');
+  var modalTrocarSenha = $('modalTrocarSenha');
+  var btnFecharTrocarSenha = $('btnFecharModalTrocarSenha');
+  var btnCancelarTrocarSenha = $('btnCancelarTrocarSenha');
+  var formTrocarSenha = $('formTrocarSenha');
+
+  function abrirModalTrocarSenha(){
+    if(!modalTrocarSenha) return;
+    $('senhaAtual').value = '';
+    $('senhaNova').value = '';
+    $('senhaConfirma').value = '';
+    $('trocarSenhaAlert').style.display = 'none';
+    modalTrocarSenha.style.display = 'flex';
+    setTimeout(function(){ $('senhaAtual').focus(); }, 100);
+  }
+
+  function fecharModalTrocarSenha(){
+    if(modalTrocarSenha) modalTrocarSenha.style.display = 'none';
+  }
+
+  if(btnTrocarSenha) btnTrocarSenha.addEventListener('click', abrirModalTrocarSenha);
+  if(btnFecharTrocarSenha) btnFecharTrocarSenha.addEventListener('click', fecharModalTrocarSenha);
+  if(btnCancelarTrocarSenha) btnCancelarTrocarSenha.addEventListener('click', fecharModalTrocarSenha);
+
+  if(formTrocarSenha){
+    formTrocarSenha.addEventListener('submit', function(e){
+      e.preventDefault();
+      var sa = $('senhaAtual').value;
+      var sn = $('senhaNova').value;
+      var sc = $('senhaConfirma').value;
+      var alertBox = $('trocarSenhaAlert');
+
+      if(!sa || !sn || !sc){
+        alertBox.textContent = 'Preencha todos os campos.';
+        alertBox.style.display = 'block';
+        return;
+      }
+      if(sn.length < 6){
+        alertBox.textContent = 'A nova senha deve ter no mínimo 6 caracteres.';
+        alertBox.style.display = 'block';
+        return;
+      }
+      if(sn !== sc){
+        alertBox.textContent = 'A confirmação não confere com a nova senha.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      var btnSubmit = $('btnSalvarTrocarSenha');
+      btnSubmit.disabled = true;
+
+      fetch('/api/senha', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, window.MOVING_AUTH.getHeaders()),
+        body: JSON.stringify({ senha_atual: sa, senha_nova: sn })
+      })
+      .then(function(r){
+        return r.json().then(function(d){ return { ok: r.ok, data: d }; });
+      })
+      .then(function(res){
+        btnSubmit.disabled = false;
+        if(res.ok && res.data && res.data.status === 'ok'){
+          alertBox.className = 'login-alert';
+          alertBox.style.background = 'rgba(22,163,74,0.12)';
+          alertBox.style.color = 'var(--c-success)';
+          alertBox.style.borderColor = 'rgba(22,163,74,0.3)';
+          alertBox.textContent = 'Senha atualizada com sucesso!';
+          alertBox.style.display = 'block';
+          setTimeout(function(){ fecharModalTrocarSenha(); }, 1200);
+        } else {
+          alertBox.className = 'login-alert';
+          alertBox.style.background = '';
+          alertBox.style.color = '';
+          alertBox.style.borderColor = '';
+          alertBox.textContent = (res.data && res.data.erro) || 'Não foi possível alterar a senha.';
+          alertBox.style.display = 'block';
+        }
+      })
+      .catch(function(){
+        btnSubmit.disabled = false;
+        alertBox.textContent = 'Erro ao conectar ao servidor.';
+        alertBox.style.display = 'block';
+      });
+    });
+  }
+
+  // =========================================================================
+  // GESTÃO DE USUÁRIOS (EXCLUSIVA PARA SUPERADMIN)
+  // =========================================================================
+  var listaUsuariosCache = [];
+  var modalUsuario = $('modalUsuario');
+  var formUsuario = $('formUsuario');
+  var btnNovoUsuario = $('btnNovoUsuario');
+  var btnFecharModalUsuario = $('btnFecharModalUsuario');
+  var btnCancelarUsuario = $('btnCancelarUsuario');
+  var selPapel = $('usuarioPapel');
+  var telasGrid = $('telasGrid');
+
+  // Carregar lista de usuários da API
+  function carregarUsuarios(){
+    if(!usuarioAtual || usuarioAtual.papel !== 'superadmin') return;
+    var tbody = $('listaUsuariosBody');
+    if(!tbody) return;
+
+    fetch('/api/usuarios', {
+      method: 'GET',
+      headers: window.MOVING_AUTH.getHeaders()
+    })
+    .then(function(r){
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(dados){
+      listaUsuariosCache = Array.isArray(dados) ? dados : (dados.usuarios || []);
+      renderTabelaUsuarios(listaUsuariosCache);
+    })
+    .catch(function(err){
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--c-danger);">' +
+        'Erro ao carregar usuários: ' + (err.message || 'Verifique sua conexão') + '</td></tr>';
+    });
+  }
+  window.carregarUsuarios = carregarUsuarios;
+
+  function renderTabelaUsuarios(usuarios){
+    var tbody = $('listaUsuariosBody');
+    if(!tbody) return;
+
+    if(!usuarios || !usuarios.length){
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:32px; color:var(--fg-muted);">Nenhum usuário cadastrado.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = usuarios.map(function(u){
+      var ehEu = usuarioAtual && usuarioAtual.id === u.id;
+      var iniciais = getIniciais(u.nome || u.login);
+
+      var papelClass = u.papel === 'superadmin' ? 'badge-papel-superadmin' :
+        (u.papel === 'admin' ? 'badge-papel-admin' : 'badge-papel-usuario');
+      var papelTxt = u.papel === 'superadmin' ? 'SuperADMIN' :
+        (u.papel === 'admin' ? 'Administrador' : 'Usuário');
+
+      // Badges das telas
+      var telasHtml = '';
+      if(u.papel === 'superadmin' || u.papel === 'admin'){
+        telasHtml = '<span class="status-pill ativo" style="background:rgba(43,108,246,0.12); color:var(--accent); font-size:11px;">Acesso Total a Todos os Relatórios</span>';
+      } else {
+        var telasArr = Array.isArray(u.telas) ? u.telas : [];
+        if(!telasArr.length){
+          telasHtml = '<span style="color:var(--fg-muted); font-size:11.5px;">Nenhuma tela liberada</span>';
+        } else {
+          telasHtml = '<div style="display:flex; flex-wrap:wrap; gap:4px;">' +
+            telasArr.map(function(t){
+              var nome = LABELS_TELAS[t] || t;
+              return '<span style="background:var(--surface-2); border:1px solid var(--border); padding:2px 7px; border-radius:6px; font-size:11px; font-weight:600; color:var(--fg);">' + nome + '</span>';
+            }).join('') +
+          '</div>';
+        }
+      }
+
+      var statusPill = u.ativo
+        ? '<button type="button" class="status-pill ativo" data-toggle-id="' + u.id + '" title="Clique para desativar"><span class="dot"></span>Ativo</button>'
+        : '<button type="button" class="status-pill inativo" data-toggle-id="' + u.id + '" title="Clique para reativar"><span class="dot"></span>Inativo</button>';
+
+      var acoesHtml = '<div style="display:flex; justify-content:flex-end; gap:6px;">' +
+        '<button type="button" class="btn-action edit" data-edit-id="' + u.id + '" title="Editar usuário">' +
+          '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+          'Editar' +
+        '</button>' +
+        (!ehEu ? (
+          '<button type="button" class="btn-action del" data-del-id="' + u.id + '" title="Excluir usuário">' +
+            '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+            'Excluir' +
+          '</button>'
+        ) : '<span style="font-size:11px; color:var(--fg-muted); padding:4px 6px;">(Você)</span>') +
+      '</div>';
+
+      return '<tr>' +
+        '<td style="padding:12px;">' +
+          '<div style="display:flex; align-items:center; gap:10px;">' +
+            '<div class="side-user-avatar" style="width:34px; height:34px; font-size:12px;">' + iniciais + '</div>' +
+            '<div>' +
+              '<b style="display:block; font-size:13.5px; color:var(--fg);">' + (u.nome || u.login) + '</b>' +
+              '<small style="font-size:11px; color:var(--fg-muted);">' + (ehEu ? 'Sua conta conectada' : 'ID: ' + u.id) + '</small>' +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td style="padding:12px; font-family:monospace; font-size:12.5px; color:var(--fg);">' + u.login + '</td>' +
+        '<td style="padding:12px;"><span class="side-user-badge ' + papelClass + '">' + papelTxt + '</span></td>' +
+        '<td style="padding:12px; max-width:320px;">' + telasHtml + '</td>' +
+        '<td style="padding:12px;">' + statusPill + '</td>' +
+        '<td style="padding:12px; text-align:right;">' + acoesHtml + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  // Interações na Tabela de Usuários (Editar, Excluir, Toggle Ativo)
+  var tbodyUsuarios = $('listaUsuariosBody');
+  if(tbodyUsuarios){
+    tbodyUsuarios.addEventListener('click', function(e){
+      var btnEdit = e.target.closest('button[data-edit-id]');
+      if(btnEdit){
+        var id = +btnEdit.getAttribute('data-edit-id');
+        var u = listaUsuariosCache.find(function(x){ return x.id === id; });
+        if(u) abrirModalUsuario(u);
+        return;
+      }
+
+      var btnDel = e.target.closest('button[data-del-id]');
+      if(btnDel){
+        var delId = +btnDel.getAttribute('data-del-id');
+        var uDel = listaUsuariosCache.find(function(x){ return x.id === delId; });
+        if(uDel){
+          if(confirm('Tem certeza que deseja excluir o usuário "' + (uDel.nome || uDel.login) + '"?\nEsta ação não pode ser desfeita.')){
+            excluirUsuario(delId);
+          }
+        }
+        return;
+      }
+
+      var btnTgl = e.target.closest('button[data-toggle-id]');
+      if(btnTgl){
+        var tglId = +btnTgl.getAttribute('data-toggle-id');
+        var uTgl = listaUsuariosCache.find(function(x){ return x.id === tglId; });
+        if(uTgl){
+          toggleAtivoUsuario(uTgl);
+        }
+      }
+    });
+  }
+
+  // Alternar ativo/inativo
+  function toggleAtivoUsuario(u){
+    var novoStatus = !u.ativo;
+    fetch('/api/usuarios', {
+      method: 'POST',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, window.MOVING_AUTH.getHeaders()),
+      body: JSON.stringify({
+        id: u.id,
+        login: u.login,
+        nome: u.nome,
+        papel: u.papel,
+        telas: u.telas,
+        ativo: novoStatus
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.status === 'ok') carregarUsuarios();
+      else alert((res.erro || res.error) || 'Erro ao alterar status.');
+    })
+    .catch(function(){ alert('Falha ao comunicar com o servidor.'); });
+  }
+
+  // Excluir usuário
+  function excluirUsuario(id){
+    fetch('/api/usuarios?id=' + encodeURIComponent(id), {
+      method: 'DELETE',
+      headers: window.MOVING_AUTH.getHeaders()
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.status === 'ok'){
+        carregarUsuarios();
+      } else {
+        alert((res.erro || res.error) || 'Erro ao excluir usuário.');
+      }
+    })
+    .catch(function(){ alert('Erro de rede ao excluir usuário.'); });
+  }
+
+  // Abrir Modal de Criação / Edição de Usuário
+  function abrirModalUsuario(u){
+    if(!modalUsuario) return;
+    $('usuarioModalAlert').style.display = 'none';
+
+    if(u){
+      // Edição
+      $('modalUsuarioTitulo').textContent = 'Editar Usuário: ' + (u.nome || u.login);
+      $('usuarioId').value = u.id;
+      $('usuarioNome').value = u.nome || '';
+      $('usuarioLogin').value = u.login || '';
+      $('usuarioSenha').value = '';
+      $('usuarioSenha').required = false;
+      $('usuarioSenhaHint').textContent = 'Deixe em branco para manter a senha atual inalterada.';
+      $('usuarioPapel').value = u.papel || 'usuario';
+      $('usuarioAtivo').checked = !!u.ativo;
+
+      var telas = Array.isArray(u.telas) ? u.telas : ['overview','diario'];
+      [].slice.call(telasGrid.querySelectorAll('input[name="tela"]')).forEach(function(inp){
+        var ck = telas.indexOf(inp.value) > -1;
+        inp.checked = ck;
+        var card = inp.closest('.tela-item-card');
+        if(card) card.classList.toggle('checked', ck);
+      });
+    } else {
+      // Criação de Novo Usuário
+      $('modalUsuarioTitulo').textContent = 'Novo Usuário';
+      $('usuarioId').value = '';
+      $('usuarioNome').value = '';
+      $('usuarioLogin').value = '';
+      $('usuarioSenha').value = '';
+      $('usuarioSenha').required = true;
+      $('usuarioSenhaHint').textContent = 'Obrigatória para novos usuários (mínimo de 6 caracteres).';
+      $('usuarioPapel').value = 'usuario';
+      $('usuarioAtivo').checked = true;
+
+      // Padrão de telas iniciais para usuário comum: Visão Geral e Vendas por Dia
+      [].slice.call(telasGrid.querySelectorAll('input[name="tela"]')).forEach(function(inp){
+        var ck = (inp.value === 'overview' || inp.value === 'diario');
+        inp.checked = ck;
+        var card = inp.closest('.tela-item-card');
+        if(card) card.classList.toggle('checked', ck);
+      });
+    }
+
+    ajustarVisibilidadeGridTelas();
+    modalUsuario.style.display = 'flex';
+    setTimeout(function(){ $('usuarioNome').focus(); }, 100);
+  }
+
+  function fecharModalUsuario(){
+    if(modalUsuario) modalUsuario.style.display = 'none';
+  }
+
+  if(btnNovoUsuario) btnNovoUsuario.addEventListener('click', function(){ abrirModalUsuario(null); });
+  if(btnFecharModalUsuario) btnFecharModalUsuario.addEventListener('click', fecharModalUsuario);
+  if(btnCancelarUsuario) btnCancelarUsuario.addEventListener('click', fecharModalUsuario);
+
+  // Reação ao alterar papel no select
+  function ajustarVisibilidadeGridTelas(){
+    var p = $('usuarioPapel').value;
+    var hint = $('telasPickerHint');
+    if(p === 'superadmin' || p === 'admin'){
+      telasGrid.style.opacity = '0.4';
+      telasGrid.style.pointerEvents = 'none';
+      if(hint) hint.textContent = 'ℹ️ Administradores possuem acesso total irrestrito a todos os relatórios.';
+    } else {
+      telasGrid.style.opacity = '1';
+      telasGrid.style.pointerEvents = 'auto';
+      if(hint) hint.textContent = 'Selecione uma ou mais telas que este colaborador poderá visualizar no menu lateral.';
+    }
+  }
+
+  if(selPapel){
+    selPapel.addEventListener('change', ajustarVisibilidadeGridTelas);
+  }
+
+  // Clique nos cards de seleção de tela
+  if(telasGrid){
+    telasGrid.addEventListener('change', function(e){
+      var inp = e.target;
+      if(inp && inp.name === 'tela'){
+        var card = inp.closest('.tela-item-card');
+        if(card) card.classList.toggle('checked', inp.checked);
+      }
+    });
+  }
+
+  // Submissão do Formulário de Usuário (Criar / Editar)
+  if(formUsuario){
+    formUsuario.addEventListener('submit', function(e){
+      e.preventDefault();
+      var id = $('usuarioId').value ? +$('usuarioId').value : null;
+      var nome = ($('usuarioNome').value || '').trim();
+      var login = ($('usuarioLogin').value || '').trim().toLowerCase();
+      var senha = ($('usuarioSenha').value || '').trim();
+      var papel = $('usuarioPapel').value;
+      var ativo = $('usuarioAtivo').checked;
+      var alertBox = $('usuarioModalAlert');
+
+      if(!nome || !login){
+        alertBox.textContent = 'Preencha o nome completo e o login.';
+        alertBox.style.display = 'block';
+        return;
+      }
+      if(!id && (!senha || senha.length < 6)){
+        alertBox.textContent = 'A senha inicial deve ter no mínimo 6 caracteres.';
+        alertBox.style.display = 'block';
+        return;
+      }
+      if(id && senha && senha.length < 6){
+        alertBox.textContent = 'A nova senha deve ter no mínimo 6 caracteres.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      // Telas permitidas
+      var telasSelecionadas = [];
+      if(papel === 'usuario'){
+        [].slice.call(telasGrid.querySelectorAll('input[name="tela"]:checked')).forEach(function(ck){
+          telasSelecionadas.push(ck.value);
+        });
+        if(!telasSelecionadas.length){
+          alertBox.textContent = 'Selecione pelo menos uma tela permitida para o usuário.';
+          alertBox.style.display = 'block';
+          return;
+        }
+      } else {
+        telasSelecionadas = ['overview','diario','plataformas','promoters','ingressos','tendencias'];
+      }
+
+      var payload = {
+        id: id,
+        nome: nome,
+        login: login,
+        papel: papel,
+        telas: telasSelecionadas,
+        ativo: ativo
+      };
+      if(senha) payload.senha = senha;
+
+      var btnSalvar = $('btnSalvarUsuario');
+      btnSalvar.disabled = true;
+      btnSalvar.textContent = 'Salvando…';
+
+      fetch('/api/usuarios', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, window.MOVING_AUTH.getHeaders()),
+        body: JSON.stringify(payload)
+      })
+      .then(function(r){
+        return r.json().then(function(d){ return { ok: r.ok, data: d }; });
+      })
+      .then(function(res){
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = 'Salvar Usuário';
+
+        if(res.ok && res.data && res.data.status === 'ok'){
+          fecharModalUsuario();
+          carregarUsuarios();
+          // Se eu editei a mim mesmo, atualiza dados na interface
+          if(usuarioAtual && usuarioAtual.id === res.data.id){
+            usuarioAtual.nome = nome;
+            usuarioAtual.login = login;
+            usuarioAtual.papel = papel;
+            usuarioAtual.telas = telasSelecionadas;
+            aplicarPermissoes(usuarioAtual);
+          }
+        } else {
+          alertBox.textContent = (res.data && (res.data.erro || res.data.error)) || 'Erro ao salvar usuário.';
+          alertBox.style.display = 'block';
+        }
+      })
+      .catch(function(){
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = 'Salvar Usuário';
+        alertBox.textContent = 'Erro ao conectar ao servidor.';
+        alertBox.style.display = 'block';
+      });
+    });
+  }
+
+  // =========================================================================
+  // INICIALIZAÇÃO DO ESTADO DE SESSÃO
+  // =========================================================================
+  var tokenSalvo = localStorage.getItem(TOKEN_KEY);
+  if(!tokenSalvo){
+    mostrarLogin();
+  } else {
+    // Validar token no backend
+    fetch('/api/me', {
+      method: 'GET',
+      headers: { 'X-Moving-Token': tokenSalvo }
+    })
+    .then(function(r){
+      if(!r.ok) throw new Error('Token inválido');
+      return r.json();
+    })
+    .then(function(res){
+      if(res && res.status === 'ok' && res.usuario){
+        usuarioAtual = res.usuario;
+        esconderLogin();
+        aplicarPermissoes(usuarioAtual);
+        if(window.movingRecarregarDados) window.movingRecarregarDados();
+      } else {
+        window.MOVING_AUTH.logoutLocal();
+      }
+    })
+    .catch(function(){
+      window.MOVING_AUTH.logoutLocal();
+    });
+  }
+
+})();
+</script>
+</html>

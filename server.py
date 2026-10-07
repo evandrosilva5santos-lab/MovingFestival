@@ -471,6 +471,43 @@ def normalizar_lotes(lista_lotes):
     res.sort(key=lambda x: x['total'], reverse=True)
     return res
 
+def call_supabase_rpc(rpc_name, params=None):
+    key = SUPABASE_ROLE or SUPABASE_ANON
+    rpc_url = f"{SUPABASE_URL}/rest/v1/rpc/{rpc_name}"
+    req = urllib.request.Request(
+        rpc_url,
+        data=json.dumps(params or {}).encode('utf-8'),
+        headers={
+            'apikey': key,
+            'Authorization': f'Bearer {key}',
+            'Content-Type': 'application/json'
+        },
+        method='POST'
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read().decode('utf-8'))
+
+def extract_req_token(handler):
+    t = handler.headers.get('X-Moving-Token')
+    if t:
+        return t.strip()
+    auth = handler.headers.get('Authorization')
+    if auth and auth.startswith('Bearer '):
+        return auth[7:].strip()
+    return None
+
+def authenticate_req(handler):
+    token = extract_req_token(handler)
+    if not token:
+        return None
+    try:
+        res = call_supabase_rpc('moving_excluir_me', {'p_token': token})
+        if res and res.get('ok') and res.get('usuario'):
+            return {'token': token, 'usuario': res['usuario']}
+    except Exception as e:
+        print(f"[!] Erro ao autenticar token local: {e}")
+    return None
+
 class PlatformHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIR, **kwargs)
@@ -499,11 +536,75 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 pass
         return super().send_head()
 
+    def send_cors(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Moving-Token')
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_cors()
+        self.end_headers()
+
     def do_GET(self):
+        # 1. GET /api/me
+        if self.path == '/api/me':
+            auth = authenticate_req(self)
+            self.send_response(200 if auth else 401)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_cors()
+            self.end_headers()
+            if auth:
+                self.wfile.write(json.dumps({'ok': True, 'usuario': auth['usuario']}).encode('utf-8'))
+            else:
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Não autenticado'}).encode('utf-8'))
+            return
+
+        # 2. GET /api/usuarios (Apenas Superadmin)
+        if self.path.startswith('/api/usuarios'):
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Não autenticado'}).encode('utf-8'))
+                return
+            if auth['usuario'].get('papel') != 'superadmin':
+                self.send_response(403)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Acesso negado: apenas superadmin'}).encode('utf-8'))
+                return
+
+            try:
+                res = call_supabase_rpc('moving_excluir_usuarios_listar', {'p_token': auth['token']})
+                self.send_response(200 if res.get('ok') else 400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps(res).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': str(e)}).encode('utf-8'))
+            return
+
+        # 3. GET /api/resumo (Protegido por login)
         if self.path == '/api/resumo':
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'Não autorizado. Faça login para acessar o painel.'}).encode('utf-8'))
+                return
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+            self.send_cors()
             self.end_headers()
             try:
                 rpc_url = f"{SUPABASE_URL}/rest/v1/rpc/moving_excluir_resumo"
@@ -515,7 +616,6 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 with urllib.request.urlopen(req, timeout=10) as resp:
                     resumo_obj = json.loads(resp.read().decode('utf-8'))
                     
-                # Injetar cupons agregados e inteligência de Ações Start Inc vs Outras
                 cupons_list = get_aggregated_coupons()
                 resumo_obj['cupons'] = cupons_list
                 resumo_obj['lotes'] = normalizar_lotes(resumo_obj.get('lotes', []))
@@ -532,19 +632,38 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(err_resp)
             return
 
+        # 4. GET /api/vendas_diarias (Protegido por login)
         if self.path == '/api/vendas_diarias':
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'Não autorizado. Faça login.'}).encode('utf-8'))
+                return
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+            self.send_cors()
             self.end_headers()
             vd = get_vendas_diarias()
             self.wfile.write(json.dumps({'vendas_diarias': vd}).encode('utf-8'))
             return
 
         if self.path == '/api/cupons':
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': 'Não autorizado'}).encode('utf-8'))
+                return
+
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
-            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_cors()
             self.end_headers()
             cupons = get_aggregated_coupons()
             self.wfile.write(json.dumps({
@@ -561,8 +680,135 @@ class PlatformHandler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
+        # 1. POST /api/login
+        if self.path == '/api/login':
+            content_length = int(self.headers.get('Content-Length', 0))
+            body_raw = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else '{}'
+            try:
+                body = json.loads(body_raw)
+                res = call_supabase_rpc('moving_excluir_login', {
+                    'p_login': str(body.get('login', '')).strip(),
+                    'p_senha': str(body.get('senha', '')).strip()
+                })
+                status = 200 if res.get('ok') else 401
+                self.send_response(status)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps(res).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': str(e)}).encode('utf-8'))
+            return
+
+        # 2. POST /api/logout
+        if self.path == '/api/logout':
+            token = extract_req_token(self)
+            if token:
+                try:
+                    call_supabase_rpc('moving_excluir_logout', {'p_token': token})
+                except Exception:
+                    pass
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_cors()
+            self.end_headers()
+            self.wfile.write(json.dumps({'ok': True}).encode('utf-8'))
+            return
+
+        # 3. POST /api/senha
+        if self.path == '/api/senha':
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Não autenticado'}).encode('utf-8'))
+                return
+
+            content_length = int(self.headers.get('Content-Length', 0))
+            body_raw = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else '{}'
+            try:
+                body = json.loads(body_raw)
+                res = call_supabase_rpc('moving_excluir_senha_trocar', {
+                    'p_token': auth['token'],
+                    'p_atual': str(body.get('atual', '')),
+                    'p_nova': str(body.get('nova', ''))
+                })
+                self.send_response(200 if res.get('ok') else 400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps(res).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': str(e)}).encode('utf-8'))
+            return
+
+        # 4. POST /api/usuarios (Salvar usuário - superadmin)
+        if self.path == '/api/usuarios':
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Não autenticado'}).encode('utf-8'))
+                return
+            if auth['usuario'].get('papel') != 'superadmin':
+                self.send_response(403)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Acesso negado: apenas superadmin'}).encode('utf-8'))
+                return
+
+            content_length = int(self.headers.get('Content-Length', 0))
+            body_raw = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else '{}'
+            try:
+                body = json.loads(body_raw)
+                res = call_supabase_rpc('moving_excluir_usuario_salvar', {
+                    'p_token': auth['token'],
+                    'p_id': body.get('id') or None,
+                    'p_login': str(body.get('login', '')).strip(),
+                    'p_nome': str(body.get('nome', '')).strip(),
+                    'p_senha': str(body.get('senha', '')),
+                    'p_papel': str(body.get('papel', 'usuario')),
+                    'p_telas': body.get('telas') if isinstance(body.get('telas'), list) else [],
+                    'p_ativo': body.get('ativo', True) is not False
+                })
+                self.send_response(200 if res.get('ok') else 400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps(res).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': str(e)}).encode('utf-8'))
+            return
+
+        # 5. POST /api/sync (Protegido - Admin ou Superadmin)
         if self.path == '/api/sync':
-            # Dispara sync_worker: Sympla API em tempo real, Uticket scraping em tempo real e Wix mantido
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'status': 'ERRO', 'erro': 'Não autorizado. Faça login.'}).encode('utf-8'))
+                return
+            if auth['usuario'].get('papel') not in ('admin', 'superadmin'):
+                self.send_response(403)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'status': 'ERRO', 'erro': 'Acesso negado: apenas administradores podem sincronizar.'}).encode('utf-8'))
+                return
+
             worker_script = os.path.join(DIR, 'sync_worker.py')
             try:
                 proc = subprocess.run([sys.executable, worker_script], capture_output=True, text=True, timeout=120)
@@ -574,11 +820,9 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                     falhas = [l for l in linhas if any(k in l for k in ('FALHA', 'ERRO', 'Erro', 'Error', 'Traceback', 'falhou'))]
                     sync_erro = (falhas[-1] if falhas else (linhas[-1] if linhas else 'o sync_worker terminou sem confirmar'))[:300]
                 
-                # Invalidar caches em memória para recarregar com dados novos instantaneamente
                 CUPONS_CACHE['timestamp'] = 0
                 DIARIO_CACHE['timestamp'] = 0
                 
-                # Busca resumo atualizado após a sincronização
                 rpc_url = f"{SUPABASE_URL}/rest/v1/rpc/moving_excluir_resumo"
                 req = urllib.request.Request(rpc_url, data=b'{}', headers={
                     'apikey': SUPABASE_ANON,
@@ -600,7 +844,7 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                     
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
-                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_cors()
                 self.end_headers()
                 self.wfile.write(json.dumps({
                     'status': 'OK' if sync_ok else 'ERRO',
@@ -611,13 +855,72 @@ class PlatformHandler(SimpleHTTPRequestHandler):
             except Exception as e:
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')
-                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_cors()
                 self.end_headers()
                 motivo = 'a sincronização passou de 2 minutos' if isinstance(e, subprocess.TimeoutExpired) else str(e)
                 self.wfile.write(json.dumps({'status': 'ERRO', 'erro': motivo}).encode('utf-8'))
             return
             
         self.send_response(404)
+        self.send_cors()
+        self.end_headers()
+
+    def do_DELETE(self):
+        # DELETE /api/usuarios?id=... (Excluir usuário - superadmin)
+        if self.path.startswith('/api/usuarios'):
+            auth = authenticate_req(self)
+            if not auth:
+                self.send_response(401)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Não autenticado'}).encode('utf-8'))
+                return
+            if auth['usuario'].get('papel') != 'superadmin':
+                self.send_response(403)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'Acesso negado: apenas superadmin'}).encode('utf-8'))
+                return
+
+            import urllib.parse
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            user_id = qs.get('id', [None])[0]
+            if not user_id:
+                content_length = int(self.headers.get('Content-Length', 0))
+                if content_length > 0:
+                    try:
+                        b = json.loads(self.rfile.read(content_length).decode('utf-8'))
+                        user_id = b.get('id')
+                    except Exception:
+                        pass
+
+            if not user_id:
+                self.send_response(400)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'ID não fornecido'}).encode('utf-8'))
+                return
+
+            try:
+                res = call_supabase_rpc('moving_excluir_usuario_excluir', {
+                    'p_token': auth['token'],
+                    'p_id': user_id
+                })
+                self.send_response(200 if res.get('ok') else 400)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps(res).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': False, 'erro': str(e)}).encode('utf-8'))
+            return
+
+        self.send_response(404)
+        self.send_cors()
         self.end_headers()
 
 def start_periodic_sync(interval_seconds=900):

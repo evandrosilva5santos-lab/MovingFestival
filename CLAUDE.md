@@ -49,9 +49,10 @@ Wix (importação)      ─┘                                        │
 | Arquivo | Para que serve |
 |---|---|
 | `CLAUDE.md` | Este arquivo. Contexto e regras para IAs. |
-| `SUPABASE.md` | Banco: tabelas, colunas, função de resumo, SQL completo, como apagar. |
-| `index.html` | O painel (HTML/CSS/JS puro, 1 arquivo, sem build). Visual light estilo ManyChat. Lê os dados de `/api/resumo`. |
-| `server.py` | Servidor local na porta **7777** (`python3 server.py` → http://localhost:7777). Serve o `index.html`, `GET /api/resumo` (chama `moving_excluir_resumo()` no Supabase) e `POST /api/sync` (roda o `sync_worker.py`). |
+| `migration_auth.sql` | Script SQL completo de autenticação e controle de acesso (tabelas `moving_excluir_usuarios`, `moving_excluir_sessoes`, funções `moving_excluir_*` e 3 usuários iniciais com hashes bcrypt). |
+| `_worker.js` | Cloudflare Worker que serve a API `/api/login`, `/api/me`, `/api/logout`, `/api/senha`, `/api/usuarios`, `/api/resumo` e `/api/sync` protegidas por token. |
+| `index.html` | O painel (HTML/CSS/JS puro, 1 arquivo, sem build). Visual light estilo ManyChat. Login integrado e controle de acesso por tela. |
+| `server.py` | Servidor local na porta **7777** (`python3 server.py` → http://localhost:7777). Serve o `index.html`, rotas `/api/*` com autenticação e sincronização automática. |
 | `sync_worker.py` | Motor de sincronização: busca vendas da Sympla (API) e da Uticket (exportação XLSX com cookie), classifica e faz upsert em `moving_excluir_vendas`. |
 | `run_sync_daemon.py` | Roda o `sync_worker.py` a cada 5 minutos em segundo plano. |
 | `sympla_api.py` | **Fonte oficial da Sympla.** API do dono da conta, só o evento Moving 2026 (`SYMPLA_EVENT_ID=3419289`). Confere o nome do evento antes de puxar. Compara com a planilha e gera `validacao_sympla.json`. Teste sem gravar: `python3 sympla_api.py`. |

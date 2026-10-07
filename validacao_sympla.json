@@ -1,8 +1,8 @@
 {
-  "gerado_em": "2026-10-06T23:47:30.764518-03:00",
+  "gerado_em": "2026-10-07T12:40:45.165298-03:00",
   "evento": "3419289",
   "api": {
-    "ingressos_confirmados": 815,
+    "ingressos_confirmados": 817,
     "por_setor": {
       "GOLD": {
         "total": 125,
@@ -17,10 +17,10 @@
         "receita": 25197.35
       },
       "FULLPASS": {
-        "total": 453,
-        "pagos": 453,
+        "total": 455,
+        "pagos": 455,
         "cortesias": 0,
-        "receita": 66898.45
+        "receita": 67144.95
       },
       "BLACK": {
         "total": 44,
@@ -61,13 +61,15 @@
   },
   "batem": false,
   "so_na_api": {
-    "qtd": 5,
+    "qtd": 7,
     "exemplos": [
       "SYMPLA-UVRV-06-GJYM",
       "SYMPLA-UVS0-NM-QNQ8",
       "SYMPLA-UVS1-VT-TKGW",
       "SYMPLA-UVS3-1A-2PCS",
-      "SYMPLA-UVS3-1A-2Z6V"
+      "SYMPLA-UVS3-1A-2Z6V",
+      "SYMPLA-UVT2-0C-7QA7",
+      "SYMPLA-UVT4-0Y-WH1Y"
     ]
   },
   "so_na_planilha": {
@@ -77,26 +79,26 @@
   "valor_diferente": {
     "qtd": 303,
     "exemplos": [
-      "SYMPLA-UVKZ-A9-E4D6",
-      "SYMPLA-UVPG-N7-8MKQ",
-      "SYMPLA-UUR5-BA-XVUT",
-      "SYMPLA-URLR-Z7-K01S",
-      "SYMPLA-UUKP-3T-9TLT",
-      "SYMPLA-UV5G-CT-P3FQ",
-      "SYMPLA-URJC-UF-VVM1",
-      "SYMPLA-URK4-TN-TQJU",
-      "SYMPLA-UUGZ-TH-EL0U",
-      "SYMPLA-URH5-6T-Y24S",
-      "SYMPLA-UUPM-VF-W251",
-      "SYMPLA-UUUH-SF-3XG9",
-      "SYMPLA-UURN-GZ-KKN5",
-      "SYMPLA-UVQA-3N-FF2D",
-      "SYMPLA-URX5-ZX-H7WV",
-      "SYMPLA-UUF8-PZ-J5MD",
-      "SYMPLA-UVAQ-VM-BHQK",
-      "SYMPLA-USZC-1L-NCPK",
-      "SYMPLA-URHC-8L-V8MH",
-      "SYMPLA-USDK-FH-1MJ1"
+      "SYMPLA-UT47-W5-5HFS",
+      "SYMPLA-UVJC-S3-LV9N",
+      "SYMPLA-UUPU-XW-L4K4",
+      "SYMPLA-URH6-WC-Q389",
+      "SYMPLA-UR6Y-8M-6BE7",
+      "SYMPLA-URAJ-PW-LMWM",
+      "SYMPLA-UR97-GN-335B",
+      "SYMPLA-UVJ9-RB-DR9R",
+      "SYMPLA-UUC1-RT-4Z4E",
+      "SYMPLA-URJD-3A-5PM6",
+      "SYMPLA-UUR3-07-046J",
+      "SYMPLA-UV8Z-R5-Q1P4",
+      "SYMPLA-UQSQ-JU-Y9VD",
+      "SYMPLA-US5E-XU-8F61",
+      "SYMPLA-URJB-RD-KHVL",
+      "SYMPLA-UUF0-NQ-SVZX",
+      "SYMPLA-UTA0-V1-A4AS",
+      "SYMPLA-USCB-F7-FC18",
+      "SYMPLA-UR56-W5-8PX7",
+      "SYMPLA-UTA1-7J-1EWD"
     ]
   },
   "setor_diferente": {
