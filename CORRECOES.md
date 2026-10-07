@@ -157,3 +157,11 @@
   - Rodapé da sidebar com perfil ativo: iniciais em avatar estilizado, badge colorido com o papel (`SuperADMIN`, `Administrador`, `Usuário`), botão de troca de senha própria (`/api/senha`) e botão de logout.
   - Todas as chamadas de dados usam o header `X-Moving-Token`. Sem token válido, o backend responde 401 e a interface direciona para o login.
 
+
+## 17. Login pendente, IA e Sympla sem taxa (07/10)
+- **Login travava o painel:** o login foi publicado mas as tabelas `moving_excluir_usuarios/sessoes` não existem no banco. Agora o Worker detecta isso (`loginAtivo`) e abre o painel em **acesso livre** (usuário "Acesso livre", papel admin). Quando o `migration_auth.sql` for aplicado, o login passa a ser exigido sozinho (cache de 60 s).
+- Corrigido no front: `/api/me` devolve `{ok:true}` (o front esperava `status:'ok'` e deslogava todo mundo). Mesma correção em trocar senha / salvar / excluir usuário.
+- `migration_auth.sql` estava com as senhas reais em texto. Trocadas por `TROQUE_PELA_SENHA` (preencher na hora de rodar). As senhas antigas ainda aparecem no histórico do Git.
+- **Sympla sem taxa (Edge Function v5):** valor do ingresso = `ticket_sale_price × (order_total_net_value ÷ order_total_sale_price)` do pedido. Remove a taxa de conveniência de 10% que o comprador paga.
+- **Análise com IA:** `POST /api/ia` (exige sessão ou acesso livre) usa `GEMINI_API_KEY` (modelo `GEMINI_MODEL`, padrão `gemini-2.5-flash`) ou `ANTHROPIC_API_KEY` (modelo `CLAUDE_MODEL`). Sem chave, responde 501 com instrução. Botões "Analisar com IA" no Resumo do Faturamento e no resultado da Conferência; só manda o texto com números da tela (sem nomes, e-mails ou códigos).
+- Uticket financeiro: testados 20 endpoints prováveis da API (`/financial`, `/transfers`, `/withdraws`, …) — todos 404. Falta a chamada real da página Financeiro.

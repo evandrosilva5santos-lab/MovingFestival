@@ -325,7 +325,24 @@ function extrairToken(request) {
   return null;
 }
 
+// LOGIN_PENDENTE: enquanto as tabelas/funções de login não existirem no Supabase, o painel abre em "acesso livre"
+// (como era antes do login). Assim que o migration_auth.sql for aplicado, o login passa a ser exigido sozinho.
+const USUARIO_LIVRE = { id: null, login: 'acesso-livre', nome: 'Acesso livre (login ainda não ativado)', papel: 'admin',
+  telas: ['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias', 'conferencia'], modo_livre: true };
+let cacheAuthAtivo = { valor: null, em: 0 };
+async function loginAtivo(supabaseUrl, supabaseAnon) {
+  if (cacheAuthAtivo.valor !== null && Date.now() - cacheAuthAtivo.em < 60000) return cacheAuthAtivo.valor;
+  let ativo = true;
+  try {
+    const r = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_me', { p_token: 'verificacao' });
+    if (r && r.ok === false && typeof r.erro === 'string' && /PGRST202|Could not find the function|\(404\)/.test(r.erro)) ativo = false;
+  } catch (e) { ativo = true; }
+  cacheAuthAtivo = { valor: ativo, em: Date.now() };
+  return ativo;
+}
+
 async function autenticarUsuario(request, supabaseUrl, supabaseAnon) {
+  if (!(await loginAtivo(supabaseUrl, supabaseAnon))) return { token: null, usuario: USUARIO_LIVRE };
   const token = extrairToken(request);
   if (!token) return null;
   try {
@@ -485,6 +502,47 @@ export default {
         } catch (err) {
           return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
         }
+      }
+    }
+
+    // IA: segunda opinião sobre os números (Gemini ou Claude). Recebe só texto com números agregados, sem dados pessoais.
+    if (url.pathname === '/api/ia') {
+      const jh = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
+      if (request.method !== 'POST') return new Response(JSON.stringify({ erro: 'Use POST' }), { status: 405, headers: jh });
+      const authIa = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!authIa) return new Response(JSON.stringify({ erro: 'Faça login para usar a análise com IA.' }), { status: 401, headers: jh });
+      const corpo = await request.json().catch(() => ({}));
+      const contexto = String(corpo.contexto || '').slice(0, 15000);
+      const foco = String(corpo.foco || 'geral').slice(0, 40);
+      if (contexto.length < 40) return new Response(JSON.stringify({ erro: 'Sem dados para analisar' }), { status: 400, headers: jh });
+      const sistema = 'Você é um analista financeiro e de vendas de festivais de música no Brasil (Moving Festival 2026, 17 e 18/10). ' +
+        'Responda em português do Brasil, direto, em tópicos curtos, no máximo 220 palavras. Estrutura: "O que chama atenção" (3 a 5 itens com números), ' +
+        '"Riscos" (até 3) e "O que fazer agora" (até 4 ações práticas). Use só os números fornecidos; se faltar dado, diga o que falta. Não invente valores. Foco: ' + foco + '.';
+      try {
+        let texto = '';
+        if (env.GEMINI_API_KEY) {
+          const modelo = env.GEMINI_MODEL || 'gemini-2.5-flash';
+          const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+            body: JSON.stringify({ systemInstruction: { parts: [{ text: sistema }] }, contents: [{ role: 'user', parts: [{ text: contexto }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 900 } })
+          });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok) return new Response(JSON.stringify({ erro: 'Gemini: ' + (j.error && j.error.message || r.status) }), { status: 502, headers: jh });
+          texto = ((j.candidates || [])[0] || {}).content ? j.candidates[0].content.parts.map((p) => p.text || '').join('') : '';
+        } else if (env.ANTHROPIC_API_KEY) {
+          const r = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+            body: JSON.stringify({ model: env.CLAUDE_MODEL || 'claude-sonnet-5-5', max_tokens: 900, system: sistema, messages: [{ role: 'user', content: contexto }] })
+          });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok) return new Response(JSON.stringify({ erro: 'Claude: ' + (j.error && j.error.message || r.status) }), { status: 502, headers: jh });
+          texto = (j.content || []).map((c) => c.text || '').join('');
+        } else {
+          return new Response(JSON.stringify({ erro: 'A análise com IA ainda não está ligada. Falta cadastrar na Cloudflare o segredo GEMINI_API_KEY (ou ANTHROPIC_API_KEY).', configurar: true }), { status: 501, headers: jh });
+        }
+        return new Response(JSON.stringify({ texto: texto || 'A IA não devolveu texto.' }), { headers: jh });
+      } catch (err) {
+        return new Response(JSON.stringify({ erro: String(err) }), { status: 500, headers: jh });
       }
     }
 

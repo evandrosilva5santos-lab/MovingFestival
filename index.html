@@ -1104,6 +1104,12 @@
             <div class="fat-barra-pag" id="fatBarraPag"></div>
           </div>
 
+          <div class="card ia-card" data-ia="faturamento">
+            <div class="ttl">✨ Análise com IA <span class="tag">faturamento, despesas, caixa e metas</span>
+              <span class="fat-acoes"><button type="button" class="fat-btn fat-btn-pri" data-ia-btn>Analisar com IA</button></span></div>
+            <div class="ia-out" data-ia-out><p class="fat-nota" style="margin:0">A IA lê só os números desta tela (sem nomes, e-mails ou códigos) e devolve o que chama atenção, os riscos e o que fazer.</p></div>
+          </div>
+
           <div class="grid g4">
             <div class="card kpi hl-k"><div class="k">Faturamento projetado no dia do evento <span class="fat-est">estimado</span></div><div class="v tnum" id="fatProjDia" style="color:var(--accent)">—</div><div class="s" id="fatProjDiaSub">—</div></div>
             <div class="card kpi"><div class="k">Ingressos projetados no dia do evento</div><div class="v tnum" id="fatProjIng">—</div><div class="s" id="fatProjIngSub">—</div></div>
@@ -1282,6 +1288,11 @@
             <div class="ttl">Resultado da conferência <span class="tag" id="cfResTag">—</span></div>
             <div class="cf-kpis" id="cfKpis"></div>
             <div class="cf-veredito" id="cfVeredito"></div>
+          </div>
+          <div class="card ia-card" style="margin-top:16px" data-ia="conferencia">
+            <div class="ttl">✨ Análise com IA <span class="tag">resultado da conferência</span>
+              <span class="fat-acoes"><button type="button" class="fat-btn fat-btn-pri" data-ia-btn>Analisar com IA</button></span></div>
+            <div class="ia-out" data-ia-out><p class="fat-nota" style="margin:0">A IA lê só os números desta tela (sem nomes, e-mails ou códigos) e devolve o que chama atenção, os riscos e o que fazer.</p></div>
           </div>
           <div class="card" style="margin-top:16px">
             <div class="ttl">Totais: planilha × painel <span class="tag">só itens válidos (sem cancelados)</span></div>
@@ -4251,7 +4262,7 @@
       })
       .then(function(res){
         btnSubmit.disabled = false;
-        if(res.ok && res.data && res.data.status === 'ok'){
+        if(res.ok && res.data && (res.data.status === 'ok' || res.data.ok === true)){
           alertBox.className = 'login-alert';
           alertBox.style.background = 'rgba(22,163,74,0.12)';
           alertBox.style.color = 'var(--c-success)';
@@ -4437,7 +4448,7 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res.status === 'ok') carregarUsuarios();
+      if(res.status === 'ok' || res.ok === true) carregarUsuarios();
       else alert((res.erro || res.error) || 'Erro ao alterar status.');
     })
     .catch(function(){ alert('Falha ao comunicar com o servidor.'); });
@@ -4451,7 +4462,7 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res.status === 'ok'){
+      if(res.status === 'ok' || res.ok === true){
         carregarUsuarios();
       } else {
         alert((res.erro || res.error) || 'Erro ao excluir usuário.');
@@ -4617,7 +4628,7 @@
         btnSalvar.disabled = false;
         btnSalvar.textContent = 'Salvar Usuário';
 
-        if(res.ok && res.data && res.data.status === 'ok'){
+        if(res.ok && res.data && (res.data.status === 'ok' || res.data.ok === true)){
           fecharModalUsuario();
           carregarUsuarios();
           // Se eu editei a mim mesmo, atualiza dados na interface
@@ -4646,20 +4657,18 @@
   // INICIALIZAÇÃO DO ESTADO DE SESSÃO
   // =========================================================================
   var tokenSalvo = localStorage.getItem(TOKEN_KEY);
-  if(!tokenSalvo){
-    mostrarLogin();
-  } else {
-    // Validar token no backend
+  {
+    // Validar token no backend (sem token também pergunta: se o login ainda não estiver ativado no banco, o painel abre em acesso livre)
     fetch('/api/me', {
       method: 'GET',
-      headers: { 'X-Moving-Token': tokenSalvo }
+      headers: tokenSalvo ? { 'X-Moving-Token': tokenSalvo } : {}
     })
     .then(function(r){
       if(!r.ok) throw new Error('Token inválido');
       return r.json();
     })
     .then(function(res){
-      if(res && res.status === 'ok' && res.usuario){
+      if(res && (res.ok === true || res.status === 'ok') && res.usuario){
         usuarioAtual = res.usuario;
         esconderLogin();
         aplicarPermissoes(usuarioAtual);
@@ -4676,3 +4685,50 @@
 })();
 </script>
 </html>
+
+<style>
+/* IA_ANALISE */
+.ia-card{ border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border)); background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 5%,var(--surface)),var(--surface)); }
+.fat > .ia-card, .fat-pane > .ia-card{ margin-top:16px; }
+.ia-out{ font-size:13px; line-height:1.55; color:var(--fg); }
+.ia-out h4{ font-size:12.5px; margin:12px 0 4px; } .ia-out ul{ margin:4px 0 0; padding-left:18px; } .ia-out li{ margin:3px 0; }
+.ia-out .ia-erro{ color:var(--c-danger,#DC2626); font-weight:600; } .ia-out .ia-carr{ color:var(--fg-muted); }
+</style>
+<script>
+/* IA_ANALISE: manda para /api/ia só o texto com números da tela (sem a tabela de códigos) */
+(function(){
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function txt(el){ return el? (el.innerText||'').replace(/\n{3,}/g,'\n\n').trim() : ''; }
+  function contexto(k){
+    var hoje=new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
+    if(k==='faturamento'){
+      var pane=document.querySelector('[data-fat-pane="resumo"]'), clone=pane? pane.cloneNode(true) : null;
+      if(clone){ clone.querySelectorAll('.ia-card,.fat-sim-chips').forEach(function(x){ x.remove(); }); }
+      var rec=document.getElementById('fatRecTab');
+      return 'Data/hora: '+hoje+'\nTELA FATURAMENTO DO PAINEL MOVING\n'+(clone? (clone.innerText||'') : '')+'\n\nRECEBIDO POR TICKETEIRA\n'+txt(rec);
+    }
+    var r=document.getElementById('cfRes');
+    return 'Data/hora: '+hoje+'\nCONFERÊNCIA PLANILHA x PAINEL\n'+txt(document.getElementById('cfResTag'))+'\n'+txt(document.getElementById('cfKpis'))+'\n'+txt(document.getElementById('cfVeredito'))+'\n'+txt(document.getElementById('cfTotais'));
+  }
+  function formatar(t){
+    var linhas=String(t).split(/\n/), h='', lista=false;
+    linhas.forEach(function(l){ var s=l.trim(); if(!s){ if(lista){ h+='</ul>'; lista=false; } return; }
+      s=esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+      if(/^[-*•]\s+/.test(s)){ if(!lista){ h+='<ul>'; lista=true; } h+='<li>'+s.replace(/^[-*•]\s+/,'')+'</li>'; }
+      else { if(lista){ h+='</ul>'; lista=false; } h+= /^#+\s/.test(s)||/:$/.test(s)? '<h4>'+s.replace(/^#+\s*/,'')+'</h4>' : '<p style="margin:6px 0">'+s+'</p>'; } });
+    if(lista) h+='</ul>'; return h;
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-ia-btn]'); if(!b) return;
+    var card=b.closest('[data-ia]'), out=card.querySelector('[data-ia-out]'), k=card.getAttribute('data-ia');
+    var ctx=contexto(k); if(ctx.length<60){ out.innerHTML='<p class="ia-erro">Ainda não há números nesta tela.</p>'; return; }
+    b.disabled=true; b.textContent='Analisando…'; out.innerHTML='<p class="ia-carr">A IA está lendo os números…</p>';
+    fetch('/api/ia',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':(function(){ try{ return localStorage.getItem('moving_token')||''; }catch(x){ return ''; } })()},body:JSON.stringify({contexto:ctx.slice(0,15000),foco:k})})
+      .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
+      .then(function(j){ b.disabled=false; b.textContent='Analisar de novo';
+        if(j.erro){ out.innerHTML='<p class="ia-erro">'+esc(j.erro)+'</p>'; return; }
+        out.innerHTML=formatar(j.texto)+'<p class="fat-nota">Gerado por IA a partir dos números desta tela em '+esc(new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}))+'. Confira antes de decidir.</p>'; })
+      .catch(function(){ b.disabled=false; b.textContent='Analisar com IA'; out.innerHTML='<p class="ia-erro">Sem conexão. Tente de novo.</p>'; });
+  });
+})();
+</script>

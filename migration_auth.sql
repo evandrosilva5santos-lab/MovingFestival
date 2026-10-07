@@ -490,19 +490,20 @@ grant execute on function public.moving_excluir_senha_trocar(text, text, text) t
 
 -- ==============================================================================
 -- 7. USUÁRIOS INICIAIS (Inserção segura com bcrypt)
+-- ATENÇÃO: troque TROQUE_PELA_SENHA pela senha de cada usuário ANTES de rodar. Nunca commitar senha real.
 -- ==============================================================================
 -- 1. evandro@startinc.com.br (superadmin)
 insert into public.moving_excluir_usuarios (login, nome, senha_hash, papel, telas, ativo)
 values (
   'evandro@startinc.com.br',
   'Evandro Silva',
-  crypt('Ev@12101034', gen_salt('bf')),
+  crypt('TROQUE_PELA_SENHA', gen_salt('bf')),
   'superadmin',
   array['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias', 'conferencia'],
   true
 )
 on conflict (login) do update
-set senha_hash = crypt('Ev@12101034', gen_salt('bf')),
+set senha_hash = crypt('TROQUE_PELA_SENHA', gen_salt('bf')),
     papel = 'superadmin',
     ativo = true;
 
@@ -511,13 +512,13 @@ insert into public.moving_excluir_usuarios (login, nome, senha_hash, papel, tela
 values (
   'movingadmin',
   'Moving Admin',
-  crypt('Moving@2026', gen_salt('bf')),
+  crypt('TROQUE_PELA_SENHA', gen_salt('bf')),
   'admin',
   array['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias', 'conferencia'],
   true
 )
 on conflict (login) do update
-set senha_hash = crypt('Moving@2026', gen_salt('bf')),
+set senha_hash = crypt('TROQUE_PELA_SENHA', gen_salt('bf')),
     papel = 'admin',
     ativo = true;
 
@@ -526,13 +527,13 @@ insert into public.moving_excluir_usuarios (login, nome, senha_hash, papel, tela
 values (
   'carolamandoneves@gmail.com',
   'Carol Amando',
-  crypt('Moving@1234', gen_salt('bf')),
+  crypt('TROQUE_PELA_SENHA', gen_salt('bf')),
   'usuario',
   array['overview', 'diario'],
   true
 )
 on conflict (login) do update
-set senha_hash = crypt('Moving@1234', gen_salt('bf')),
+set senha_hash = crypt('TROQUE_PELA_SENHA', gen_salt('bf')),
     papel = 'usuario',
     telas = array['overview', 'diario'],
     ativo = true;
