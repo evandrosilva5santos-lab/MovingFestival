@@ -337,7 +337,7 @@
       <a data-view="plataformas" title="Plataformas & Regiões"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><span class="nav-txt">Plataformas</span></a>
       <a data-view="promoters" title="Ações Start & Cupons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Ações Start & Cupons</span></a>
       <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
-      <a data-view="tendencias" title="Tendências"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="nav-txt">Tendências</span></a>
+      <a data-view="tendencias" title="Faturamento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="nav-txt">Faturamento</span></a>
     </nav>
     <div class="side-foot"><div class="avatar">EG</div><div class="who">Evandro & Gê<small>Start Inc.</small></div><button class="theme-toggle" id="themeToggle" type="button" title="Alternar tema claro/escuro">
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -778,42 +778,60 @@
 
       <!-- TENDÊNCIAS -->
       <section data-view="tendencias" hidden>
+        <!-- FATURAMENTO -->
+        <div id="financeiroCard" class="fat">
+          <div class="grid g4">
+            <div class="card kpi hl-k"><div class="k">Faturamento de ingressos <span class="fat-real">real</span></div><div class="v tnum" id="fatIngressos" style="color:var(--accent)">—</div><div class="s" id="fatIngressosSub">—</div></div>
+            <div class="card kpi"><div class="k">Ticket médio do ingresso <span class="fat-real">real</span></div><div class="v tnum" id="fatTicket">—</div><div class="s">faturamento ÷ ingressos pagos</div></div>
+            <div class="card kpi"><div class="k">Estacionamento <span class="fat-est">estimado</span></div><div class="v tnum" id="fatEst">—</div><div class="s" id="fatEstSub">—</div></div>
+            <div class="card kpi"><div class="k">Bar <span class="fat-est">estimado</span></div><div class="v tnum" id="fatBar">—</div><div class="s" id="fatBarSub">—</div></div>
+          </div>
+
+          <div class="card fat-total">
+            <div class="fat-total-l">
+              <div class="k">Faturamento total projetado</div>
+              <div class="v tnum" id="fatTotal">—</div>
+              <div class="s">ingressos (real) + estacionamento e bar (estimados) · <b id="fatPorPessoa">—</b> por pessoa</div>
+            </div>
+            <div class="fat-total-r">
+              <div class="fat-stack" id="fatStack"></div>
+              <div class="fat-leg" id="fatLeg"></div>
+            </div>
+          </div>
+
+          <div class="grid g2">
+            <div class="card">
+              <div class="ttl">Faturamento por setor <span class="tag">só ingressos pagos</span></div>
+              <div id="finSetores" class="fin-setores"></div>
+            </div>
+            <div class="card fat-prem" id="fatPrem">
+              <div class="ttl">Premissas da estimativa
+                <span class="fat-acoes">
+                  <button type="button" class="fat-btn" id="fatEditar">Editar</button>
+                  <button type="button" class="fat-btn" id="fatCancelar" hidden>Cancelar</button>
+                  <button type="button" class="fat-btn fat-btn-pri" id="fatSalvar" hidden>Salvar</button>
+                </span>
+              </div>
+              <div class="fat-rows">
+                <label class="fat-row"><span>Público base</span><b data-v="base">—</b>
+                  <select data-i="base" hidden><option value="total">Ingressos totais</option><option value="pagos">Só ingressos pagos</option></select></label>
+                <label class="fat-row"><span>% do público que vai de carro</span><b data-v="carro">—</b><input data-i="carro" type="number" min="0" max="100" step="5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Pessoas por carro</span><b data-v="pessoas">—</b><input data-i="pessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Estacionamento (R$ por carro)</span><b data-v="preco">—</b><input data-i="preco" type="number" min="0" max="1000" step="5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Ticket médio do bar (R$ por pessoa)</span><b data-v="bar">—</b><input data-i="bar" type="number" min="0" max="5000" step="5" inputmode="decimal" hidden></label>
+              </div>
+              <div class="fat-msg" id="fatMsg" hidden></div>
+              <div class="fat-calc" id="fatCalc"></div>
+              <p class="fat-nota" id="fatInfo">—</p>
+            </div>
+          </div>
+
+          <div class="fat-sub"><h2>Tendência de vendas</h2><span class="pill">quantidade de ingressos</span></div>
+        </div>
         <div class="grid g3">
           <div class="card"><div class="ttl">Vendas por dia <span class="tag">últimos 30 dias</span></div><div class="chart" id="chartDia"></div></div>
           <div class="card"><div class="ttl">Vendas por hora</div><div class="chart" id="chartHora"></div></div>
           <div class="card"><div class="ttl">Por dia da semana</div><div class="chart" id="chartSemana"></div></div>
-        </div>
-        <!-- FINANCEIRO_PAINEL -->
-        <div class="card fin-card" id="financeiroCard">
-          <div class="ttl">Receita da campanha <span class="tag">faturamento e projeção de extras</span></div>
-          <div class="fin-grid">
-            <div class="fin-col">
-              <h3>Ingressos e camping</h3>
-              <div class="fin-nums">
-                <div><small>Ingressos totais</small><b id="finTotal">—</b><i>pagos + cortesias</i></div>
-                <div><small>Ingressos vendidos</small><b id="finPagos">—</b><i>só pagos</i></div>
-                <div><small>Camping vendido</small><b id="finCamping">—</b><i>vagas · fora do total</i></div>
-                <div><small>Faturamento de ingressos</small><b id="finReceita">—</b><i>só ingressos pagos</i></div>
-              </div>
-            </div>
-            <div class="fin-col">
-              <h3>Faturamento por setor</h3>
-              <div id="finSetores" class="fin-setores"></div>
-            </div>
-            <div class="fin-col fin-proj">
-              <h3>Projeção de receita extra <em>estimativa</em></h3>
-              <div class="fin-params">
-                <label>Público base
-                  <select id="fpBase"><option value="total">Ingressos totais</option><option value="pagos">Só pagos</option></select></label>
-                <label>% que vai de carro<input id="fpCarro" type="number" min="0" max="100" step="5" inputmode="decimal"></label>
-                <label>Pessoas por carro<input id="fpPessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal"></label>
-                <label>Estacionamento (R$/carro)<input id="fpPreco" type="number" min="0" step="5" inputmode="decimal"></label>
-                <label>Ticket médio do bar (R$/pessoa)<input id="fpBar" type="number" min="0" step="5" inputmode="decimal"></label>
-              </div>
-              <div class="fin-res" id="finRes"></div>
-              <p class="fin-nota">Receita estimada, não é lucro (não desconta custos). Os valores acima são editáveis e ficam salvos neste navegador.</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -956,7 +974,7 @@
     plataformas:['Plataformas & canais','De onde vêm as vendas'],
     promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
     ingressos:['Ingressos','Ticket médio e lotes que mais vendem'],
-    tendencias:['Tendências','Vendas por dia, hora e dia da semana']
+    tendencias:['Faturamento','Faturamento real dos ingressos e estimativa de estacionamento e bar']
   };
   var views = [].slice.call(document.querySelectorAll('section[data-view]'));
   var links = [].slice.call(document.querySelectorAll('#nav a'));
@@ -1038,7 +1056,7 @@
     $('kTotal').textContent = num(sel.total);
     $('kTotalS').textContent = f ? ((totalGeral? Math.round(sel.total/totalGeral*100):0)+'% do total geral') : 'ingressos consolidados';
     $('kPagos').textContent = num(sel.pagos);
-    $('kReceita').textContent = f ? 'ingressos pagos' : ('receita '+brl(d.receita));
+    $('kReceita').textContent = 'ingressos pagos';
     $('kCort').textContent = num(sel.cortesias);
     var dias={}; (d.por_dia||[]).forEach(function(x){ dias[String(x.dia).slice(0,10)]=x.total; });
     $('kHoje').textContent = num(dias[hojeSP(0)]||0);
@@ -2345,7 +2363,7 @@
 <script>
 // Cabeçalho do celular (logo + tema) e nomes curtos das abas
 (function(){
-  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Tendências' };
+  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Faturamento' };
   [].slice.call(document.querySelectorAll('#nav a[data-view]')).forEach(function(a){
     a.setAttribute('data-curto', CURTO[a.getAttribute('data-view')] || (a.textContent||'').trim());
   });
@@ -2621,79 +2639,144 @@
 </style>
 
 <style>
-/* FINANCEIRO_PAINEL */
-.fin-card{ margin-top:16px; }
-.fin-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr); gap:28px; }
-.fin-col h3{ font-size:12.5px; font-weight:700; margin:0 0 12px; color:var(--fg); display:flex; align-items:center; gap:8px; }
-.fin-col h3 em{ font-style:normal; font-size:10.5px; font-weight:700; color:var(--c-warning); background:color-mix(in srgb,var(--c-warning) 12%,transparent); padding:2px 8px; border-radius:999px; }
-.fin-nums{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.fin-nums > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:0; }
-.fin-nums small{ display:block; font-size:11px; font-weight:600; color:var(--fg-muted); }
-.fin-nums b{ display:block; font-family:var(--font-display); font-size:24px; line-height:1.15; font-variant-numeric:tabular-nums; margin:2px 0; }
-.fin-nums i{ font-style:normal; font-size:10.5px; color:var(--fg-faint); }
-.fin-setores{ display:flex; flex-direction:column; gap:12px; }
-.fin-set .t{ display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; font-weight:600; gap:8px; }
+/* FATURAMENTO: aba Faturamento (antiga Tendências) */
+.fat .grid + .card, .fat .card + .grid{ margin-top:16px; }
+.fat-real,.fat-est{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border-radius:999px; margin-left:4px; vertical-align:1px; }
+.fat-real{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 12%,transparent); }
+.fat-est{ color:var(--c-warning); background:color-mix(in srgb,var(--c-warning) 14%,transparent); }
+.fat-total{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:32px; align-items:center; margin-top:16px; }
+.fat-total .k{ font-size:12px; font-weight:600; color:var(--fg-muted); }
+.fat-total .v{ font-family:var(--font-display); font-size:40px; font-weight:800; line-height:1.1; color:var(--accent); margin:4px 0; }
+.fat-total .s{ font-size:12px; color:var(--fg-muted); }
+.fat-total .s b{ color:var(--fg); }
+.fat-stack{ display:flex; height:14px; border-radius:99px; overflow:hidden; background:var(--surface-2); gap:2px; }
+.fat-stack span{ display:block; height:100%; }
+.fat-leg{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:12px; }
+.fat-leg div{ font-size:11.5px; color:var(--fg-muted); min-width:0; }
+.fat-leg i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.fat-leg b{ display:block; font-size:15px; color:var(--fg); font-variant-numeric:tabular-nums; margin-top:2px; }
+.fin-setores{ display:flex; flex-direction:column; gap:14px; }
+.fin-set .t{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; font-weight:600; gap:8px; }
 .fin-set .t b{ font-variant-numeric:tabular-nums; font-size:14px; }
-.fin-set .bar{ height:7px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin:5px 0 2px; }
+.fin-set .bar{ height:8px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin:6px 0 3px; }
 .fin-set .bar span{ display:block; height:100%; border-radius:99px; background:var(--cor); }
-.fin-set small{ font-size:10.5px; color:var(--fg-muted); }
-.fin-params{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 10px; margin-bottom:12px; }
-.fin-params label{ display:flex; flex-direction:column; gap:3px; font-size:10.5px; font-weight:600; color:var(--fg-muted); min-width:0; }
-.fin-params input,.fin-params select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:6px 8px; width:100%; min-width:0; box-sizing:border-box; }
-.fin-res{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-.fin-res > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:9px 12px; }
-.fin-res small{ display:block; font-size:10.5px; font-weight:600; color:var(--fg-muted); }
-.fin-res b{ font-family:var(--font-display); font-size:18px; font-variant-numeric:tabular-nums; }
-.fin-res .tot{ grid-column:1 / -1; background:color-mix(in srgb,var(--accent) 8%,transparent); border-color:color-mix(in srgb,var(--accent) 30%,var(--border)); }
-.fin-res .tot b{ font-size:24px; color:var(--accent); }
-.fin-nota{ font-size:10.5px; color:var(--fg-faint); margin:10px 0 0; line-height:1.4; }
-@media (max-width:1199px){ .fin-grid{ grid-template-columns:1fr; gap:22px; } }
-@media (max-width:480px){ .fin-nums b{ font-size:20px; } }
+.fin-set small{ font-size:11px; color:var(--fg-muted); }
+.fat-prem .ttl{ display:flex; align-items:center; gap:8px; }
+.fat-acoes{ margin-left:auto; display:flex; gap:6px; }
+.fat-acoes [hidden]{ display:none!important; }
+.fat-btn{ font:inherit; font-size:12px; font-weight:600; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--fg); cursor:pointer; }
+.fat-btn:hover{ background:var(--surface-2); }
+.fat-btn-pri{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.fat-btn-pri:hover{ background:var(--accent); filter:brightness(1.08); }
+.fat-btn:disabled{ opacity:.6; cursor:wait; }
+.fat-rows{ display:flex; flex-direction:column; }
+.fat-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.fat-row span{ color:var(--fg-muted); }
+.fat-row b{ font-variant-numeric:tabular-nums; text-align:right; }
+.fat-row [hidden]{ display:none!important; }
+.fat-row input,.fat-row select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--accent); border-radius:8px; padding:6px 10px; width:150px; max-width:100%; box-sizing:border-box; text-align:right; }
+.fat-row select{ width:230px; text-align:left; }
+.fat-msg{ margin-top:10px; font-size:12px; font-weight:600; padding:8px 12px; border-radius:8px; }
+.fat-msg.ok{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 10%,transparent); }
+.fat-msg.erro{ color:var(--c-danger,#DC2626); background:color-mix(in srgb,var(--c-danger,#DC2626) 10%,transparent); }
+.fat-calc{ margin-top:12px; display:grid; gap:4px; font-size:12px; color:var(--fg-muted); background:var(--surface-2); border-radius:10px; padding:10px 12px; }
+.fat-calc b{ color:var(--fg); font-variant-numeric:tabular-nums; }
+.fat-nota{ font-size:11px; color:var(--fg-faint); margin:10px 0 0; line-height:1.45; }
+.fat-sub{ display:flex; align-items:center; gap:10px; margin:26px 0 10px; }
+.fat-sub h2{ font-size:14px; font-weight:700; }
+.fat-sub .pill{ font-size:11px; font-weight:700; color:var(--fg-muted); background:var(--surface-2); border:1px dashed var(--border); padding:3px 10px; border-radius:999px; }
+@media (max-width:1000px){ .fat-total{ grid-template-columns:1fr; gap:18px; } }
+@media (max-width:767px){
+  .fat-total .v{ font-size:32px; }
+  .fat-leg{ grid-template-columns:1fr 1fr 1fr; gap:6px; } .fat-leg b{ font-size:13px; }
+  .fat-row{ grid-template-columns:1fr; gap:6px; } .fat-row b{ text-align:left; }
+  .fat-row input,.fat-row select{ width:100%; text-align:left; }
+}
 </style>
 <script>
+/* FATURAMENTO: premissas guardadas no Supabase (via /api/estimativas). Editar só admin/superadmin. */
 (function(){
-  var KEY='moving_fin_params', PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70};
-  function ler(){ try{ var o=JSON.parse(localStorage.getItem(KEY)||'{}'); return Object.assign({},PAD,o); }catch(e){ return Object.assign({},PAD); } }
-  function gravar(o){ try{ localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){} }
+  var PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70};
+  var prem=Object.assign({},PAD), info=null, ult=null, editando=false;
+  var NOME={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black'}, COR={FULLPASS:'var(--c-fullpass)',ZONE:'var(--c-zone)',GOLD:'var(--c-gold)',BLACK:'var(--c-black)'};
+  var C_ING='var(--accent)', C_EST='#F59E0B', C_BAR='#10B981';
+  function g(id){ return document.getElementById(id); }
   function din(n,c){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:c===0?0:2,maximumFractionDigits:c===0?0:2}); }
   function int(n){ return Math.round(+n||0).toLocaleString('pt-BR'); }
-  var NOME={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black'}, COR={FULLPASS:'var(--c-fullpass)',ZONE:'var(--c-zone)',GOLD:'var(--c-gold)',BLACK:'var(--c-black)'};
-  var ult=null;
-  function g(id){ return document.getElementById(id); }
-  function proj(){
-    if(!ult) return; var P=ler();
-    var base = P.base==='pagos' ? ult.pagos : ult.total;
-    var pessoasCarro = Math.max(1,+P.pessoas||1), pct = Math.min(100,Math.max(0,+P.carro||0))/100;
-    var carros = base*pct/pessoasCarro, est = carros*(+P.preco||0), bar = base*(+P.bar||0);
-    var extra = est+bar, tot = ult.receita+extra;
-    g('finRes').innerHTML =
-      '<div><small>Carros estimados</small><b>'+int(carros)+'</b></div>'+
-      '<div><small>Público base</small><b>'+int(base)+'</b></div>'+
-      '<div><small>Estacionamento</small><b>'+din(est,0)+'</b></div>'+
-      '<div><small>Bar</small><b>'+din(bar,0)+'</b></div>'+
-      '<div><small>Extra projetado</small><b>'+din(extra,0)+'</b></div>'+
-      '<div><small>Extra por pessoa</small><b>'+din(base?extra/base:0)+'</b></div>'+
-      '<div class="tot"><small>Receita total projetada (ingressos + estacionamento + bar)</small><b>'+din(tot,0)+'</b></div>';
+  function numBr(n){ return (+n||0).toLocaleString('pt-BR',{maximumFractionDigits:1}); }
+  function set(id,v){ var e=g(id); if(e) e.textContent=v; }
+  // Permissão: quando o login existir, window.movingUsuario = {papel,nome}. Sem login ainda, todos podem editar.
+  function podeEditar(){ var u=window.movingUsuario; return !u || u.papel==='admin' || u.papel==='superadmin'; }
+  function token(){ try{ return localStorage.getItem('moving_token')||''; }catch(e){ return ''; } }
+  function calc(){
+    if(!ult) return null;
+    var base = prem.base==='pagos' ? ult.pagos : ult.total;
+    var carros = base*(Math.min(100,Math.max(0,+prem.carro||0))/100)/Math.max(1,+prem.pessoas||1);
+    var est = carros*(+prem.preco||0), bar = base*(+prem.bar||0);
+    return {base:base,carros:carros,est:est,bar:bar,extra:est+bar,total:ult.receita+est+bar};
+  }
+  function msg(t,tipo){ var m=g('fatMsg'); if(!m) return; if(!t){ m.hidden=true; return; } m.hidden=false; m.className='fat-msg '+tipo; m.textContent=t; }
+  function mostrarPremissas(){
+    var v={base: prem.base==='pagos'?'Só ingressos pagos':'Ingressos totais', carro: numBr(prem.carro)+'%', pessoas: numBr(prem.pessoas), preco: din(prem.preco), bar: din(prem.bar)};
+    document.querySelectorAll('#fatPrem [data-v]').forEach(function(b){ b.textContent=v[b.getAttribute('data-v')]; b.hidden=editando; });
+    document.querySelectorAll('#fatPrem [data-i]').forEach(function(i){ i.hidden=!editando; if(!editando) i.value=prem[i.getAttribute('data-i')]; });
+    g('fatEditar').hidden = editando || !podeEditar();
+    g('fatCancelar').hidden = !editando; g('fatSalvar').hidden = !editando;
+    var quando = info && info.atualizado_em ? new Date(info.atualizado_em).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : null;
+    set('fatInfo', (quando ? 'Última edição: '+(info.atualizado_por||'—')+' · '+quando+'. ' : '') + 'Estacionamento e bar são estimativas de receita (não descontam custos). '+(podeEditar()?'Admin e SuperAdmin podem editar.':'Só admin e SuperAdmin podem editar.'));
+  }
+  function desenhar(){
+    var r=calc(); if(!r) return;
+    set('fatIngressos', din(ult.receita,0)); set('fatIngressosSub', int(ult.pagos)+' ingressos pagos');
+    set('fatTicket', ult.pagos? din(ult.receita/ult.pagos) : '—');
+    set('fatEst', din(r.est,0)); set('fatEstSub', int(r.carros)+' carros × '+din(prem.preco,0));
+    set('fatBar', din(r.bar,0)); set('fatBarSub', int(r.base)+' pessoas × '+din(prem.bar,0));
+    set('fatTotal', din(r.total,0)); set('fatPorPessoa', din(r.base? r.total/r.base : 0));
+    var partes=[['Ingressos',ult.receita,C_ING],['Estacionamento',r.est,C_EST],['Bar',r.bar,C_BAR]];
+    g('fatStack').innerHTML = partes.map(function(p){ var pc=r.total? p[1]/r.total*100 : 0; return '<span title="'+p[0]+'" style="width:'+pc.toFixed(2)+'%;background:'+p[2]+'"></span>'; }).join('');
+    g('fatLeg').innerHTML = partes.map(function(p){ var pc=r.total? Math.round(p[1]/r.total*100) : 0; return '<div><i style="background:'+p[2]+'"></i>'+p[0]+' · '+pc+'%<b>'+din(p[1],0)+'</b></div>'; }).join('');
+    g('fatCalc').innerHTML =
+      '<div>Público base: <b>'+int(r.base)+'</b> pessoas</div>'+
+      '<div>Carros: '+int(r.base)+' × '+numBr(prem.carro)+'% ÷ '+numBr(prem.pessoas)+' = <b>'+int(r.carros)+' carros</b></div>'+
+      '<div>Estacionamento: '+int(r.carros)+' × '+din(prem.preco,0)+' = <b>'+din(r.est,0)+'</b></div>'+
+      '<div>Bar: '+int(r.base)+' × '+din(prem.bar,0)+' = <b>'+din(r.bar,0)+'</b></div>';
+    mostrarPremissas();
   }
   window.movingFinanceiro=function(d){
     if(!g('financeiroCard')) return;
-    var cam=0; (d.extras||[]).forEach(function(x){ if(x.tipo==='CAMPING') cam=+x.total||0; });
     var por={}; (d.setores||[]).forEach(function(x){ por[x.setor]=x; });
-    var rec=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ rec+=+((por[k]||{}).receita)||0; });
-    var total=0,pagos=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ var x=por[k]||{}; total+=+x.total||0; pagos+=+x.pagos||0; });
+    var rec=0,total=0,pagos=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ var x=por[k]||{}; rec+=+x.receita||0; total+=+x.total||0; pagos+=+x.pagos||0; });
     ult={total:total,pagos:pagos,receita:rec};
-    g('finTotal').textContent=int(total); g('finPagos').textContent=int(pagos); g('finCamping').textContent=int(cam); g('finReceita').textContent=din(rec,0);
     g('finSetores').innerHTML=['FULLPASS','ZONE','GOLD','BLACK'].map(function(k){
-      var x=por[k]||{}, r=+x.receita||0, pc=rec?r/rec*100:0;
-      return '<div class="fin-set" style="--cor:'+COR[k]+'"><div class="t"><span>'+NOME[k]+'</span><b>'+din(r,0)+'</b></div><div class="bar"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+pc.toFixed(0)+'% do faturamento · '+int(x.pagos)+' pagos</small></div>';
+      var x=por[k]||{}, r=+x.receita||0, pc=rec?r/rec*100:0, tm=(+x.pagos)? r/x.pagos : 0;
+      return '<div class="fin-set" style="--cor:'+COR[k]+'"><div class="t"><span>'+NOME[k]+'</span><b>'+din(r,0)+'</b></div><div class="bar"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+pc.toFixed(0)+'% do faturamento · '+int(x.pagos)+' pagos · ticket médio '+din(tm)+'</small></div>';
     }).join('');
-    proj();
+    desenhar();
   };
+  function carregar(){
+    fetch('/api/estimativas',{cache:'no-store'}).then(function(r){ return r.ok? r.json() : null; }).then(function(j){
+      if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; } desenhar(); mostrarPremissas();
+    }).catch(function(){ msg('Não consegui carregar as premissas salvas. Mostrando os valores padrão.','erro'); mostrarPremissas(); });
+  }
   function ini(){
-    var P=ler(); if(!g('fpBase')) return;
-    g('fpBase').value=P.base; g('fpCarro').value=P.carro; g('fpPessoas').value=P.pessoas; g('fpPreco').value=P.preco; g('fpBar').value=P.bar;
-    function salvar(){ gravar({base:g('fpBase').value,carro:g('fpCarro').value,pessoas:g('fpPessoas').value,preco:g('fpPreco').value,bar:g('fpBar').value}); proj(); }
-    ['fpBase','fpCarro','fpPessoas','fpPreco','fpBar'].forEach(function(id){ g(id).addEventListener('input',salvar); g(id).addEventListener('change',salvar); });
+    if(!g('fatEditar')) return;
+    g('fatEditar').addEventListener('click',function(){ if(!podeEditar()) return; editando=true; msg(''); mostrarPremissas(); var f=document.querySelector('#fatPrem [data-i="carro"]'); if(f) f.focus(); });
+    g('fatCancelar').addEventListener('click',function(){ editando=false; msg(''); mostrarPremissas(); });
+    g('fatSalvar').addEventListener('click',function(){
+      var dados={}; document.querySelectorAll('#fatPrem [data-i]').forEach(function(i){ var k=i.getAttribute('data-i'); dados[k]= k==='base'? i.value : Number(String(i.value).replace(',','.')); });
+      var b=g('fatSalvar'); b.disabled=true; b.textContent='Salvando…';
+      var u=window.movingUsuario;
+      fetch('/api/estimativas',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':token()},body:JSON.stringify({dados:dados,quem:u&&u.nome||''})})
+        .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
+        .then(function(j){
+          b.disabled=false; b.textContent='Salvar';
+          if(j && j.erro){ msg(j.erro,'erro'); return; }
+          if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; }
+          editando=false; msg('Estimativa salva. Vale para todos que abrirem o painel.','ok'); desenhar();
+          setTimeout(function(){ msg(''); },4000);
+        }).catch(function(){ b.disabled=false; b.textContent='Salvar'; msg('Sem conexão. Tente de novo.','erro'); });
+    });
+    mostrarPremissas(); carregar();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();

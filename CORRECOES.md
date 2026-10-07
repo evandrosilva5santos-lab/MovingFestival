@@ -88,3 +88,10 @@
 ## 10. Monitores largos (3440×1440, 2048×858, 1920×1080, 1720×720)
 - Bloco `TELAS_GRANDES` no fim do `index.html`: conteúdo centralizado com largura máxima por faixa (1440 → 1720 → 2560 → 3000px) e compactação vertical quando a altura é ≤ 900px / ≤ 760px.
 - Prints de referência em `design/dispositivos/monitor_*.jpg`. Não remover esse bloco ao mexer em `.content`.
+
+## 11. Visão geral só com ingressos · aba Faturamento (antiga Tendências)
+- **Visão geral não mostra receita.** É só venda de ingresso (o card "Vendidos (pagos)" mostra "ingressos pagos").
+- A aba `tendencias` agora se chama **Faturamento** (o `data-view` continua `tendencias`). Mostra: faturamento real dos ingressos, ticket médio, estacionamento e bar estimados, total projetado, faturamento por setor e, no fim, os gráficos de tendência de vendas.
+- **Premissas da estimativa** (público base, % que vai de carro, pessoas por carro, R$ por carro, ticket do bar) ficam no Supabase, na tabela `moving_excluir_estimativas`, lidas e gravadas por `GET/POST /api/estimativas` (Worker → RPCs `moving_excluir_estimativas_ler` / `moving_excluir_estimativas_salvar`). Valem para todos os usuários.
+- Fluxo: botão **Editar** → campos → **Salvar** / **Cancelar**. O banco valida os limites.
+- Permissão: o front usa `window.movingUsuario = {papel, nome}` e o header `X-Moving-Token` (token em `localStorage.moving_token`). Só `admin` e `superadmin` editam. **Enquanto o login não existir, qualquer um consegue editar.** A RPC de salvar já passa a exigir token de admin/superadmin automaticamente assim que existir a tabela `moving_excluir_usuarios` com algum usuário.
