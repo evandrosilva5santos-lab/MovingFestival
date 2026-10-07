@@ -391,6 +391,38 @@
         </div>
 
         <div class="grid g4" id="setores"></div>
+        <!-- FINANCEIRO_PAINEL -->
+        <div class="card fin-card" id="financeiroCard">
+          <div class="ttl">Receita da campanha <span class="tag">ingressos + projeção de extras</span></div>
+          <div class="fin-grid">
+            <div class="fin-col">
+              <h3>Ingressos e camping</h3>
+              <div class="fin-nums">
+                <div><small>Ingressos totais</small><b id="finTotal">—</b><i>pagos + cortesias</i></div>
+                <div><small>Ingressos vendidos</small><b id="finPagos">—</b><i>só pagos</i></div>
+                <div><small>Camping vendido</small><b id="finCamping">—</b><i>vagas · fora do total</i></div>
+                <div><small>Faturamento de ingressos</small><b id="finReceita">—</b><i>só ingressos pagos</i></div>
+              </div>
+            </div>
+            <div class="fin-col">
+              <h3>Faturamento por setor</h3>
+              <div id="finSetores" class="fin-setores"></div>
+            </div>
+            <div class="fin-col fin-proj">
+              <h3>Projeção de receita extra <em>estimativa</em></h3>
+              <div class="fin-params">
+                <label>Público base
+                  <select id="fpBase"><option value="total">Ingressos totais</option><option value="pagos">Só pagos</option></select></label>
+                <label>% que vai de carro<input id="fpCarro" type="number" min="0" max="100" step="5" inputmode="decimal"></label>
+                <label>Pessoas por carro<input id="fpPessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal"></label>
+                <label>Estacionamento (R$/carro)<input id="fpPreco" type="number" min="0" step="5" inputmode="decimal"></label>
+                <label>Ticket médio do bar (R$/pessoa)<input id="fpBar" type="number" min="0" step="5" inputmode="decimal"></label>
+              </div>
+              <div class="fin-res" id="finRes"></div>
+              <p class="fin-nota">Receita estimada, não é lucro (não desconta custos). Os valores acima são editáveis e ficam salvos neste navegador.</p>
+            </div>
+          </div>
+        </div>
 
         <div class="extras-head" id="extrasHead">
           <h2>Extras</h2><span class="pill">fora do total de ingressos</span>
@@ -1012,6 +1044,7 @@
     $('kHoje').textContent = num(dias[hojeSP(0)]||0);
     $('kOntem').textContent = 'ontem: '+num(dias[hojeSP(1)]||0)+(f?' · todos os setores':'');
     if(window.movingHoje) window.movingHoje(d); /* HOJE_DETALHE */
+    if(window.movingFinanceiro) try{ window.movingFinanceiro(d); }catch(e){} /* FINANCEIRO_PAINEL */
 
     // Cards de setor
     $('setores').innerHTML = ORDEM.map(function(k){
@@ -2586,3 +2619,86 @@
   section[data-view="diario"] > #ondaCard{ height:100%; }
 }
 </style>
+
+<style>
+/* FINANCEIRO_PAINEL */
+.fin-card{ margin-top:16px; }
+.fin-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr); gap:28px; }
+.fin-col h3{ font-size:12.5px; font-weight:700; margin:0 0 12px; color:var(--fg); display:flex; align-items:center; gap:8px; }
+.fin-col h3 em{ font-style:normal; font-size:10.5px; font-weight:700; color:var(--c-warning); background:color-mix(in srgb,var(--c-warning) 12%,transparent); padding:2px 8px; border-radius:999px; }
+.fin-nums{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.fin-nums > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:0; }
+.fin-nums small{ display:block; font-size:11px; font-weight:600; color:var(--fg-muted); }
+.fin-nums b{ display:block; font-family:var(--font-display); font-size:24px; line-height:1.15; font-variant-numeric:tabular-nums; margin:2px 0; }
+.fin-nums i{ font-style:normal; font-size:10.5px; color:var(--fg-faint); }
+.fin-setores{ display:flex; flex-direction:column; gap:12px; }
+.fin-set .t{ display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; font-weight:600; gap:8px; }
+.fin-set .t b{ font-variant-numeric:tabular-nums; font-size:14px; }
+.fin-set .bar{ height:7px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin:5px 0 2px; }
+.fin-set .bar span{ display:block; height:100%; border-radius:99px; background:var(--cor); }
+.fin-set small{ font-size:10.5px; color:var(--fg-muted); }
+.fin-params{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 10px; margin-bottom:12px; }
+.fin-params label{ display:flex; flex-direction:column; gap:3px; font-size:10.5px; font-weight:600; color:var(--fg-muted); min-width:0; }
+.fin-params input,.fin-params select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:6px 8px; width:100%; min-width:0; box-sizing:border-box; }
+.fin-res{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.fin-res > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:9px 12px; }
+.fin-res small{ display:block; font-size:10.5px; font-weight:600; color:var(--fg-muted); }
+.fin-res b{ font-family:var(--font-display); font-size:18px; font-variant-numeric:tabular-nums; }
+.fin-res .tot{ grid-column:1 / -1; background:color-mix(in srgb,var(--accent) 8%,transparent); border-color:color-mix(in srgb,var(--accent) 30%,var(--border)); }
+.fin-res .tot b{ font-size:24px; color:var(--accent); }
+.fin-nota{ font-size:10.5px; color:var(--fg-faint); margin:10px 0 0; line-height:1.4; }
+@media (max-width:1199px){ .fin-grid{ grid-template-columns:1fr; gap:22px; } }
+@media (max-width:480px){ .fin-nums b{ font-size:20px; } }
+@media (min-width:2400px){
+  section[data-view="overview"]:not([hidden]){ grid-template-areas:"metas metas" "kpi set" "fin fin" "exh cross" "ext cross" "fontes fontes" !important; }
+  section[data-view="overview"] > #financeiroCard{ grid-area:fin; }
+}
+</style>
+<script>
+(function(){
+  var KEY='moving_fin_params', PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70};
+  function ler(){ try{ var o=JSON.parse(localStorage.getItem(KEY)||'{}'); return Object.assign({},PAD,o); }catch(e){ return Object.assign({},PAD); } }
+  function gravar(o){ try{ localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){} }
+  function din(n,c){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:c===0?0:2,maximumFractionDigits:c===0?0:2}); }
+  function int(n){ return Math.round(+n||0).toLocaleString('pt-BR'); }
+  var NOME={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black'}, COR={FULLPASS:'var(--c-fullpass)',ZONE:'var(--c-zone)',GOLD:'var(--c-gold)',BLACK:'var(--c-black)'};
+  var ult=null;
+  function g(id){ return document.getElementById(id); }
+  function proj(){
+    if(!ult) return; var P=ler();
+    var base = P.base==='pagos' ? ult.pagos : ult.total;
+    var pessoasCarro = Math.max(1,+P.pessoas||1), pct = Math.min(100,Math.max(0,+P.carro||0))/100;
+    var carros = base*pct/pessoasCarro, est = carros*(+P.preco||0), bar = base*(+P.bar||0);
+    var extra = est+bar, tot = ult.receita+extra;
+    g('finRes').innerHTML =
+      '<div><small>Carros estimados</small><b>'+int(carros)+'</b></div>'+
+      '<div><small>Público base</small><b>'+int(base)+'</b></div>'+
+      '<div><small>Estacionamento</small><b>'+din(est,0)+'</b></div>'+
+      '<div><small>Bar</small><b>'+din(bar,0)+'</b></div>'+
+      '<div><small>Extra projetado</small><b>'+din(extra,0)+'</b></div>'+
+      '<div><small>Extra por pessoa</small><b>'+din(base?extra/base:0)+'</b></div>'+
+      '<div class="tot"><small>Receita total projetada (ingressos + estacionamento + bar)</small><b>'+din(tot,0)+'</b></div>';
+  }
+  window.movingFinanceiro=function(d){
+    if(!g('financeiroCard')) return;
+    var cam=0; (d.extras||[]).forEach(function(x){ if(x.tipo==='CAMPING') cam=+x.total||0; });
+    var por={}; (d.setores||[]).forEach(function(x){ por[x.setor]=x; });
+    var rec=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ rec+=+((por[k]||{}).receita)||0; });
+    var total=0,pagos=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ var x=por[k]||{}; total+=+x.total||0; pagos+=+x.pagos||0; });
+    ult={total:total,pagos:pagos,receita:rec};
+    g('finTotal').textContent=int(total); g('finPagos').textContent=int(pagos); g('finCamping').textContent=int(cam); g('finReceita').textContent=din(rec,0);
+    g('finSetores').innerHTML=['FULLPASS','ZONE','GOLD','BLACK'].map(function(k){
+      var x=por[k]||{}, r=+x.receita||0, pc=rec?r/rec*100:0;
+      return '<div class="fin-set" style="--cor:'+COR[k]+'"><div class="t"><span>'+NOME[k]+'</span><b>'+din(r,0)+'</b></div><div class="bar"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+pc.toFixed(0)+'% do faturamento · '+int(x.pagos)+' pagos</small></div>';
+    }).join('');
+    proj();
+  };
+  function ini(){
+    var P=ler(); if(!g('fpBase')) return;
+    g('fpBase').value=P.base; g('fpCarro').value=P.carro; g('fpPessoas').value=P.pessoas; g('fpPreco').value=P.preco; g('fpBar').value=P.bar;
+    function salvar(){ gravar({base:g('fpBase').value,carro:g('fpCarro').value,pessoas:g('fpPessoas').value,preco:g('fpPreco').value,bar:g('fpBar').value}); proj(); }
+    ['fpBase','fpCarro','fpPessoas','fpPreco','fpBar'].forEach(function(id){ g(id).addEventListener('input',salvar); g(id).addEventListener('change',salvar); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
+})();
+</script>
