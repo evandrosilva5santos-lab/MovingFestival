@@ -30,7 +30,27 @@ function classifyCupom(cupomRaw) {
   else if (origem === 'ANIVERSARIANTE') canal = 'ANIVERSARIANTE';
   else if (origem === 'PARCERIA') canal = 'PARCERIA';
 
-  return { origem, canal };
+  // ANALISE_ADS — mapa definido pelo Evandro (07/10)
+  const ac = analiseCanal(u);
+  if (ac) {
+    canal = ac.canal;
+    if (ac.grupo === 'ORGANICO') origem = 'ORGANICO';
+  }
+  return { origem, canal, grupo: ac ? ac.grupo : null, gestao: ac ? ac.gestao : null };
+}
+
+// Cupons que entram na análise de ADS / canais (match exato do código do cupom).
+const MAPA_ANALISE = {
+  STARTGRUPON:    { grupo: 'WHATSAPP', canal: 'WHATSAPP_GRUPO', rotulo: 'Grupo do WhatsApp' },
+  STARTGRUPOA:    { grupo: 'WHATSAPP', canal: 'WHATSAPP_GRUPO', rotulo: 'Grupo do WhatsApp' },
+  STARTADS:       { grupo: 'ADS', canal: 'ADS_GESTAO_NOVA',   gestao: 'NOVA',   rotulo: 'Venda 100% ADS · gestão nova' },
+  MOVINGMANIACO15:{ grupo: 'ADS', canal: 'ADS_GESTAO_ANTIGA', gestao: 'ANTIGA', rotulo: 'Venda 100% ADS · gestão antiga' },
+  MOVINGBIO:      { grupo: 'ORGANICO', canal: 'ORGANICO_BIO',      rotulo: 'Orgânico · link na bio' },
+  MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' }
+};
+function analiseCanal(u) {
+  const k = String(u || '').toUpperCase().replace(/\s+/g, '');
+  return MAPA_ANALISE[k] || null;
 }
 
 // SYNC_NUVEM — nenhum segredo neste arquivo. Uticket/Sympla são consultadas pela função
@@ -69,8 +89,8 @@ async function buscarCuponsNuvem(env) {
 function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
     const code = String(c.cupom || '').trim();
-    const { origem, canal } = classifyCupom(code);
-    return { cupom: code, plataforma, origem, canal, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
+    const { origem, canal, grupo, gestao } = classifyCupom(code);
+    return { cupom: code, plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
              receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
   });
 }
@@ -127,8 +147,38 @@ async function consolidateLiveSources(env) {
   const utProms = combined.filter(c => c.plataforma === 'UTICKET' && c.origem === 'PROMOTER' && c.recompensa_10?.ganhos > 0);
   const totGanhos = utProms.reduce((acc, c) => acc + (c.recompensa_10?.ganhos || 0), 0);
 
+  const soma = (lst) => ({
+    ingressos: lst.reduce((a, c) => a + c.total, 0),
+    receita: lst.reduce((a, c) => a + c.receita, 0),
+    pedidos: lst.reduce((a, c) => a + c.pedidos, 0)
+  });
+  const porCupom = (lst) => {
+    const m = new Map();
+    for (const c of lst) {
+      const k = c.cupom.toUpperCase();
+      const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[k] || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
+      r.ingressos += c.total; r.receita += c.receita; r.pedidos += c.pedidos;
+      if (!r.plataformas.includes(c.plataforma)) r.plataformas.push(c.plataforma);
+      m.set(k, r);
+    }
+    // cupons do mapa que ainda não venderam aparecem zerados
+    return Array.from(m.values());
+  };
+  const canaisAnalise = {};
+  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO']) {
+    const lst = combined.filter(c => c.grupo === g);
+    const cps = porCupom(lst);
+    for (const [k, v] of Object.entries(MAPA_ANALISE)) {
+      if (v.grupo === g && !cps.some(x => x.cupom === k)) cps.push({ cupom: k, canal: v.canal, gestao: v.gestao || null, rotulo: v.rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
+    }
+    canaisAnalise[g.toLowerCase()] = { ...soma(lst), cupons: cps.sort((a, b) => b.ingressos - a.ingressos) };
+  }
+  canaisAnalise.ads.gestao_nova = soma(combined.filter(c => c.gestao === 'NOVA'));
+  canaisAnalise.ads.gestao_antiga = soma(combined.filter(c => c.gestao === 'ANTIGA'));
+
   return {
     cupons: combined,
+    canais_analise: canaisAnalise,
     start_inc: {
       ingressos: startCoupons.reduce((a, c) => a + c.total, 0),
       receita: startCoupons.reduce((a, c) => a + c.receita, 0),

@@ -970,6 +970,14 @@
           </div>
         </div>
 
+        <!-- ANALISE_ADS: cupons por canal (mapa do Evandro) -->
+        <div class="card" id="analiseAdsCard" style="margin-bottom:16px">
+          <div class="ttl">Análise de canais por cupom <span class="tag">ADS · WhatsApp · Orgânico</span></div>
+          <div class="grid g3" id="analiseAdsGrupos" style="margin-top:12px"></div>
+          <div class="tscroll" style="margin-top:14px"><table class="fat-tab" id="analiseAdsTab"></table></div>
+          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico). Só ingressos confirmados; receita líquida.</p>
+        </div>
+
         <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <h3 style="font-size:14px;font-weight:700">Outras Ações da Campanha (Promoters, Antiga Gestão & Sympla)</h3>
@@ -1392,6 +1400,11 @@
     'ANTIGA_GESTAO': 'Antiga Gestão (Antigo Mkt)',
     'START_OUTROS': 'Ação Start Inc.',
     'PROMOTER': 'Promoter / Divulgação',
+    'WHATSAPP_GRUPO': 'Grupo do WhatsApp',
+    'ADS_GESTAO_NOVA': 'Venda 100% ADS · gestão nova',
+    'ADS_GESTAO_ANTIGA': 'Venda 100% ADS · gestão antiga',
+    'ORGANICO_BIO': 'Orgânico · link na bio',
+    'ORGANICO_MANYCHAT': 'Orgânico · automação ManyChat',
     'ANIVERSARIANTE': 'Aniversariante (Sympla)',
     'PARCERIA_FESTASRS': 'Parceria Festasrs',
     'PARCERIA_KIOMA': 'Parceria Kioma',
@@ -1756,6 +1769,45 @@
         '</div>';
       }).join('');
     }
+
+    // ANALISE_ADS
+    (function(){
+      var ca = d.canais_analise;
+      var card = $('analiseAdsCard');
+      if(!card) return;
+      if(!ca){ card.hidden = true; return; }
+      card.hidden = false;
+      var G = [
+        {k:'ads', nome:'ADS (venda 100% ADS)', cor:'#2B6CF6'},
+        {k:'whatsapp', nome:'Grupos do WhatsApp', cor:'#10B981'},
+        {k:'organico', nome:'Orgânico', cor:'#8B5CF6'}
+      ];
+      var totIng = G.reduce(function(a,g){ return a + ((ca[g.k]||{}).ingressos||0); },0) || 1;
+      $('analiseAdsGrupos').innerHTML = G.map(function(g){
+        var x = ca[g.k] || {};
+        var sub = '';
+        if(g.k==='ads'){
+          var n = x.gestao_nova||{}, a = x.gestao_antiga||{};
+          sub = 'Gestão nova: <b>' + num(n.ingressos||0) + '</b> ing. · ' + brl(n.receita||0) + '<br>Gestão antiga: <b>' + num(a.ingressos||0) + '</b> ing. · ' + brl(a.receita||0);
+        } else {
+          sub = (x.cupons||[]).map(function(c){ return esc(c.cupom) + ': <b>' + num(c.ingressos) + '</b>'; }).join(' · ');
+        }
+        var pct = ((x.ingressos||0)/totIng*100).toFixed(1).replace('.',',');
+        return '<div class="card" style="border-top:3px solid ' + g.cor + '">' +
+          '<div class="ttl">' + g.nome + ' <span class="tag">' + pct + '% dos 3 canais</span></div>' +
+          '<div class="val tnum" style="font-family:var(--font-display);font-size:22px;font-weight:800">' + num(x.ingressos||0) + ' ing.</div>' +
+          '<div class="sub" style="font-size:11.5px;color:var(--fg-muted)">' + brl(x.receita||0) + ' · ' + num(x.pedidos||0) + ' pedidos</div>' +
+          '<div class="sub" style="font-size:11.5px;color:var(--fg-muted);margin-top:6px;line-height:1.5">' + sub + '</div>' +
+        '</div>';
+      }).join('');
+      var linhas = [];
+      G.forEach(function(g){ ((ca[g.k]||{}).cupons||[]).forEach(function(c){ linhas.push({g:g, c:c}); }); });
+      $('analiseAdsTab').innerHTML = '<thead><tr><th>Cupom</th><th>Canal</th><th>Ingressos</th><th>Receita</th><th>Pedidos</th><th>Ticket médio</th><th>Ticketeira</th></tr></thead><tbody>' +
+        linhas.map(function(l){
+          var c = l.c, tm = c.ingressos>0 ? brl(c.receita/c.ingressos) : '—';
+          return '<tr><td><b>' + esc(c.cupom) + '</b></td><td>' + esc(c.rotulo || CANAL_LABEL[c.canal] || c.canal) + '</td><td class="tnum">' + num(c.ingressos) + '</td><td class="tnum">' + brl(c.receita) + '</td><td class="tnum">' + num(c.pedidos) + '</td><td class="tnum">' + tm + '</td><td>' + esc((c.plataformas||[]).join(', ') || '—') + '</td></tr>';
+        }).join('') + '</tbody>';
+    })();
 
     // 2. Outras Ações (Promoters, Antiga Gestão, Aniversariantes Sympla, Parcerias)
     if(out.promoters){

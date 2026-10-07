@@ -173,3 +173,12 @@
 - Senha nova sem a atual só vale numa sessão aberta por código há menos de 15 min; derruba as outras sessões do usuário.
 - Worker: `POST /api/login/codigo`, `POST /api/login/codigo/entrar`, `POST /api/senha/redefinir`.
 - Só funciona para usuários cujo login é um e-mail (o `movingadmin` não recebe código).
+
+## 19. Cupons por canal (análise de ADS) — 07/10
+- Mapa fixo em `_worker.js` (`MAPA_ANALISE`, match exato do código):
+  STARTGRUPON / STARTGRUPOA = Grupo do WhatsApp · STARTADS = 100% ADS gestão nova ·
+  MOVINGMANIACO15 = 100% ADS gestão antiga · MOVINGBIO = orgânico link na bio · MOVINGDIRECT = orgânico ManyChat.
+- `/api/resumo` devolve `canais_analise` {ads (com gestao_nova/gestao_antiga), whatsapp, organico}.
+- Tela Cupons: card "Análise de canais por cupom" (comentário `ANALISE_ADS`).
+- MOVINGBIO e MOVINGDIRECT saíram de "Promoters" (não ganham recompensa de 10 vendas).
+- Para incluir cupom novo num canal, adicionar uma linha em `MAPA_ANALISE`.
