@@ -1,8 +1,8 @@
 {
-  "gerado_em": "2026-10-07T17:49:42.857891-03:00",
+  "gerado_em": "2026-10-07T18:25:04.951124-03:00",
   "evento": "3419289",
   "api": {
-    "ingressos_confirmados": 822,
+    "ingressos_confirmados": 824,
     "por_setor": {
       "GOLD": {
         "total": 126,
@@ -17,10 +17,10 @@
         "receita": 25279.85
       },
       "FULLPASS": {
-        "total": 458,
-        "pagos": 458,
+        "total": 460,
+        "pagos": 460,
         "cortesias": 0,
-        "receita": 67704.95
+        "receita": 68022.58
       },
       "BLACK": {
         "total": 44,
@@ -61,9 +61,11 @@
   },
   "batem": false,
   "so_na_api": {
-    "qtd": 1,
+    "qtd": 3,
     "exemplos": [
-      "SYMPLA-UVTL-4U-4VFK"
+      "SYMPLA-UVTL-4U-4VFK",
+      "SYMPLA-UVTL-S4-FZAC",
+      "SYMPLA-UVTL-T9-YLRX"
     ]
   },
   "so_na_planilha": {
@@ -73,26 +75,26 @@
   "valor_diferente": {
     "qtd": 311,
     "exemplos": [
-      "SYMPLA-UV8D-GQ-855S",
-      "SYMPLA-UQ6R-74-BF6E",
-      "SYMPLA-URCE-FT-110Z",
-      "SYMPLA-UT47-W5-5HFS",
-      "SYMPLA-UUPM-VF-W251",
-      "SYMPLA-UZBW-FB-YVF5",
-      "SYMPLA-US96-Z8-QJJX",
+      "SYMPLA-USE3-J4-Y2TP",
+      "SYMPLA-UUF0-NQ-SVZX",
+      "SYMPLA-UQ80-JF-C75M",
+      "SYMPLA-UVPW-L4-NL0N",
+      "SYMPLA-URZB-X5-VRFZ",
+      "SYMPLA-UVTC-T3-895C",
+      "SYMPLA-UQKG-YD-X70E",
       "SYMPLA-UUC1-RT-4Z4E",
-      "SYMPLA-USEG-2P-9E0S",
-      "SYMPLA-UUUH-SF-3XG9",
-      "SYMPLA-UV1S-XZ-6XSS",
-      "SYMPLA-UUKS-XB-A50Y",
-      "SYMPLA-UURD-3K-TMPG",
-      "SYMPLA-UTG3-W8-691R",
-      "SYMPLA-UUWY-T3-BYDA",
-      "SYMPLA-USEJ-F6-GAT5",
-      "SYMPLA-UTD5-SW-BEGE",
-      "SYMPLA-UV7G-ZE-NGUN",
-      "SYMPLA-USN8-XM-8TLK",
-      "SYMPLA-UVFH-CQ-6SYA"
+      "SYMPLA-UUH8-6U-V63E",
+      "SYMPLA-UZBV-XF-6ZUL",
+      "SYMPLA-URUM-2S-AQFU",
+      "SYMPLA-USD3-4V-K4BJ",
+      "SYMPLA-UUUD-LP-LX1Q",
+      "SYMPLA-UV0D-8N-41MM",
+      "SYMPLA-UR8W-PD-WNS2",
+      "SYMPLA-UUF9-46-LWL3",
+      "SYMPLA-UVJM-MS-B62J",
+      "SYMPLA-UVKL-0U-FYSQ",
+      "SYMPLA-USV6-YM-GUQB",
+      "SYMPLA-UR8Q-SQ-TPMU"
     ]
   },
   "setor_diferente": {

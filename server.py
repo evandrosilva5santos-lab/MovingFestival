@@ -61,8 +61,6 @@ def classify_cupom(cupom_raw):
         origem = 'ANIVERSARIANTE'
     elif 'MANIACO' in u:
         origem = 'ANTIGA_GESTAO'
-    elif any(k in u for k in ['FESTASRS', 'TRIPTRANCE', 'KIOMA']):
-        origem = 'PARCERIA'
     else:
         origem = 'PROMOTER'
         
@@ -89,8 +87,6 @@ def classify_cupom(cupom_raw):
         canal = 'ANTIGO_MKT'
     elif origem == 'ANIVERSARIANTE':
         canal = 'ANIVERSARIANTE'
-    elif origem == 'PARCERIA':
-        canal = 'PARCERIA'
     else:
         canal = 'PROMOTER'
         
@@ -238,17 +234,38 @@ def get_aggregated_coupons():
 
     combined.sort(key=lambda x: -x['total'])
     
-    # 3. Métricas Especiais: Regra Uticket (1 ganho a cada 10) & BDAY Sympla
+    # Mapa de Cupons Semelhantes Vinculados entre Plataformas
+    MAPA_VINCULADOS = {
+        'CUPOMGUTO': {'par': 'GUTO', 'plataforma': 'SYMPLA', 'promoter': 'GUTO'},
+        'GUTO': {'par': 'CUPOMGUTO', 'plataforma': 'UTICKET', 'promoter': 'GUTO'},
+        'KIOMA': {'par': 'KIOMA', 'plataforma': 'AMBAS', 'promoter': 'KIOMA'},
+        'NATANIELE': {'par': 'NATANIELE5', 'plataforma': 'SYMPLA', 'promoter': 'NATANIELE'},
+        'NATANIELE5': {'par': 'NATANIELE', 'plataforma': 'UTICKET', 'promoter': 'NATANIELE'}
+    }
+
+    # 3. Métricas Especiais: Premiação Uticket (1 a cada 10) & Sympla (7% Comissão)
     total_ganhos_uticket = 0
-    promoters_premiados = 0
+    promoters_premiados_uticket = 0
+    total_comissao_sympla = 0.0
+    promoters_comissao_sympla = 0
+
     for c in combined:
         t_tot = c.get('total', 0)
-        # Regra Uticket: a cada 10 vendas de promoter ganha 1 ingresso
+        c_up = c.get('cupom', '').upper()
+        
+        # Vinculação com cupom semelhante na outra plataforma
+        vinc = MAPA_VINCULADOS.get(c_up)
+        if vinc:
+            c['vinculado'] = vinc
+
+        # Premiação Uticket: a cada 10 ingressos de promoter ganha 1 Full Pass
         if c.get('plataforma') == 'UTICKET' and c.get('origem') == 'PROMOTER':
             ganhos = t_tot // 10
             ciclo = t_tot % 10
             falta = 10 - ciclo if ciclo != 0 else 10
             c['recompensa_10'] = {
+                'tipo': 'FULL_PASS',
+                'regra': '1 Full Pass a cada 10 ingressos',
                 'ganhos': ganhos,
                 'ciclo': ciclo,
                 'falta': falta,
@@ -256,12 +273,28 @@ def get_aggregated_coupons():
             }
             total_ganhos_uticket += ganhos
             if ganhos > 0:
-                promoters_premiados += 1
+                promoters_premiados_uticket += 1
         else:
-            c['recompensa_10'] = {'ganhos': 0, 'ciclo': 0, 'falta': 10, 'elegivel': False}
+            c['recompensa_10'] = {'tipo': 'FULL_PASS', 'ganhos': 0, 'ciclo': 0, 'falta': 10, 'elegivel': False}
+
+        # Premiação Sympla: Comissão financeira de 7% sobre a receita
+        if c.get('plataforma') == 'SYMPLA' and c.get('origem') == 'PROMOTER':
+            rec = c.get('receita', 0.0)
+            comis = round(rec * 0.07, 2)
+            c['comissao_sympla'] = {
+                'taxa': 0.07,
+                'taxa_pct': '7%',
+                'valor': comis,
+                'regra': '7% de comissão sobre a receita gerada'
+            }
+            total_comissao_sympla += comis
+            if comis > 0:
+                promoters_comissao_sympla += 1
+        else:
+            c['comissao_sympla'] = {'taxa': 0.0, 'taxa_pct': '0%', 'valor': 0.0}
 
         # Regra Sympla: Aniversariantes BDAY (Meta: 2 ingressos = liberado para levar)
-        if 'BDAY' in c.get('cupom', '').upper():
+        if 'BDAY' in c_up:
             lib = t_tot >= 2
             c['bday_meta'] = {
                 'meta': 2,
@@ -285,13 +318,32 @@ def get_aggregated_coupons():
         'campanhas': start_coupons
     }
     
-    # 5. Consolidação das Outras Ações (Promoters, Comunidade, Aniversariantes, Parcerias)
+    # 5. Consolidação de Promoters dividida por Uticket e Sympla
     bday_coupons = [c for c in combined if 'BDAY' in c['cupom'].upper()]
+    ut_promoters = [c for c in combined if c['plataforma'] == 'UTICKET' and c['origem'] == 'PROMOTER']
+    sy_promoters = [c for c in combined if c['plataforma'] == 'SYMPLA' and c['origem'] == 'PROMOTER']
+
     CUPONS_CACHE['outras_acoes_summary'] = {
         'promoters': {
             'ingressos': sum(c['total'] for c in combined if c['origem'] == 'PROMOTER'),
             'receita': sum(c['receita'] for c in combined if c['origem'] == 'PROMOTER'),
             'cupons_count': len([c for c in combined if c['origem'] == 'PROMOTER'])
+        },
+        'promoters_uticket': {
+            'ingressos': sum(c['total'] for c in ut_promoters),
+            'receita': sum(c['receita'] for c in ut_promoters),
+            'cupons_count': len(ut_promoters),
+            'fullpass_ganhos': total_ganhos_uticket,
+            'premiados': promoters_premiados_uticket,
+            'regra': '1 Full Pass a cada 10 ingressos vendidos'
+        },
+        'promoters_sympla': {
+            'ingressos': sum(c['total'] for c in sy_promoters),
+            'receita': sum(c['receita'] for c in sy_promoters),
+            'cupons_count': len(sy_promoters),
+            'comissao_total': round(total_comissao_sympla, 2),
+            'comissao_premiados': promoters_comissao_sympla,
+            'regra': '7% de comissão sobre a receita gerada'
         },
         'antiga_gestao': {
             'ingressos': sum(c['total'] for c in combined if c['origem'] == 'ANTIGA_GESTAO'),
@@ -310,15 +362,15 @@ def get_aggregated_coupons():
             'liberados': len([c for c in bday_coupons if c.get('total', 0) >= 2]),
             'pendentes': len([c for c in bday_coupons if c.get('total', 0) < 2])
         },
-        'parcerias': {
-            'ingressos': sum(c['total'] for c in combined if c['origem'] == 'PARCERIA'),
-            'receita': sum(c['receita'] for c in combined if c['origem'] == 'PARCERIA'),
-            'cupons_count': len([c for c in combined if c['origem'] == 'PARCERIA'])
-        },
         'uticket_recompensas': {
             'total_ingressos_ganhos': total_ganhos_uticket,
-            'promoters_premiados': promoters_premiados,
-            'regra': '1 ingresso ganho a cada 10 ingressos vendidos'
+            'promoters_premiados': promoters_premiados_uticket,
+            'regra': '1 Full Pass ganho a cada 10 ingressos vendidos'
+        },
+        'sympla_comissoes': {
+            'total_comissao': round(total_comissao_sympla, 2),
+            'promoters_com_comissao': promoters_comissao_sympla,
+            'taxa': '7%'
         }
     }
     

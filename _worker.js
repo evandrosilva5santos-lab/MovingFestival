@@ -14,7 +14,6 @@ function classifyCupom(cupomRaw) {
   if (u.includes('START')) origem = 'START_INC';
   else if (u.includes('BDAY')) origem = 'ANIVERSARIANTE';
   else if (u.includes('MANIACO')) origem = 'ANTIGA_GESTAO';
-  else if (['FESTASRS', 'TRIPTRANCE', 'KIOMA'].some(k => u.includes(k))) origem = 'PARCERIA';
 
   let canal = 'PROMOTER';
   if (u.includes('STARTGRUPON')) canal = 'GRUPO_VIP_NOTURNO';
@@ -29,7 +28,6 @@ function classifyCupom(cupomRaw) {
   else if (u.includes('MANIACO')) canal = 'ANTIGO_MKT';
   else if (origem === 'ANTIGA_GESTAO') canal = 'ANTIGO_MKT';
   else if (origem === 'ANIVERSARIANTE') canal = 'ANIVERSARIANTE';
-  else if (origem === 'PARCERIA') canal = 'PARCERIA';
 
   // promoter unificado
   const promoter = u.includes('GUTO') ? 'GUTO' : (origem === 'PROMOTER' ? cupomRaw : null);
@@ -61,9 +59,7 @@ const MAPA_ANALISE = {
 };
 const semAcento = (x) => String(x || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 // Regras por padrão de nome (informadas pela Carol, 07/10)
-const AFILIADOS = ['TRIPTRANCE', 'TRIP', 'NATANIELE5', 'KIOMA', 'KIOMA2', 'HELENA15', 'GUTO', 'GUTO2', 'DALETOUR', 'ALEMOA', 'FESTASRS'];
 function analisePorRegra(u) {
-  if (AFILIADOS.includes(u)) return { grupo: 'AFILIADOS', canal: 'AFILIADO_PROGRAMA', origem: 'PARCERIA', rotulo: u === 'FESTASRS' ? 'Programa de afiliados (Lais)' : 'Programa de afiliados' };
   if (u.includes('DIVULGADOR')) return { grupo: 'FRAN', canal: 'EQUIPE_FRAN', origem: 'EQUIPE_FRAN', rotulo: 'Equipe Fran Saval (divulgador + nome, gerado pela Júlia)' };
   if (u.startsWith('BDAY')) return { grupo: 'ATENDIMENTO', canal: 'ANIVERSARIANTE', origem: 'ANIVERSARIANTE', rotulo: 'Aniversariante · atendimento WhatsApp (Carol)' };
   if (u.startsWith('MEIA')) return { grupo: 'ATENDIMENTO', canal: 'MEIA_ENTRADA', origem: 'MEIA_ENTRADA', rotulo: 'Meia-entrada · atendimento WhatsApp (Carol)' };
@@ -109,22 +105,36 @@ async function buscarCuponsNuvem(env) {
 }
 
 // Mesmo cupom com nomes diferentes em cada ticketeira -> nome único (mostrado somado)
-const ALIAS_CUPOM = { CUPOMGUTO: 'GUTO' };
-function nomeCupom(raw) {
-  const code = String(raw || '').trim();
-  return ALIAS_CUPOM[code.toUpperCase()] || code;
-}
-const CUPOM_UNIFICADO = new Set(Object.values(ALIAS_CUPOM));
+// Cupons semelhantes vinculados entre plataformas
+const MAPA_VINCULADOS = {
+  CUPOMGUTO: { par: 'GUTO', plataforma: 'SYMPLA', promoter: 'GUTO' },
+  GUTO: { par: 'CUPOMGUTO', plataforma: 'UTICKET', promoter: 'GUTO' },
+  KIOMA: { par: 'KIOMA', plataforma: 'AMBAS', promoter: 'KIOMA' },
+  NATANIELE: { par: 'NATANIELE5', plataforma: 'SYMPLA', promoter: 'NATANIELE' },
+  NATANIELE5: { par: 'NATANIELE', plataforma: 'UTICKET', promoter: 'NATANIELE' }
+};
 
 function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
     const code = String(c.cupom || '').trim();
-    const base = nomeCupom(code);   // nome comum (ex.: CUPOMGUTO -> GUTO) só para classificar e somar na análise
-    const { origem, canal, promoter, grupo, gestao } = classifyCupom(base);
-    const irmaos = Object.entries(ALIAS_CUPOM).filter(([a, b]) => b === base.toUpperCase());
-    const nomes = irmaos.length ? [...irmaos.map(([a]) => `${a} (Uticket)`), `${base.toUpperCase()} (Sympla)`] : [`${code.toUpperCase()} (${plataforma === 'UTICKET' ? 'Uticket' : 'Sympla'})`];
-    return { cupom: code, base, promoter: promoter || base, nomes, plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
-             receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
+    const { origem, canal, promoter, grupo, gestao } = classifyCupom(code);
+    const codeUp = code.toUpperCase();
+    const vinc = MAPA_VINCULADOS[codeUp] || null;
+    return {
+      cupom: code,
+      promoter: promoter || (vinc ? vinc.promoter : code),
+      vinculado: vinc,
+      plataforma,
+      origem,
+      canal,
+      grupo,
+      gestao,
+      total: Number(c.total) || 0,
+      pedidos: Number(c.pedidos) || 0,
+      receita: Number(c.receita) || 0,
+      desconto: Number(c.desconto) || 0,
+      ativo: c.ativo !== false
+    };
   });
 }
 
@@ -135,14 +145,11 @@ async function consolidateLiveSources(env) {
 
   const map = new Map();
   for (const c of [...utCupons, ...syCupons]) {
-    // cada cupom fica na sua linha, igual à ticketeira (CUPOMGUTO na Uticket, GUTO na Sympla)
     const k = `${c.cupom}|${c.plataforma}`;
     if (!map.has(k)) {
-      map.set(k, { ...c, plataformas: [c.plataforma], nomes: [...(c.nomes || [])] });
+      map.set(k, { ...c });
     } else {
       const ex = map.get(k);
-      if (!ex.plataformas.includes(c.plataforma)) { ex.plataformas.push(c.plataforma); ex.plataforma = 'AMBAS'; }
-      for (const n of c.nomes || []) if (!ex.nomes.includes(n)) ex.nomes.push(n);
       ex.total += c.total;
       ex.pedidos += c.pedidos;
       ex.receita += c.receita;
@@ -151,19 +158,47 @@ async function consolidateLiveSources(env) {
 
   const combined = Array.from(map.values()).sort((a, b) => b.total - a.total);
 
-  // Recompensas Uticket
+  // Premiações: Uticket (1 Full Pass a cada 10) & Sympla (7% Comissão)
+  let totGanhosUticket = 0;
+  let promotersPremiadosUt = 0;
+  let totComissaoSympla = 0;
+  let promotersComissaoSy = 0;
+
   for (const c of combined) {
+    const tot = c.total || 0;
     if (c.plataforma === 'UTICKET' && c.origem === 'PROMOTER') {
-      const tot = c.total || 0;
+      const ganhos = Math.floor(tot / 10);
+      const ciclo = tot % 10;
       c.recompensa_10 = {
+        tipo: 'FULL_PASS',
+        regra: '1 Full Pass a cada 10 ingressos',
         meta: 10,
-        ganhos: Math.floor(tot / 10),
-        ciclo: tot % 10,
-        falta: 10 - (tot % 10)
+        ganhos: ganhos,
+        ciclo: ciclo,
+        falta: 10 - ciclo,
+        elegivel: true
       };
+      totGanhosUticket += ganhos;
+      if (ganhos > 0) promotersPremiadosUt++;
+    } else {
+      c.recompensa_10 = { tipo: 'FULL_PASS', ganhos: 0, ciclo: 0, falta: 10, elegivel: false };
     }
+
+    if (c.plataforma === 'SYMPLA' && c.origem === 'PROMOTER') {
+      const comis = Math.round((c.receita * 0.07) * 100) / 100;
+      c.comissao_sympla = {
+        taxa: 0.07,
+        taxa_pct: '7%',
+        valor: comis,
+        regra: '7% de comissão sobre a receita gerada'
+      };
+      totComissaoSympla += comis;
+      if (comis > 0) promotersComissaoSy++;
+    } else {
+      c.comissao_sympla = { taxa: 0, taxa_pct: '0%', valor: 0 };
+    }
+
     if (c.cupom.toUpperCase().includes('BDAY')) {
-      const tot = c.total || 0;
       c.bday_meta = {
         meta: 2,
         vendidos: tot,
@@ -177,11 +212,9 @@ async function consolidateLiveSources(env) {
   const startCoupons = combined.filter(c => c.origem === 'START_INC');
   const bdayCoupons = combined.filter(c => c.cupom.toUpperCase().includes('BDAY'));
   const promCoupons = combined.filter(c => c.origem === 'PROMOTER');
+  const utProms = combined.filter(c => c.plataforma === 'UTICKET' && c.origem === 'PROMOTER');
+  const syProms = combined.filter(c => c.plataforma === 'SYMPLA' && c.origem === 'PROMOTER');
   const antCoupons = combined.filter(c => c.origem === 'ANTIGA_GESTAO');
-  const parCoupons = combined.filter(c => c.origem === 'PARCERIA');
-
-  const utProms = combined.filter(c => c.plataforma === 'UTICKET' && c.origem === 'PROMOTER' && c.recompensa_10?.ganhos > 0);
-  const totGanhos = utProms.reduce((acc, c) => acc + (c.recompensa_10?.ganhos || 0), 0);
 
   const soma = (lst) => ({
     ingressos: lst.reduce((a, c) => a + c.total, 0),
@@ -191,24 +224,21 @@ async function consolidateLiveSources(env) {
   const porCupom = (lst) => {
     const m = new Map();
     for (const c of lst) {
-      const k = String(c.base || c.cupom).toUpperCase();
+      const k = c.cupom.toUpperCase();
       const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[semAcento(k)] || analisePorRegra(semAcento(k)) || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
       r.ingressos += c.total; r.receita += c.receita; r.pedidos += c.pedidos;
-      for (const pl of (c.plataformas || [c.plataforma])) if (!r.plataformas.includes(pl)) r.plataformas.push(pl);
+      if (!r.plataformas.includes(c.plataforma)) r.plataformas.push(c.plataforma);
       m.set(k, r);
     }
     // cupons do mapa que ainda não venderam aparecem zerados
     return Array.from(m.values());
   };
   const canaisAnalise = {};
-  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA', 'AFILIADOS', 'FRAN', 'ATENDIMENTO', 'DESCONHECIDO']) {
+  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA', 'FRAN', 'ATENDIMENTO', 'DESCONHECIDO']) {
     const lst = combined.filter(c => c.grupo === g);
     const cps = porCupom(lst);
     for (const [k, v] of Object.entries(MAPA_ANALISE)) {
       if (v.grupo === g && !cps.some(x => semAcento(x.cupom) === k)) cps.push({ cupom: k, canal: v.canal, gestao: v.gestao || null, rotulo: v.rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
-    }
-    if (g === 'AFILIADOS') for (const k of AFILIADOS) {
-      if (!cps.some(x => semAcento(x.cupom) === k)) cps.push({ cupom: k, canal: 'AFILIADO_PROGRAMA', gestao: null, rotulo: analisePorRegra(k).rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
     }
     canaisAnalise[g.toLowerCase()] = { ...soma(lst), cupons: cps.sort((a, b) => b.ingressos - a.ingressos) };
   }
@@ -231,6 +261,22 @@ async function consolidateLiveSources(env) {
         receita: promCoupons.reduce((a, c) => a + c.receita, 0),
         cupons_count: promCoupons.length
       },
+      promoters_uticket: {
+        ingressos: utProms.reduce((a, c) => a + c.total, 0),
+        receita: utProms.reduce((a, c) => a + c.receita, 0),
+        cupons_count: utProms.length,
+        fullpass_ganhos: totGanhosUticket,
+        premiados: promotersPremiadosUt,
+        regra: '1 Full Pass a cada 10 ingressos vendidos'
+      },
+      promoters_sympla: {
+        ingressos: syProms.reduce((a, c) => a + c.total, 0),
+        receita: syProms.reduce((a, c) => a + c.receita, 0),
+        cupons_count: syProms.length,
+        comissao_total: Math.round(totComissaoSympla * 100) / 100,
+        comissao_premiados: promotersComissaoSy,
+        regra: '7% de comissão sobre a receita gerada'
+      },
       antiga_gestao: {
         ingressos: antCoupons.reduce((a, c) => a + c.total, 0),
         receita: antCoupons.reduce((a, c) => a + c.receita, 0),
@@ -248,14 +294,15 @@ async function consolidateLiveSources(env) {
         liberados: bdayCoupons.filter(c => c.total >= 2).length,
         pendentes: bdayCoupons.filter(c => c.total < 2).length
       },
-      parcerias: {
-        ingressos: parCoupons.reduce((a, c) => a + c.total, 0),
-        receita: parCoupons.reduce((a, c) => a + c.receita, 0),
-        cupons_count: parCoupons.length
-      },
       uticket_recompensas: {
-        total_ingressos_ganhos: totGanhos,
-        promoters_premiados: utProms.length
+        total_ingressos_ganhos: totGanhosUticket,
+        promoters_premiados: promotersPremiadosUt,
+        regra: '1 Full Pass ganho a cada 10 ingressos vendidos'
+      },
+      sympla_comissoes: {
+        total_comissao: Math.round(totComissaoSympla * 100) / 100,
+        promoters_com_comissao: promotersComissaoSy,
+        taxa: '7%'
       }
     }
   };

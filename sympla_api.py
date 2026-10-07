@@ -159,11 +159,10 @@ def canal_do_cupom(cupom):
         return "ANIVERSARIANTE", cupom
     if "MEIA" in c or "ESTUDANTE" in c or "PCD" in c:
         return "MEIA_ENTRADA", None
-    if any(k in c for k in ["KIOMA", "TRIP", "FESTASRS"]):
-        return "PARCERIA", cupom
-    if "GUTO" in c:
-        return "AFILIADO_PROMOTER", "GUTO"
-    return "CUPOM_CAMPANHA", cupom
+    if any(k in c for k in ["KIOMA", "TRIP", "FESTASRS", "GUTO"]):
+        prom = "GUTO" if "GUTO" in c else ("KIOMA" if "KIOMA" in c else ("FESTASRS" if "FESTAS" in c else "TRIPTRANCE"))
+        return "AFILIADO_PROMOTER", prom
+    return "AFILIADO_PROMOTER" if cupom else "ORGANICO", cupom
 
 
 def _data_iso(s):

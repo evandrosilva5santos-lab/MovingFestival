@@ -284,11 +284,14 @@
 
   /* RECOMPENSAS UTICKET & METAS */
   .badge-recompensa{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(22,163,74,0.14); color:var(--c-success); border:1px solid rgba(22,163,74,0.3); }
+  .badge-comissao{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(16,185,129,0.15); color:#10B981; border:1px solid rgba(16,185,129,0.3); }
+  .badge-vinculo{ display:inline-flex; align-items:center; gap:4px; padding:2px 6px; border-radius:5px; font-size:10.5px; font-weight:700; background:rgba(59,130,246,0.12); color:#3B82F6; border:1px solid rgba(59,130,246,0.25); margin-top:3px; }
   .badge-liberado{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(43,108,246,0.14); color:var(--accent); border:1px solid rgba(43,108,246,0.3); }
   .badge-pendente{ display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(217,119,6,0.14); color:var(--c-warning); border:1px solid rgba(217,119,6,0.3); }
   .prog-ciclo{ height:4px; background:var(--border); border-radius:2px; overflow:hidden; width:100%; min-width:40px; margin-top:4px; }
   .prog-ciclo > div{ height:100%; background:var(--c-success); border-radius:2px; }
   .card-recompensa{ background:linear-gradient(135deg, rgba(22,163,74,0.08) 0%, rgba(43,108,246,0.06) 100%); border:1px solid rgba(22,163,74,0.3); border-radius:14px; padding:18px 20px; margin-bottom:18px; }
+  .card-recompensa-sympla{ background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(245,158,11,0.06) 100%); border:1px solid rgba(16,185,129,0.3); border-radius:14px; padding:18px 20px; margin-bottom:18px; }
   .top-prom-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:10px; margin-top:12px; }
   .top-prom-card{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px; }
   .top-prom-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
@@ -998,68 +1001,102 @@
           <div class="ttl">Análise de canais por cupom <span class="tag">quem vendeu com cada cupom</span></div>
           <div class="grid" id="analiseAdsGrupos" style="margin-top:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))"></div>
           <div class="tscroll" style="margin-top:14px"><table class="fat-tab" id="analiseAdsTab"></table></div>
-          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico) · ANINHA, FULLDIVULGAÇÃO e GOLDDIVULGAÇÃO = equipe interna Moving · Triptrance, Trip, Nataniele5, Kioma, Helena15, Guto, Daletour, Alemoa e Festasrs (Lais) = programa de afiliados · DIVULGADOR + nome = equipe da Fran Saval · BDAY e MEIA = atendimento WhatsApp da Carol · 5035 e códigos ___ = origem não identificada. A tabela abaixo não lista os cupons da equipe Fran Saval nem do atendimento (estão na lista geral). Só ingressos confirmados; receita líquida.</p>
+          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico) · ANINHA, FULLDIVULGAÇÃO e GOLDDIVULGAÇÃO = equipe interna Moving · DIVULGADOR + nome = equipe da Fran Saval · BDAY e MEIA = atendimento WhatsApp da Carol · 5035 e códigos ___ = origem não identificada. A tabela abaixo lista só os cupons de ADS, WhatsApp, orgânico, equipe interna e sem origem. Só ingressos confirmados; receita líquida.</p>
         </div>
 
-        <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
+        <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPES DIVIDIDAS POR TICKETEIRA) -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px" id="outrasAcoesHeader">
-          <h3 style="font-size:14px;font-weight:700">Outras Ações da Campanha (Promoters, Antiga Gestão & Sympla)</h3>
+          <h3 style="font-size:14px;font-weight:700">Equipes & Cupons da Campanha (Uticket, Sympla & Antiga Gestão)</h3>
         </div>
         <div class="grid g4" id="outrasAcoesGrid" style="margin-bottom:16px">
-          <div class="card" style="border-top:3px solid #8B5CF6">
-            <div class="ttl"><span class="badge-orig orig-promoter">Promoters</span> <span class="tag">Equipe</span></div>
-            <div class="val tnum" id="outrasPromIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">767 ing.</div>
-            <div class="sub" id="outrasPromRec" style="font-size:11.5px;color:var(--fg-muted)">R$ 70.790 · 50 promoters ativos</div>
+          <!-- CARD 1: PROMOTERS UTICKET -->
+          <div class="card" style="border-top:3px solid #2563EB">
+            <div class="ttl"><span class="badge-orig orig-promoter">Promoters Uticket</span> <span class="tag">1 Full Pass / 10 ing.</span></div>
+            <div class="val tnum" id="outrasPromUtIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">0 ing.</div>
+            <div class="sub" id="outrasPromUtSub" style="font-size:11.5px;color:var(--fg-muted)">R$ 0 · 0 promoters ativos</div>
           </div>
+          <!-- CARD 2: PROMOTERS SYMPLA -->
+          <div class="card" style="border-top:3px solid #10B981">
+            <div class="ttl"><span class="badge-orig orig-promoter">Promoters Sympla</span> <span class="tag">Comissão 7%</span></div>
+            <div class="val tnum" id="outrasPromSyIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">0 ing.</div>
+            <div class="sub" id="outrasPromSySub" style="font-size:11.5px;color:var(--fg-muted)">R$ 0 · comissão 7%</div>
+          </div>
+          <!-- CARD 3: ANIVERSARIANTES SYMPLA -->
+          <div class="card" style="border-top:3px solid #EC4899">
+            <div class="ttl"><span class="badge-orig orig-aniversariante">Aniversariantes</span> <span class="tag">Sympla (Meta 2)</span></div>
+            <div class="val tnum" id="outrasBdayIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">185 ing.</div>
+            <div class="sub" id="outrasBdaySub" style="font-size:11.5px;color:var(--fg-muted)">R$ 17.659 · 153 cupons BDAY</div>
+          </div>
+          <!-- CARD 4: ANTIGA GESTÃO -->
           <div class="card" style="border-top:3px solid #64748B">
             <div class="ttl"><span class="badge-orig orig-antiga">Antiga Gestão</span> <span class="tag">Antigo Mkt</span></div>
             <div class="val tnum" id="outrasAntigaGestaoIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">186 ing.</div>
             <div class="sub" id="outrasAntigaGestaoSub" style="font-size:11.5px;color:var(--fg-muted)">R$ 33.980 · MOVINGMANIACO15</div>
           </div>
-          <div class="card" style="border-top:3px solid #EC4899">
-            <div class="ttl"><span class="badge-orig orig-aniversariante">Aniversariantes</span> <span class="tag">Sympla</span></div>
-            <div class="val tnum" id="outrasBdayIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">185 ing.</div>
-            <div class="sub" id="outrasBdaySub" style="font-size:11.5px;color:var(--fg-muted)">R$ 17.659 · 153 cupons BDAY</div>
-          </div>
-          <div class="card" style="border-top:3px solid #10B981">
-            <div class="ttl"><span class="badge-orig orig-parceria">Programa de afiliados</span> <span class="tag">Festas / Excursões</span></div>
-            <div class="val tnum" id="outrasParceriaIng" style="font-family:var(--font-display);font-size:22px;font-weight:800">52 ing.</div>
-            <div class="sub" style="font-size:11.5px;color:var(--fg-muted)">R$ 7.138 · Festasrs (Lais), Trip, Kioma, Guto, Nataniele5…</div>
-          </div>
         </div>
 
-        <!-- 3. PAINEL DE RECOMPENSAS UTICKET (A CADA 10 VENDAS GANHA 1 INGRESSO) -->
+        <!-- 3. PAINEL DE RECOMPENSAS UTICKET (A CADA 10 VENDAS GANHA 1 FULL PASS) -->
         <div class="card-recompensa" id="recompensasPromoterCard">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
             <div>
-              <span class="badge-recompensa">🎁 Regra Uticket: 1 Ingresso Cortesia a cada 10 Vendas</span>
+              <span class="badge-recompensa">🎁 Premiação Uticket: 1 Ingresso Full Pass a cada 10 Vendas</span>
               <h3 style="font-size:16px;font-weight:800;margin:6px 0 2px">Metas & Recompensas dos Promoters (Uticket)</h3>
               <p style="font-size:12.5px;color:var(--fg-muted);margin:0">
-                A cada 10 ingressos vendidos por um promoter na Uticket, ele ganha <b>1 ingresso cortesia</b> para vender ou levar.
+                A cada 10 ingressos vendidos por um promoter na Uticket, ele ganha <b>1 ingresso Full Pass cortesia</b> para vender ou levar.
               </p>
             </div>
             <div style="display:flex;gap:20px">
               <div style="text-align:right">
-                <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Ingressos Conquistados</div>
-                <div class="tnum" id="uticketTotalGanhos" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--c-success)">58 ing.</div>
+                <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Full Pass Conquistados</div>
+                <div class="tnum" id="uticketTotalGanhos" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--c-success)">0 ing.</div>
               </div>
               <div style="text-align:right">
                 <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Promoters Premiados</div>
-                <div class="tnum" id="uticketPromPremiados" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--fg)">12 de 37</div>
+                <div class="tnum" id="uticketPromPremiados" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--fg)">0</div>
               </div>
             </div>
           </div>
 
           <!-- TOP PROMOTERS PREMIADOS COM CICLO ATUAL -->
           <div style="margin-top:14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-muted)">
-            Top Promoters Premiados & Ciclo para o Próximo Ingresso:
+            Top Promoters Uticket Premiados & Ciclo para o Próximo Ingresso:
           </div>
           <div class="top-prom-grid" id="topPromotersGrid">
             <!-- Renderizado dinamicamente pelo JS -->
           </div>
         </div>
 
-        <!-- 4. MAPEAMENTO COMPLETO DE CUPONS (UTICKET + SYMPLA) -->
+        <!-- 3.1 PAINEL DE COMISSÃO SYMPLA (7% SOBRE RECEITA) -->
+        <div class="card-recompensa-sympla" id="recompensasSymplaCard">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+            <div>
+              <span class="badge-comissao">💰 Premiação Sympla: 7% de Comissão Financeira sobre Vendas</span>
+              <h3 style="font-size:16px;font-weight:800;margin:6px 0 2px">Comissões dos Promoters (Sympla)</h3>
+              <p style="font-size:12.5px;color:var(--fg-muted);margin:0">
+                Cada promoter na Sympla recebe <b>7% de comissão em dinheiro</b> sobre a receita bruta das suas vendas confirmadas.
+              </p>
+            </div>
+            <div style="display:flex;gap:20px">
+              <div style="text-align:right">
+                <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Total em Comissões (7%)</div>
+                <div class="tnum" id="symplaTotalComissao" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:#10B981">R$ 0,00</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:11px;font-weight:700;color:var(--fg-muted);text-transform:uppercase">Promoters Comissionados</div>
+                <div class="tnum" id="symplaPromPremiados" style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--fg)">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-muted)">
+            Top Promoters Sympla & Comissão Acumulada:
+          </div>
+          <div class="top-prom-grid" id="topSymplaGrid">
+            <!-- Renderizado dinamicamente pelo JS -->
+          </div>
+        </div>
+
+        <!-- 4. MAPEAMENTO COMPLETO DE CUPONS (DIVIDIDO POR UTICKET & SYMPLA) -->
         <div class="card" id="mapeamentoCuponsCard">
           <div class="ttl" style="margin-bottom:12px">
             <span id="tituloMapeamentoCupons">Mapeamento Consolidado de Cupons (Uticket + Sympla)</span>
@@ -1067,24 +1104,24 @@
           </div>
 
           <div class="filter-bar">
-            <!-- FILTRO DE PLATAFORMA -->
+            <!-- FILTRO DE PLATAFORMA (DIVISÃO CLARA) -->
             <div class="chip-group" id="platFilterGroup">
               <button class="chip-btn" aria-pressed="true" data-plat="ALL">Todas as Plataformas</button>
-              <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket (37)</button>
-              <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla (182)</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket (1 a cada 10)</button>
+              <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla (Comissão 7%)</button>
             </div>
 
-            <!-- FILTRO DE ORIGEM -->
+            <!-- FILTRO DE ORIGEM (SEM PARCERIAS) -->
             <div class="chip-group" id="origemFilterGroup">
               <button class="chip-btn" aria-pressed="true" data-orig="ALL">Todas as Ações</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="PROMOTER">👥 Promoters (Todos)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="PREMIADOS_UTICKET">🎁 Uticket Premiados (Full Pass)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="COMISSAO_SYMPLA">💰 Sympla Comissionados (7%)</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes Sympla</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="BDAY_LIBERADOS">🍾 Aniv. Liberados</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="BDAY_PENDENTES">⏳ Aniv. Pendentes</button>
               <button class="chip-btn" aria-pressed="false" data-orig="START_INC">🚀 Start Inc.</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="PROMOTER">👥 Promoters</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="PREMIADOS">🎁 Promoters Premiados (12)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes Sympla (153)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="BDAY_LIBERADOS">🍾 Aniv. Liberados (32)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="BDAY_PENDENTES">⏳ Aniv. Pendentes (121)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="ANTIGA_GESTAO">🏛️ Antiga Gestão / Antigo Mkt</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="PARCERIA">🤝 Parcerias</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="ANTIGA_GESTAO">🏛️ Antiga Gestão</button>
             </div>
 
             <!-- BUSCA INSTANTÂNEA -->
@@ -1095,14 +1132,14 @@
             <table>
               <thead>
                 <tr>
-                  <th>Cupom / Código</th>
-                  <th>Origem</th>
+                  <th>Cupom / Promoter</th>
                   <th>Plataforma</th>
+                  <th>Origem</th>
                   <th>Campanha / Canal</th>
                   <th>Pedidos</th>
                   <th>Ingressos</th>
                   <th>Receita Gerada</th>
-                  <th>Recompensas / Metas</th>
+                  <th>Premiação (Uticket / Sympla)</th>
                   <th>Participação</th>
                 </tr>
               </thead>
@@ -1434,10 +1471,10 @@
     'EQUIPE_FRAN': 'Equipe Fran Saval',
     'DESCONHECIDO': 'Origem não identificada',
     'ANIVERSARIANTE': 'Aniversariante (Sympla)',
-    'PARCERIA_FESTASRS': 'Parceria Festasrs',
-    'PARCERIA_KIOMA': 'Parceria Kioma',
-    'PARCERIA_TRIPTRANCE': 'Parceria Triptrance',
-    'PARCERIA_GUTO': 'Parceria GUTO'
+    'PARCERIA_FESTASRS': 'Promoter Festasrs',
+    'PARCERIA_KIOMA': 'Promoter Kioma',
+    'PARCERIA_TRIPTRANCE': 'Promoter Triptrance',
+    'PARCERIA_GUTO': 'Promoter GUTO'
   };
 
   var DIARIO_PERIODO = 'tudo';
@@ -1813,7 +1850,6 @@
         {k:'whatsapp', nome:'Grupos do WhatsApp', cor:'#10B981'},
         {k:'organico', nome:'Orgânico', cor:'#8B5CF6'},
         {k:'interna', nome:'Equipe interna Moving', cor:'#E08A00'},
-        {k:'afiliados', nome:'Programa de afiliados', cor:'#10B981'},
         {k:'fran', nome:'Equipe Fran Saval (divulgadores)', cor:'#0EA5E9', resumo:true},
         {k:'atendimento', nome:'Atendimento WhatsApp (Carol) · BDAY e Meia', cor:'#EC4899', resumo:true},
         {k:'desconhecido', nome:'Origem não identificada', cor:'#94A3B8'}
@@ -1848,10 +1884,18 @@
         }).join('') + '</tbody>';
     })();
 
-    // 2. Outras Ações (Promoters, Antiga Gestão, Aniversariantes Sympla, Parcerias)
-    if(out.promoters){
-      if($('outrasPromIng')) $('outrasPromIng').textContent = num(out.promoters.ingressos) + ' ing.';
-      if($('outrasPromRec')) $('outrasPromRec').textContent = brl(out.promoters.receita) + ' · ' + (out.promoters.cupons_count||0) + ' promoters ativos';
+    // 2. Outras Ações (Promoters Uticket, Promoters Sympla, Aniversariantes Sympla, Antiga Gestão)
+    var pUt = out.promoters_uticket || {};
+    var pSy = out.promoters_sympla || {};
+    if($('outrasPromUtIng')) $('outrasPromUtIng').textContent = num(pUt.ingressos || 0) + ' ing.';
+    if($('outrasPromUtSub')) $('outrasPromUtSub').textContent = brl(pUt.receita || 0) + ' · ' + (pUt.cupons_count || 0) + ' promoters ativos';
+
+    if($('outrasPromSyIng')) $('outrasPromSyIng').textContent = num(pSy.ingressos || 0) + ' ing.';
+    if($('outrasPromSySub')) $('outrasPromSySub').textContent = brl(pSy.receita || 0) + ' · ' + brl(pSy.comissao_total || 0) + ' em comissão (7%)';
+
+    if(out.aniversariantes){
+      if($('outrasBdayIng')) $('outrasBdayIng').textContent = num(out.aniversariantes.ingressos) + ' ing.';
+      if($('outrasBdaySub')) $('outrasBdaySub').textContent = brl(out.aniversariantes.receita) + ' · ' + (out.aniversariantes.liberados||0) + ' liberados / ' + (out.aniversariantes.pendentes||0) + ' pendentes';
     }
     if(out.antiga_gestao){
       if($('outrasAntigaGestaoIng')) $('outrasAntigaGestaoIng').textContent = num(out.antiga_gestao.ingressos) + ' ing.';
@@ -1859,20 +1903,13 @@
     } else if(out.comunidade){
       if($('outrasAntigaGestaoIng')) $('outrasAntigaGestaoIng').textContent = num(out.comunidade.ingressos) + ' ing.';
     }
-    if(out.aniversariantes){
-      if($('outrasBdayIng')) $('outrasBdayIng').textContent = num(out.aniversariantes.ingressos) + ' ing.';
-      if($('outrasBdaySub')) $('outrasBdaySub').textContent = brl(out.aniversariantes.receita) + ' · ' + (out.aniversariantes.liberados||0) + ' liberados / ' + (out.aniversariantes.pendentes||0) + ' pendentes';
-    }
-    if(out.parcerias){
-      if($('outrasParceriaIng')) $('outrasParceriaIng').textContent = num(out.parcerias.ingressos) + ' ing.';
-    }
 
-    // 3. Recompensas Uticket (Regra 1 a cada 10)
+    // 3. Recompensas Uticket (Regra 1 a cada 10 vendas)
     var uRec = out.uticket_recompensas || {};
-    var uTotGanhos = uRec.total_ingressos_ganhos || 0;
-    var uPromPrem = uRec.promoters_premiados || 0;
+    var uTotGanhos = uRec.total_ingressos_ganhos || (pUt.fullpass_ganhos || 0);
+    var uPromPrem = uRec.promoters_premiados || (pUt.premiados || 0);
     if($('uticketTotalGanhos')) $('uticketTotalGanhos').textContent = uTotGanhos + ' ing.';
-    if($('uticketPromPremiados')) $('uticketPromPremiados').textContent = uPromPrem + ' de ' + (out.promoters ? out.promoters.cupons_count : 37);
+    if($('uticketPromPremiados')) $('uticketPromPremiados').textContent = uPromPrem + ' de ' + (pUt.cupons_count || 28);
 
     if($('topPromotersGrid')){
       var uticketPromoters = cupons.filter(function(c){
@@ -1882,16 +1919,47 @@
       $('topPromotersGrid').innerHTML = uticketPromoters.map(function(p){
         var r = p.recompensa_10 || {ganhos:0, ciclo:0, falta:10};
         var faltaHtml = r.falta === 1 ? '<b style="color:var(--c-warning)">FALTA SÓ 1!</b>' : 'faltam ' + r.falta;
+        var vincInfo = p.vinculado ? ('<div style="font-size:10.5px;color:var(--accent);margin-top:4px">🔗 Ligado na Sympla: <b>' + esc(p.vinculado.par) + '</b></div>') : '';
         return '<div class="top-prom-card">' +
           '<div class="top-prom-head">' +
             '<span class="top-prom-name">' + esc(p.cupom) + '</span>' +
-            '<span class="top-prom-badge">🎁 ' + r.ganhos + ' ganho' + (r.ganhos>1?'s':'') + '</span>' +
+            '<span class="top-prom-badge">🎁 ' + r.ganhos + ' Full Pass' + (r.ganhos>1?'es':'') + '</span>' +
           '</div>' +
           '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--fg-muted);margin-bottom:3px">' +
             '<span>' + num(p.total) + ' vendas</span>' +
             '<span>Ciclo: <b>' + r.ciclo + '/10</b> (' + faltaHtml + ')</span>' +
           '</div>' +
           '<div class="prog-ciclo"><div style="width:' + (r.ciclo * 10) + '%"></div></div>' +
+          vincInfo +
+        '</div>';
+      }).join('');
+    }
+
+    // 3.1 Comissões Sympla (Regra 7% sobre receita)
+    var syCom = out.sympla_comissoes || {};
+    var syTotCom = syCom.total_comissao !== undefined ? syCom.total_comissao : (pSy.comissao_total || 0);
+    var syPromPrem = syCom.promoters_com_comissao || syCom.promoters_comissionados || (pSy.comissao_premiados || 0);
+    if($('symplaTotalComissao')) $('symplaTotalComissao').textContent = brl(syTotCom);
+    if($('symplaPromPremiados')) $('symplaPromPremiados').textContent = syPromPrem + ' de ' + (pSy.cupons_count || 29);
+
+    if($('topSymplaGrid')){
+      var symplaPromoters = cupons.filter(function(c){
+        return c.plataforma === 'SYMPLA' && c.origem === 'PROMOTER' && (c.total > 0);
+      }).sort(function(a,b){ return (b.total||0) - (a.total||0); });
+
+      $('topSymplaGrid').innerHTML = symplaPromoters.slice(0, 12).map(function(p){
+        var comValor = (p.comissao_sympla && p.comissao_sympla.valor) ? p.comissao_sympla.valor : ((p.receita||0) * 0.07);
+        var vincInfo = p.vinculado ? ('<div style="font-size:10.5px;color:var(--accent);margin-top:4px">🔗 Ligado na Uticket: <b>' + esc(p.vinculado.par) + '</b></div>') : '';
+        return '<div class="top-prom-card" style="border-left:3px solid #10B981">' +
+          '<div class="top-prom-head">' +
+            '<span class="top-prom-name">' + esc(p.cupom) + '</span>' +
+            '<span class="badge-comissao">💰 ' + brl(comValor) + '</span>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--fg-muted);margin-bottom:3px">' +
+            '<span>' + num(p.total) + ' vendas (' + brl(p.receita) + ')</span>' +
+            '<span>Comissão: <b>7%</b></span>' +
+          '</div>' +
+          vincInfo +
         '</div>';
       }).join('');
     }
@@ -1919,10 +1987,14 @@
       if(CUPOM_ORIG_FILTER === 'START_INC' && c.origem !== 'START_INC') return false;
       if(CUPOM_ORIG_FILTER === 'PROMOTER' && c.origem !== 'PROMOTER') return false;
       if(CUPOM_ORIG_FILTER === 'ANTIGA_GESTAO' && c.origem !== 'ANTIGA_GESTAO' && c.origem !== 'COMUNIDADE') return false;
-      if(CUPOM_ORIG_FILTER === 'PARCERIA' && c.origem !== 'PARCERIA') return false;
-      if(CUPOM_ORIG_FILTER === 'PREMIADOS'){
+      if(CUPOM_ORIG_FILTER === 'PREMIADOS_UTICKET'){
+        if(c.plataforma !== 'UTICKET' || c.origem !== 'PROMOTER') return false;
         var r = c.recompensa_10;
         if(!r || !r.ganhos || r.ganhos <= 0) return false;
+      }
+      if(CUPOM_ORIG_FILTER === 'COMISSAO_SYMPLA'){
+        if(c.plataforma !== 'SYMPLA' || c.origem !== 'PROMOTER') return false;
+        if((c.total||0) <= 0) return false;
       }
       if(CUPOM_ORIG_FILTER === 'ANIVERSARIANTE'){
         var isBday = (c.cupom || '').toUpperCase().indexOf('BDAY') > -1 || c.origem === 'ANIVERSARIANTE';
@@ -1942,7 +2014,8 @@
         var q = CUPOM_SEARCH;
         var promStr = (c.promoter || '');
         if((c.cupom || '').toUpperCase() === 'CUPOMGUTO') promStr = 'guto';
-        var txt = (c.cupom + ' ' + (c.nomes||[]).join(' ') + ' ' + promStr + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
+        var vincStr = c.vinculado ? (c.vinculado.par + ' ' + (c.vinculado.promoter||'')) : '';
+        var txt = (c.cupom + ' ' + (c.nomes||[]).join(' ') + ' ' + promStr + ' ' + vincStr + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
         if(txt.indexOf(q) === -1) return false;
       }
       return true;
@@ -1966,8 +2039,7 @@
       'PROMOTER': 'orig-promoter',
       'ANTIGA_GESTAO': 'orig-antiga',
       'COMUNIDADE': 'orig-antiga',
-      'ANIVERSARIANTE': 'orig-aniversariante',
-      'PARCERIA': 'orig-parceria'
+      'ANIVERSARIANTE': 'orig-aniversariante'
     };
     var origLabel = {
       'START_INC': '🚀 Start Inc.',
@@ -1975,7 +2047,6 @@
       'ANTIGA_GESTAO': '🏛️ Antiga Gestão',
       'COMUNIDADE': '🏛️ Antiga Gestão',
       'ANIVERSARIANTE': '🎂 Aniversariante',
-      'PARCERIA': '🤝 Afiliado',
       'INTERNA': '🏠 Equipe interna Moving',
       'EQUIPE_FRAN': '📣 Equipe Fran Saval',
       'MEIA_ENTRADA': '💬 Meia (atendimento)',
@@ -1984,7 +2055,7 @@
     };
 
     var baseTotalCupons = isUsuarioRestrito
-      ? ((DATA.outras_acoes && DATA.outras_acoes.promoters && DATA.outras_acoes.promoters.ingressos) || 767)
+      ? ((DATA.outras_acoes && DATA.outras_acoes.promoters && DATA.outras_acoes.promoters.ingressos) || 874)
       : (DATA.start_inc ? DATA.start_inc.ingressos : totCuponsIng);
 
     $('couponsTableBody').innerHTML = filtrados.map(function(c){
@@ -2004,16 +2075,24 @@
       } else if((c.cupom||'').toUpperCase() === 'CUPOMGUTO'){
         subInfo = '<div style="font-size:11px;color:var(--accent);font-weight:600;margin-top:2px">Promoter: GUTO</div>';
       }
-      var cupomNomeHtml = '<b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b>' + subInfo;
 
-      // Renderização da Coluna Recompensas / Metas
+      // Vínculo com outra plataforma
+      var vincTag = '';
+      if(c.vinculado){
+        var platPar = c.vinculado.plataforma === 'UTICKET' ? 'Uticket' : (c.vinculado.plataforma === 'SYMPLA' ? 'Sympla' : 'outra ticketeira');
+        vincTag = '<div class="badge-vinculo">🔗 Mesmo promoter na ' + platPar + ': <b>' + esc(c.vinculado.par) + '</b></div>';
+      }
+
+      var cupomNomeHtml = '<b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b>' + subInfo + vincTag;
+
+      // Renderização da Coluna Premiação (Uticket / Sympla)
       var recompensaHtml = '<span style="color:var(--fg-faint);font-size:12px">—</span>';
       if(c.plataforma === 'UTICKET' && c.origem === 'PROMOTER'){
         var r = c.recompensa_10 || {ganhos: Math.floor(c.total / 10), ciclo: c.total % 10, falta: 10 - (c.total % 10)};
         var faltaLbl = r.falta === 1 ? '<b style="color:var(--c-warning)">falta só 1!</b>' : 'faltam ' + r.falta;
         if(r.ganhos > 0){
           recompensaHtml = '<div>' +
-            '<span class="badge-recompensa">🎁 ' + r.ganhos + ' ganho' + (r.ganhos>1?'s':'') + '</span>' +
+            '<span class="badge-recompensa">🎁 ' + r.ganhos + ' Full Pass' + (r.ganhos>1?'es':'') + '</span>' +
             '<div class="prog-ciclo"><div style="width:' + (r.ciclo * 10) + '%"></div></div>' +
             '<div style="font-size:10px;color:var(--fg-muted);margin-top:2px">ciclo: ' + r.ciclo + '/10 (' + faltaLbl + ')</div>' +
           '</div>';
@@ -2023,10 +2102,20 @@
             '<div style="font-size:10.5px;color:var(--fg-muted);margin-top:2px">' + r.ciclo + '/10 (' + faltaLbl + ')</div>' +
           '</div>';
         }
+      } else if(c.plataforma === 'SYMPLA' && c.origem === 'PROMOTER'){
+        var comVal = (c.comissao_sympla && c.comissao_sympla.valor) ? c.comissao_sympla.valor : ((c.receita||0) * 0.07);
+        if(c.total > 0){
+          recompensaHtml = '<div>' +
+            '<span class="badge-comissao">💰 ' + brl(comVal) + '</span>' +
+            '<div style="font-size:10px;color:#10B981;font-weight:600;margin-top:2px">7% sobre receita</div>' +
+          '</div>';
+        } else {
+          recompensaHtml = '<span style="color:var(--fg-faint);font-size:11px">7% comissão</span>';
+        }
       } else if((c.cupom||'').toUpperCase().indexOf('BDAY') > -1){
         if(c.total >= 2){
           recompensaHtml = '<div>' +
-            '<span class="badge-liberado">🍾 LIBERADO P/ LEVAR</span>' +
+            '<span class="badge-liberado">🍾 LIBERADO</span>' +
             '<div style="font-size:10px;color:var(--c-success);font-weight:700;margin-top:2px">' + c.total + ' vendidos</div>' +
           '</div>';
         } else {
@@ -2039,8 +2128,8 @@
 
       return '<tr>' +
         '<td>' + cupomNomeHtml + '</td>' +
+        '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='UTICKET'?'🎟️ Uticket':'🎫 Sympla') + '</span></td>' +
         '<td><span class="badge-orig ' + oCls + '">' + oLbl + '</span></td>' +
-        '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='AMBAS'?'Uticket + Sympla':(c.plataforma==='UTICKET'?'Uticket':'Sympla')) + '</span></td>' +
         '<td style="font-size:12px;color:var(--fg-muted)">' + esc(cNome) + '</td>' +
         '<td>' + num(c.pedidos) + '</td>' +
         '<td><b style="color:var(--fg)">' + num(c.total) + '</b></td>' +
@@ -4362,7 +4451,7 @@
     if(titMap) titMap.textContent = isUsuarioComum ? 'Ranking & Vendas dos Promoters' : 'Mapeamento Consolidado de Cupons (Uticket + Sympla)';
 
     if(origG){
-      var chipsNaoPromoter = origG.querySelectorAll('button:not([data-orig="PROMOTER"]):not([data-orig="PREMIADOS"])');
+      var chipsNaoPromoter = origG.querySelectorAll('button:not([data-orig="PROMOTER"]):not([data-orig="PREMIADOS_UTICKET"]):not([data-orig="COMISSAO_SYMPLA"])');
       chipsNaoPromoter.forEach(function(btn){
         btn.style.display = isUsuarioComum ? 'none' : '';
       });

@@ -371,12 +371,13 @@ def extract_sympla_records(file_path):
                 promoter = cupom
             elif 'MEIA' in c_u or 'ESTUDANTE' in c_u or 'PCD' in c_u:
                 canal = 'MEIA_ENTRADA'
-            elif any(k in c_u for k in ['KIOMA', 'TRIP', 'FESTASRS']):
-                canal = 'PARCERIA'
-                promoter = cupom
-            elif 'GUTO' in c_u:
+            elif any(k in c_u for k in ['KIOMA', 'TRIP', 'FESTASRS', 'GUTO']):
                 canal = 'AFILIADO_PROMOTER'
-                promoter = 'GUTO'
+                if 'GUTO' in c_u: promoter = 'GUTO'
+                elif 'KIOMA' in c_u: promoter = 'KIOMA'
+                elif 'FESTAS' in c_u: promoter = 'FESTASRS'
+                elif 'TRIP' in c_u: promoter = 'TRIPTRANCE'
+                else: promoter = cupom
             else:
                 canal = 'CUPOM_CAMPANHA'
                 promoter = cupom
