@@ -995,10 +995,10 @@
 
         <!-- ANALISE_ADS: cupons por canal (mapa do Evandro) -->
         <div class="card" id="analiseAdsCard" style="margin-bottom:16px">
-          <div class="ttl">Análise de canais por cupom <span class="tag">ADS · WhatsApp · Orgânico · Interna</span></div>
-          <div class="grid g4" id="analiseAdsGrupos" style="margin-top:12px"></div>
+          <div class="ttl">Análise de canais por cupom <span class="tag">quem vendeu com cada cupom</span></div>
+          <div class="grid" id="analiseAdsGrupos" style="margin-top:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))"></div>
           <div class="tscroll" style="margin-top:14px"><table class="fat-tab" id="analiseAdsTab"></table></div>
-          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico) · ANINHA = lista interna Moving (prospecção direta). Só ingressos confirmados; receita líquida.</p>
+          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico) · ANINHA, FULLDIVULGAÇÃO e GOLDDIVULGAÇÃO = equipe interna Moving · DIVULGADOR + nome = equipe da Fran Saval · BDAY e MEIA = atendimento WhatsApp da Carol · 5035 e códigos ___ = origem não identificada. A tabela abaixo lista só os cupons de ADS, WhatsApp, orgânico, equipe interna e sem origem. Só ingressos confirmados; receita líquida.</p>
         </div>
 
         <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
@@ -1430,6 +1430,9 @@
     'ORGANICO_BIO': 'Orgânico · link na bio',
     'ORGANICO_MANYCHAT': 'Orgânico · automação ManyChat',
     'INTERNA_PROSPECCAO': 'Lista interna Moving · prospecção direta',
+    'INTERNA_DIVULGACAO': 'Equipe de divulgação Moving (equipe direta)',
+    'EQUIPE_FRAN': 'Equipe Fran Saval',
+    'DESCONHECIDO': 'Origem não identificada',
     'ANIVERSARIANTE': 'Aniversariante (Sympla)',
     'PARCERIA_FESTASRS': 'Parceria Festasrs',
     'PARCERIA_KIOMA': 'Parceria Kioma',
@@ -1809,7 +1812,10 @@
         {k:'ads', nome:'ADS (venda 100% ADS)', cor:'#2B6CF6'},
         {k:'whatsapp', nome:'Grupos do WhatsApp', cor:'#10B981'},
         {k:'organico', nome:'Orgânico', cor:'#8B5CF6'},
-        {k:'interna', nome:'Lista interna Moving', cor:'#E08A00'}
+        {k:'interna', nome:'Equipe interna Moving', cor:'#E08A00'},
+        {k:'fran', nome:'Equipe Fran Saval (divulgadores)', cor:'#0EA5E9', resumo:true},
+        {k:'atendimento', nome:'Atendimento WhatsApp (Carol) · BDAY e Meia', cor:'#EC4899', resumo:true},
+        {k:'desconhecido', nome:'Origem não identificada', cor:'#94A3B8'}
       ];
       var totIng = G.reduce(function(a,g){ return a + ((ca[g.k]||{}).ingressos||0); },0) || 1;
       $('analiseAdsGrupos').innerHTML = G.map(function(g){
@@ -1818,6 +1824,9 @@
         if(g.k==='ads'){
           var n = x.gestao_nova||{}, a = x.gestao_antiga||{};
           sub = 'Gestão nova: <b>' + num(n.ingressos||0) + '</b> ing. · ' + brl(n.receita||0) + '<br>Gestão antiga: <b>' + num(a.ingressos||0) + '</b> ing. · ' + brl(a.receita||0);
+        } else if(g.resumo){
+          var ativos = (x.cupons||[]).filter(function(c){ return c.ingressos>0; }).length;
+          sub = num((x.cupons||[]).length) + ' cupons · ' + num(ativos) + ' com venda' + (g.k==='atendimento' ? '<br>Cadastros completos na planilha da Carol' : '<br>Divulgador + nome, gerados pela Júlia');
         } else {
           sub = (x.cupons||[]).map(function(c){ return esc(c.cupom) + ': <b>' + num(c.ingressos) + '</b>'; }).join(' · ');
         }
@@ -1830,7 +1839,7 @@
         '</div>';
       }).join('');
       var linhas = [];
-      G.forEach(function(g){ ((ca[g.k]||{}).cupons||[]).forEach(function(c){ linhas.push({g:g, c:c}); }); });
+      G.forEach(function(g){ if(g.resumo) return; ((ca[g.k]||{}).cupons||[]).forEach(function(c){ linhas.push({g:g, c:c}); }); });
       $('analiseAdsTab').innerHTML = '<thead><tr><th>Cupom</th><th>Canal</th><th>Ingressos</th><th>Receita</th><th>Pedidos</th><th>Ticket médio</th><th>Ticketeira</th></tr></thead><tbody>' +
         linhas.map(function(l){
           var c = l.c, tm = c.ingressos>0 ? brl(c.receita/c.ingressos) : '—';
@@ -1963,7 +1972,12 @@
       'ANTIGA_GESTAO': '🏛️ Antiga Gestão',
       'COMUNIDADE': '🏛️ Antiga Gestão',
       'ANIVERSARIANTE': '🎂 Aniversariante',
-      'PARCERIA': '🤝 Parceria'
+      'PARCERIA': '🤝 Parceria',
+      'INTERNA': '🏠 Equipe interna Moving',
+      'EQUIPE_FRAN': '📣 Equipe Fran Saval',
+      'MEIA_ENTRADA': '💬 Meia (atendimento)',
+      'ORGANICO': '🌱 Orgânico',
+      'DESCONHECIDO': '❓ Origem não identificada'
     };
 
     var baseTotalCupons = isUsuarioRestrito

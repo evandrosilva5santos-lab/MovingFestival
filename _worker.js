@@ -8,7 +8,7 @@ const SUPABASE_DEFAULT_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJz
 
 function classifyCupom(cupomRaw) {
   if (!cupomRaw) return { origem: 'OUTROS', canal: 'OUTROS' };
-  const u = String(cupomRaw).toUpperCase().trim();
+  const u = String(cupomRaw).toUpperCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
   let origem = 'PROMOTER';
   if (u.includes('START')) origem = 'START_INC';
@@ -32,11 +32,13 @@ function classifyCupom(cupomRaw) {
   else if (origem === 'PARCERIA') canal = 'PARCERIA';
 
   // ANALISE_ADS — mapa definido pelo Evandro (07/10)
-  const ac = analiseCanal(u);
+  let ac = analiseCanal(u);
+  if (!ac) ac = analisePorRegra(u);
   if (ac) {
     canal = ac.canal;
-    if (ac.grupo === 'ORGANICO') origem = 'ORGANICO';
-    if (ac.grupo === 'INTERNA') origem = 'INTERNA';
+    if (ac.origem) origem = ac.origem;
+    else if (ac.grupo === 'ORGANICO') origem = 'ORGANICO';
+    else if (ac.grupo === 'INTERNA') origem = 'INTERNA';
   }
   return { origem, canal, grupo: ac ? ac.grupo : null, gestao: ac ? ac.gestao : null };
 }
@@ -50,10 +52,21 @@ const MAPA_ANALISE = {
   MOVINGMANIACO15:{ grupo: 'ADS', canal: 'ADS_GESTAO_ANTIGA', gestao: 'ANTIGA', rotulo: 'Venda 100% ADS · gestão antiga' },
   MOVINGBIO:      { grupo: 'ORGANICO', canal: 'ORGANICO_BIO',      rotulo: 'Orgânico · link na bio' },
   MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' },
-  ANINHA:         { grupo: 'INTERNA', canal: 'INTERNA_PROSPECCAO', rotulo: 'Lista interna Moving · prospecção direta' }
+  ANINHA:         { grupo: 'INTERNA', canal: 'INTERNA_PROSPECCAO', rotulo: 'Lista interna Moving · prospecção direta' },
+  FULLDIVULGACAO: { grupo: 'INTERNA', canal: 'INTERNA_DIVULGACAO', rotulo: 'Equipe de divulgação Moving (equipe direta)' },
+  GOLDDIVULGACAO: { grupo: 'INTERNA', canal: 'INTERNA_DIVULGACAO', rotulo: 'Equipe de divulgação Moving (equipe direta)' }
 };
+const semAcento = (x) => String(x || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+// Regras por padrão de nome (informadas pela Carol, 07/10)
+function analisePorRegra(u) {
+  if (u.includes('DIVULGADOR')) return { grupo: 'FRAN', canal: 'EQUIPE_FRAN', origem: 'EQUIPE_FRAN', rotulo: 'Equipe Fran Saval (divulgador + nome, gerado pela Júlia)' };
+  if (u.startsWith('BDAY')) return { grupo: 'ATENDIMENTO', canal: 'ANIVERSARIANTE', origem: 'ANIVERSARIANTE', rotulo: 'Aniversariante · atendimento WhatsApp (Carol)' };
+  if (u.startsWith('MEIA')) return { grupo: 'ATENDIMENTO', canal: 'MEIA_ENTRADA', origem: 'MEIA_ENTRADA', rotulo: 'Meia-entrada · atendimento WhatsApp (Carol)' };
+  if (u === '5035' || /^_{2,}[0-9A-F]{6,}$/.test(u)) return { grupo: 'DESCONHECIDO', canal: 'DESCONHECIDO', origem: 'DESCONHECIDO', rotulo: 'Origem não identificada (ninguém da equipe criou)' };
+  return null;
+}
 function analiseCanal(u) {
-  const k = String(u || '').toUpperCase().replace(/\s+/g, '');
+  const k = String(u || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '');
   return MAPA_ANALISE[k] || null;
 }
 
@@ -172,7 +185,7 @@ async function consolidateLiveSources(env) {
     const m = new Map();
     for (const c of lst) {
       const k = c.cupom.toUpperCase();
-      const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[k] || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
+      const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[semAcento(k)] || analisePorRegra(semAcento(k)) || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
       r.ingressos += c.total; r.receita += c.receita; r.pedidos += c.pedidos;
       if (!r.plataformas.includes(c.plataforma)) r.plataformas.push(c.plataforma);
       m.set(k, r);
@@ -181,11 +194,11 @@ async function consolidateLiveSources(env) {
     return Array.from(m.values());
   };
   const canaisAnalise = {};
-  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA']) {
+  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA', 'FRAN', 'ATENDIMENTO', 'DESCONHECIDO']) {
     const lst = combined.filter(c => c.grupo === g);
     const cps = porCupom(lst);
     for (const [k, v] of Object.entries(MAPA_ANALISE)) {
-      if (v.grupo === g && !cps.some(x => x.cupom === k)) cps.push({ cupom: k, canal: v.canal, gestao: v.gestao || null, rotulo: v.rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
+      if (v.grupo === g && !cps.some(x => semAcento(x.cupom) === k)) cps.push({ cupom: k, canal: v.canal, gestao: v.gestao || null, rotulo: v.rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
     }
     canaisAnalise[g.toLowerCase()] = { ...soma(lst), cupons: cps.sort((a, b) => b.ingressos - a.ingressos) };
   }
