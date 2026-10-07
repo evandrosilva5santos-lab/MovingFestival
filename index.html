@@ -1105,7 +1105,7 @@
 
           <div class="filter-bar">
             <!-- FILTRO DE PLATAFORMA (DIVISÃO CLARA) -->
-            <div class="chip-group" id="platFilterGroup">
+            <div class="chip-group" id="platFilterGroup" hidden>
               <button class="chip-btn" aria-pressed="true" data-plat="ALL">Todas as Plataformas</button>
               <button class="chip-btn" aria-pressed="false" data-plat="UTICKET">🎟️ Uticket (1 a cada 10)</button>
               <button class="chip-btn" aria-pressed="false" data-plat="SYMPLA">🎫 Sympla (Comissão 7%)</button>
@@ -1117,11 +1117,17 @@
               <button class="chip-btn" aria-pressed="false" data-orig="PROMOTER">👥 Promoters (Todos)</button>
               <button class="chip-btn" aria-pressed="false" data-orig="PREMIADOS_UTICKET">🎁 Uticket Premiados (Full Pass)</button>
               <button class="chip-btn" aria-pressed="false" data-orig="COMISSAO_SYMPLA">💰 Sympla Comissionados (7%)</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes Sympla</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="ANIVERSARIANTE">🎂 Aniversariantes (Sympla)</button>
               <button class="chip-btn" aria-pressed="false" data-orig="BDAY_LIBERADOS">🍾 Aniv. Liberados</button>
               <button class="chip-btn" aria-pressed="false" data-orig="BDAY_PENDENTES">⏳ Aniv. Pendentes</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="START_INC">🚀 Start Inc.</button>
-              <button class="chip-btn" aria-pressed="false" data-orig="ANTIGA_GESTAO">🏛️ Antiga Gestão</button>
+              <button class="chip-btn" aria-pressed="false" data-orig="MARKETING">📣 Marketing (Uticket)</button>
+            </div>
+
+            <!-- SUBFILTRO DE MARKETING: Start Inc. x Antiga Gestão -->
+            <div class="chip-group" id="mktSubGroup" hidden>
+              <button class="chip-btn" aria-pressed="true" data-mkt="MARKETING">Todo o marketing</button>
+              <button class="chip-btn" aria-pressed="false" data-mkt="START_INC">🚀 Start Inc.</button>
+              <button class="chip-btn" aria-pressed="false" data-mkt="ANTIGA_GESTAO">🏛️ Antiga Gestão</button>
             </div>
 
             <!-- BUSCA INSTANTÂNEA -->
@@ -1984,6 +1990,7 @@
       if(CUPOM_PLAT_FILTER !== 'ALL' && c.plataforma !== CUPOM_PLAT_FILTER && !(c.plataformas||[]).includes(CUPOM_PLAT_FILTER)) return false;
 
       // Filtros de Origem / Regras Especiais
+      if(CUPOM_ORIG_FILTER === 'MARKETING' && c.origem !== 'START_INC' && c.origem !== 'ANTIGA_GESTAO') return false;
       if(CUPOM_ORIG_FILTER === 'START_INC' && c.origem !== 'START_INC') return false;
       if(CUPOM_ORIG_FILTER === 'PROMOTER' && c.origem !== 'PROMOTER') return false;
       if(CUPOM_ORIG_FILTER === 'ANTIGA_GESTAO' && c.origem !== 'ANTIGA_GESTAO' && c.origem !== 'COMUNIDADE') return false;
@@ -2172,13 +2179,45 @@
     });
   }
 
+  // Filtro de plataforma só existe na aba Promoters (regras Uticket 1 a cada 10 / Sympla 7%).
+  // Aniversariantes são só Sympla; Marketing (Start Inc. e Antiga Gestão) é só Uticket.
+  function sincronizarFiltrosCupom(){
+    var o = CUPOM_ORIG_FILTER;
+    var ehMkt = (o === 'MARKETING' || o === 'START_INC' || o === 'ANTIGA_GESTAO');
+    var origG2 = $('origemFilterGroup');
+    if(origG2) [].slice.call(origG2.children).forEach(function(c){
+      var v = c.getAttribute('data-orig');
+      c.setAttribute('aria-pressed', (v === o || (ehMkt && v === 'MARKETING')) ? 'true' : 'false');
+    });
+    var pg = $('platFilterGroup');
+    if(pg){
+      pg.hidden = (o !== 'PROMOTER');
+      if(pg.hidden && CUPOM_PLAT_FILTER !== 'ALL'){
+        CUPOM_PLAT_FILTER = 'ALL';
+        [].slice.call(pg.children).forEach(function(c){ c.setAttribute('aria-pressed', c.getAttribute('data-plat') === 'ALL' ? 'true' : 'false'); });
+      }
+    }
+    var mg = $('mktSubGroup');
+    if(mg){
+      mg.hidden = !ehMkt;
+      [].slice.call(mg.children).forEach(function(c){ c.setAttribute('aria-pressed', c.getAttribute('data-mkt') === o ? 'true' : 'false'); });
+    }
+  }
   var origG = $('origemFilterGroup');
   if(origG){
     origG.addEventListener('click', function(e){
       var b = e.target.closest('button'); if(!b) return;
-      [].slice.call(origG.children).forEach(function(c){ c.setAttribute('aria-pressed','false'); });
-      b.setAttribute('aria-pressed','true');
       CUPOM_ORIG_FILTER = b.getAttribute('data-orig') || 'ALL';
+      sincronizarFiltrosCupom();
+      renderCuponsTable();
+    });
+  }
+  var mktG = $('mktSubGroup');
+  if(mktG){
+    mktG.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if(!b) return;
+      CUPOM_ORIG_FILTER = b.getAttribute('data-mkt') || 'MARKETING';
+      sincronizarFiltrosCupom();
       renderCuponsTable();
     });
   }
@@ -2194,6 +2233,7 @@
   window.renderCuponsTable = renderCuponsTable;
   window.setCupomOrigFilter = function(orig){
     CUPOM_ORIG_FILTER = orig;
+    sincronizarFiltrosCupom();
     renderCuponsTable();
   };
 
