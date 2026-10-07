@@ -2559,3 +2559,20 @@
   .card{ padding-block:9px; } .content{ padding-top:10px; }
 }
 </style>
+
+<style>
+/* TELA_ULTRAWIDE: em 3440 a Visão geral usa duas colunas (números ao lado dos setores etc.) */
+@media (min-width:2400px){
+  section[data-view="overview"]:not([hidden]){ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:26px;
+    grid-template-areas:"metas metas" "kpi set" "exh cross" "ext cross" "fontes fontes"; align-items:start; }
+  section[data-view="overview"] > *{ margin:0 !important; min-width:0; }
+  section[data-view="overview"] > #metas{ grid-area:metas; }
+  section[data-view="overview"] > .grid.g4:not(#setores){ grid-area:kpi; }
+  section[data-view="overview"] > #setores{ grid-area:set; }
+  section[data-view="overview"] > #extrasHead{ grid-area:exh; align-self:end; }
+  section[data-view="overview"] > #extras{ grid-area:ext; }
+  section[data-view="overview"] > .grid.g2:not(#extras){ grid-area:cross; align-self:stretch; }
+  section[data-view="overview"] > #fontesCard{ grid-area:fontes; }
+  section[data-view="overview"] > #setores .card, section[data-view="overview"] > .grid.g4:not(#setores) .card{ height:100%; }
+}
+</style>
