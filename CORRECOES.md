@@ -187,3 +187,4 @@
 
 ## 20. Aba Recebimentos removida — 07/10
 - A pedido do Evandro, a sub-aba "Recebimentos" saiu do Faturamento (botão removido; o bloco fica escondido no HTML). Quem tinha essa aba salva no navegador volta para "Resumo e metas".
+- CUPOMGUTO (Uticket) e GUTO (Sympla) são o mesmo cupom: `ALIAS_CUPOM` no `_worker.js` junta os dois numa linha só ("Uticket + Sympla"). Novos pares: adicionar em `ALIAS_CUPOM`.

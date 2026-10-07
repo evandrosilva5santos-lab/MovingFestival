@@ -1903,7 +1903,7 @@
         if(c.origem !== 'PROMOTER') return false;
       }
 
-      if(CUPOM_PLAT_FILTER !== 'ALL' && c.plataforma !== CUPOM_PLAT_FILTER) return false;
+      if(CUPOM_PLAT_FILTER !== 'ALL' && c.plataforma !== CUPOM_PLAT_FILTER && !(c.plataformas||[]).includes(CUPOM_PLAT_FILTER)) return false;
 
       // Filtros de Origem / Regras Especiais
       if(CUPOM_ORIG_FILTER === 'START_INC' && c.origem !== 'START_INC') return false;
@@ -2012,7 +2012,7 @@
       return '<tr>' +
         '<td><b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b></td>' +
         '<td><span class="badge-orig ' + oCls + '">' + oLbl + '</span></td>' +
-        '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='UTICKET'?'Uticket':'Sympla') + '</span></td>' +
+        '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='AMBAS'?'Uticket + Sympla':(c.plataforma==='UTICKET'?'Uticket':'Sympla')) + '</span></td>' +
         '<td style="font-size:12px;color:var(--fg-muted)">' + esc(cNome) + '</td>' +
         '<td>' + num(c.pedidos) + '</td>' +
         '<td><b style="color:var(--fg)">' + num(c.total) + '</b></td>' +

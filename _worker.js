@@ -90,9 +90,17 @@ async function buscarCuponsNuvem(env) {
   }
 }
 
+// Mesmo cupom com nomes diferentes em cada ticketeira -> nome único (mostrado somado)
+const ALIAS_CUPOM = { CUPOMGUTO: 'GUTO' };
+function nomeCupom(raw) {
+  const code = String(raw || '').trim();
+  return ALIAS_CUPOM[code.toUpperCase()] || code;
+}
+const CUPOM_UNIFICADO = new Set(Object.values(ALIAS_CUPOM));
+
 function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
-    const code = String(c.cupom || '').trim();
+    const code = nomeCupom(c.cupom);
     const { origem, canal, grupo, gestao } = classifyCupom(code);
     return { cupom: code, plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
              receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
@@ -106,11 +114,13 @@ async function consolidateLiveSources(env) {
 
   const map = new Map();
   for (const c of [...utCupons, ...syCupons]) {
-    const k = `${c.cupom}|${c.plataforma}`;
+    const unif = CUPOM_UNIFICADO.has(c.cupom.toUpperCase());
+    const k = unif ? `${c.cupom.toUpperCase()}|*` : `${c.cupom}|${c.plataforma}`;
     if (!map.has(k)) {
-      map.set(k, { ...c });
+      map.set(k, { ...c, plataformas: [c.plataforma] });
     } else {
       const ex = map.get(k);
+      if (!ex.plataformas.includes(c.plataforma)) { ex.plataformas.push(c.plataforma); ex.plataforma = 'AMBAS'; }
       ex.total += c.total;
       ex.pedidos += c.pedidos;
       ex.receita += c.receita;
