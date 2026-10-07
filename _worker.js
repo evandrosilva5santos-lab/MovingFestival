@@ -61,7 +61,9 @@ const MAPA_ANALISE = {
 };
 const semAcento = (x) => String(x || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 // Regras por padrão de nome (informadas pela Carol, 07/10)
+const AFILIADOS = ['TRIPTRANCE', 'TRIP', 'NATANIELE5', 'KIOMA', 'KIOMA2', 'HELENA15', 'GUTO', 'GUTO2', 'DALETOUR', 'ALEMOA', 'FESTASRS'];
 function analisePorRegra(u) {
+  if (AFILIADOS.includes(u)) return { grupo: 'AFILIADOS', canal: 'AFILIADO_PROGRAMA', origem: 'PARCERIA', rotulo: u === 'FESTASRS' ? 'Programa de afiliados (Lais)' : 'Programa de afiliados' };
   if (u.includes('DIVULGADOR')) return { grupo: 'FRAN', canal: 'EQUIPE_FRAN', origem: 'EQUIPE_FRAN', rotulo: 'Equipe Fran Saval (divulgador + nome, gerado pela Júlia)' };
   if (u.startsWith('BDAY')) return { grupo: 'ATENDIMENTO', canal: 'ANIVERSARIANTE', origem: 'ANIVERSARIANTE', rotulo: 'Aniversariante · atendimento WhatsApp (Carol)' };
   if (u.startsWith('MEIA')) return { grupo: 'ATENDIMENTO', canal: 'MEIA_ENTRADA', origem: 'MEIA_ENTRADA', rotulo: 'Meia-entrada · atendimento WhatsApp (Carol)' };
@@ -190,18 +192,21 @@ async function consolidateLiveSources(env) {
       const k = c.cupom.toUpperCase();
       const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[semAcento(k)] || analisePorRegra(semAcento(k)) || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
       r.ingressos += c.total; r.receita += c.receita; r.pedidos += c.pedidos;
-      if (!r.plataformas.includes(c.plataforma)) r.plataformas.push(c.plataforma);
+      for (const pl of (c.plataformas || [c.plataforma])) if (!r.plataformas.includes(pl)) r.plataformas.push(pl);
       m.set(k, r);
     }
     // cupons do mapa que ainda não venderam aparecem zerados
     return Array.from(m.values());
   };
   const canaisAnalise = {};
-  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA', 'FRAN', 'ATENDIMENTO', 'DESCONHECIDO']) {
+  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA', 'AFILIADOS', 'FRAN', 'ATENDIMENTO', 'DESCONHECIDO']) {
     const lst = combined.filter(c => c.grupo === g);
     const cps = porCupom(lst);
     for (const [k, v] of Object.entries(MAPA_ANALISE)) {
       if (v.grupo === g && !cps.some(x => semAcento(x.cupom) === k)) cps.push({ cupom: k, canal: v.canal, gestao: v.gestao || null, rotulo: v.rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
+    }
+    if (g === 'AFILIADOS') for (const k of AFILIADOS) {
+      if (!cps.some(x => semAcento(x.cupom) === k)) cps.push({ cupom: k, canal: 'AFILIADO_PROGRAMA', gestao: null, rotulo: analisePorRegra(k).rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
     }
     canaisAnalise[g.toLowerCase()] = { ...soma(lst), cupons: cps.sort((a, b) => b.ingressos - a.ingressos) };
   }

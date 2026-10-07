@@ -189,3 +189,4 @@
 - A pedido do Evandro, a sub-aba "Recebimentos" saiu do Faturamento (botão removido; o bloco fica escondido no HTML). Quem tinha essa aba salva no navegador volta para "Resumo e metas".
 - CUPOMGUTO (Uticket) e GUTO (Sympla) são o mesmo cupom: `ALIAS_CUPOM` no `_worker.js` junta os dois numa linha só ("Uticket + Sympla"). Novos pares: adicionar em `ALIAS_CUPOM`.
 - 07/10 (Carol): FULLDIVULGAÇÃO e GOLDDIVULGAÇÃO = equipe interna Moving; "DIVULGADOR + nome" = equipe Fran Saval (Júlia gera); BDAY e MEIA = atendimento WhatsApp da Carol; 5035 e códigos "___…" = origem não identificada. Regras em `analisePorRegra` (`_worker.js`). Acentos são ignorados na comparação.
+- 07/10: Programa de afiliados = TRIPTRANCE, TRIP, NATANIELE5, KIOMA, KIOMA2, HELENA15, GUTO, GUTO2, DALETOUR, ALEMOA, FESTASRS (Lais). Lista `AFILIADOS` no `_worker.js`; origem PARCERIA (card renomeado "Programa de afiliados"). NATANIELE (Uticket, sem o 5) continua promoter.
