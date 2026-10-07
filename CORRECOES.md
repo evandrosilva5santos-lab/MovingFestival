@@ -101,3 +101,12 @@
 - Custos e investimentos: lista editável (item, categoria, valor, pago/previsto) com Editar / + Adicionar / Salvar / Cancelar. Premissas ganharam "custo do bar (%)" e "taxa das ticketeiras (%)".
 - Tudo fica em `moving_excluir_estimativas.dados` (`custos`, `cmv_bar`, `taxa_ingresso` + premissas). A RPC `moving_excluir_estimativas_salvar` **mescla** com o que já está salvo, então salvar só os custos não apaga as premissas e vice-versa.
 - Ponto de equilíbrio = custos cadastrados ÷ lucro que cada ingresso a mais traz (ingresso + estacionamento + bar − custo do bar − taxa).
+
+## 13. Divergência de faturamento (Vendas por Dia × Faturamento) — corrigida
+- Causa: Vendas por Dia somava **camping e copo** na quantidade e na receita, e o ticket médio dividia por todos os itens (incluindo cortesias/camping).
+- Regra agora (fonte única = `moving_excluir_resumo()`):
+  - **Quantidade de ingressos** (Visão geral e Vendas por Dia com "Todos os setores"): só `tipo = INGRESSO`.
+  - **Faturamento** (aba Faturamento e "Faturamento no período" em Vendas por Dia): ingressos pagos **+ camping + copo** = receita real total.
+  - **Ticket médio do ingresso** = receita de ingressos pagos ÷ ingressos pagos (em todas as telas).
+- `vendas_diarias` agora vem só do RPC (fuso de São Paulo) e traz `tipo` e `pagos`; `extras` traz `pagos` e `receita`.
+- Aba Faturamento dividida em sub-abas: **Resumo e metas** (KPIs reais, simulador "e se bater a meta", DRE, projeção por meta, tendência), **Receitas extras** (premissas de estacionamento/bar) e **Despesas** (lista editável). Despesa de R$ 2.000.000 cadastrada como **exemplo fictício** — substituir.

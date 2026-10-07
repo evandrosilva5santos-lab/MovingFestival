@@ -273,10 +273,12 @@ async function getFullResumo(env, supabaseUrl, supabaseAnon) {
           dia = v.data_compra.slice(0, 10);
         }
         const plat = v.plataforma || 'OUTROS';
-        const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
+        const tipo = v.tipo || 'INGRESSO';
+        const setor = v.setor || tipo;
         const key = `${dia}|${plat}|${setor}`;
-        if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
+        if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, tipo, total: 0, pagos: 0, receita: 0 };
         aggr[key].total += 1;
+        if ((Number(v.valor) || 0) > 0) aggr[key].pagos += 1;
         aggr[key].receita += (Number(v.valor) || 0);
       }
       data.vendas_diarias = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
