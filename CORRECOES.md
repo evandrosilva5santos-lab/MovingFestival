@@ -110,3 +110,9 @@
   - **Ticket médio do ingresso** = receita de ingressos pagos ÷ ingressos pagos (em todas as telas).
 - `vendas_diarias` agora vem só do RPC (fuso de São Paulo) e traz `tipo` e `pagos`; `extras` traz `pagos` e `receita`.
 - Aba Faturamento dividida em sub-abas: **Resumo e metas** (KPIs reais, simulador "e se bater a meta", DRE, projeção por meta, tendência), **Receitas extras** (premissas de estacionamento/bar) e **Despesas** (lista editável). Despesa de R$ 2.000.000 cadastrada como **exemplo fictício** — substituir.
+
+## 14. Faturamento: custo do evento, caixa e projeção do dia do evento
+- Gráficos de tendência (vendas por dia/hora/semana) **removidos** da aba Faturamento (não eram usados). As chamadas `line/barv` ficaram protegidas com `if($('chartX'))`.
+- Topo do Resumo: **Total faturado** (ingressos + camping + copo), **Custo atual do evento**, **Total pago**, **Falta pagar**, **Saldo (faturado − pago)** e barra de pagamento.
+- Despesas têm **valor total** e **já pago** (pagamento parcial), botão **Quitar**, situação automática (Pago / Parcial / A pagar).
+- **Projeção no dia do evento** = ingressos atuais + média diária dos últimos N dias completos × dias até a data do evento. Data do evento (padrão 17/10/2026) e N (padrão 7) editáveis em Receitas extras. Camping e copo projetados na mesma proporção dos ingressos.
