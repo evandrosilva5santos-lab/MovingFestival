@@ -496,7 +496,7 @@
             <div><small>Média por hora ativa</small><b id="ondaMedia">—</b></div>
           </div>
           <div class="chart" id="chartOnda"></div>
-          <p class="onda-dica">Clique numa barra do gráfico acima (ou use ‹ ›) para ver a onda daquele dia. Linha tracejada: média por hora dos dias do filtro. Os filtros de plataforma e setor valem aqui também.</p>
+          <p class="onda-dica">Passe o mouse na onda para ver as vendas de cada hora. Clique numa barra do gráfico acima (ou use ‹ ›) para trocar o dia. Linha tracejada: média por hora dos dias do filtro. Os filtros de plataforma e setor valem aqui também.</p>
         </div>
 
         <!-- TABELA ANALÍTICA DIA A DIA -->
@@ -2085,7 +2085,8 @@
     for(i=0;i<24;i++){ H[i]=0; M[i]=0; }
     dias.forEach(function(x){ dset[x]=1; });
     var temHora = false;
-    f.forEach(function(r){ var k = String(r.dia).slice(0,10); if(k===dia){ H[r.hora]+=r.total; temHora = true; } if(dset[k]) M[r.hora]+=r.total; });
+    var HP = {}; // ONDA_HOVER
+    f.forEach(function(r){ var k = String(r.dia).slice(0,10); if(k===dia){ H[r.hora]+=r.total; temHora = true; var pl = String(r.plataforma||'').toUpperCase(); if(pl){ HP[r.hora] = HP[r.hora] || {}; HP[r.hora][pl] = (HP[r.hora][pl]||0) + r.total; } } if(dset[k]) M[r.hora]+=r.total; });
     var nd = Object.keys(dset).length || 1;
     for(i=0;i<24;i++) M[i] = M[i]/nd;
     var tot = H.reduce(function(a,b){ return a+b; },0);
@@ -2123,13 +2124,55 @@
     }
     s += marca(pk, 'var(--onda-pico)', 'Pico '+pk+'h · '+n(H[pk]), true);
     if(vl !== null) s += marca(vl, 'var(--onda-vale)', 'Vale '+vl+'h · '+n(H[vl]), Y(H[vl]) > B-26);
+    s += '<g id="ondaGuia" style="display:none;pointer-events:none"><line id="ondaGuiaL" y1="'+T+'" y2="'+B+'" stroke="var(--fg-faint)" stroke-width="1" stroke-dasharray="3 3"/><circle id="ondaGuiaM" r="4" fill="var(--surface)" stroke="var(--fg-faint)" stroke-width="1.5"/><circle id="ondaGuiaC" r="6" fill="var(--accent)" stroke="var(--surface)" stroke-width="2.5"/></g>';
     for(i=0;i<24;i++){
       var x0 = X(i) - (W-L-R)/46;
-      s += '<rect x="'+x0+'" y="'+T+'" width="'+((W-L-R)/23)+'" height="'+(B-T)+'" fill="transparent"><title>'+i+'h: '+n(H[i])+' vendas · média do período '+M[i].toLocaleString('pt-BR',{maximumFractionDigits:1})+'</title></rect>';
+      s += '<rect class="onda-hit" data-h="'+i+'" x="'+x0+'" y="'+(T-20)+'" width="'+((W-L-R)/23)+'" height="'+(B-T+40)+'" fill="transparent"/>';
     }
-    s += '</svg>';
+    s += '</svg><div class="onda-tip" id="ondaTip" hidden></div>';
+    window.__ondaHover = { H:H, M:M, HP:HP, dia:dia, tot:tot, pk:pk, X:X, Y:Y, W:W, Ht:Ht };
     $('chartOnda').innerHTML = s;
   };
+
+  // Passar o mouse (ou o dedo) na onda: mostra as vendas daquela hora
+  (function(){
+    var NOMES = { UTICKET:'Uticket', SYMPLA:'Sympla', WIX:'Wix' };
+    var CORP = { UTICKET:'#2B6CF6', SYMPLA:'#F97316', WIX:'#10B981' };
+    function esconder(){ var t = $('ondaTip'), g = $('ondaGuia'); if(t) t.hidden = true; if(g) g.style.display = 'none'; }
+    function mostrar(h){
+      var o = window.__ondaHover, box = $('chartOnda'), svg = box && box.querySelector('svg'), t = $('ondaTip');
+      if(!o || !svg || !t) return;
+      var x = o.X(h), y = o.Y(o.H[h]), ym = o.Y(o.M[h]);
+      $('ondaGuia').style.display = '';
+      $('ondaGuiaL').setAttribute('x1', x); $('ondaGuiaL').setAttribute('x2', x);
+      $('ondaGuiaC').setAttribute('cx', x); $('ondaGuiaC').setAttribute('cy', y);
+      $('ondaGuiaM').setAttribute('cx', x); $('ondaGuiaM').setAttribute('cy', ym);
+      var v = o.H[h], m = o.M[h], pct = o.tot ? Math.round(v / o.tot * 100) : 0;
+      var dif = m ? Math.round((v - m) / m * 100) : null;
+      var plats = Object.keys(o.HP[h] || {}).sort(function(a,b){ return o.HP[h][b] - o.HP[h][a]; });
+      t.innerHTML =
+        '<div class="ot-h">' + String(h).padStart(2,'0') + 'h – ' + String((h+1)%24).padStart(2,'0') + 'h' + (h === o.pk ? ' <span class="ot-pico">pico</span>' : '') + '</div>' +
+        '<div class="ot-v"><b>' + n(v) + '</b> ' + (v === 1 ? 'venda' : 'vendas') + ' <small>' + pct + '% do dia</small></div>' +
+        (plats.length ? '<div class="ot-p">' + plats.map(function(p){ return '<span><i style="background:' + (CORP[p]||'var(--fg-faint)') + '"></i>' + (NOMES[p]||p) + ' <b>' + n(o.HP[h][p]) + '</b></span>'; }).join('') + '</div>' : '') +
+        '<div class="ot-m">Média do período: ' + m.toLocaleString('pt-BR',{maximumFractionDigits:1}) +
+          (dif === null ? '' : ' · <b style="color:' + (dif >= 0 ? 'var(--onda-pico)' : 'var(--onda-vale)') + '">' + (dif >= 0 ? '+' : '') + dif + '%</b>') + '</div>';
+      t.hidden = false;
+      var r = svg.getBoundingClientRect(), bx = box.getBoundingClientRect();
+      var px = (x / o.W) * r.width + (r.left - bx.left), py = (y / o.Ht) * r.height + (r.top - bx.top);
+      var tw = t.offsetWidth, th = t.offsetHeight;
+      var left = px + 14; if(left + tw > bx.width) left = px - tw - 14; if(left < 0) left = 0;
+      var top = py - th - 12; if(top < 0) top = py + 14;
+      t.style.left = left + 'px'; t.style.top = top + 'px';
+    }
+    function mover(e){
+      var hit = e.target.closest && e.target.closest('#chartOnda .onda-hit');
+      if(hit) mostrar(+hit.getAttribute('data-h'));
+    }
+    document.addEventListener('pointermove', mover);
+    document.addEventListener('pointerdown', mover);
+    document.addEventListener('pointerleave', esconder, true);
+    document.addEventListener('pointerover', function(e){ if($('chartOnda') && !$('chartOnda').contains(e.target)) esconder(); });
+  })();
 
   document.addEventListener('click', function(e){
     var r = e.target.closest && e.target.closest('#chartDiarioEvolucao rect[data-dia]');
@@ -2250,3 +2293,21 @@
   var b = h.querySelector('button'); if(b && tema) b.addEventListener('click', function(){ tema.click(); });
 })();
 </script>
+
+<style>
+  /* ONDA_HOVER */
+  #chartOnda{ position:relative; }
+  #chartOnda .onda-hit{ cursor:crosshair; }
+  .onda-tip{ position:absolute; z-index:5; min-width:170px; max-width:240px; pointer-events:none;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px 12px;
+    box-shadow:0 10px 28px rgba(15,23,42,.14); font-size:12px; color:var(--fg-muted); }
+  .onda-tip .ot-h{ font-weight:700; color:var(--fg); font-size:12px; margin-bottom:2px; }
+  .onda-tip .ot-pico{ font-size:10px; font-weight:700; color:var(--onda-pico); background:color-mix(in srgb, var(--onda-pico) 12%, transparent); padding:1px 6px; border-radius:999px; margin-left:4px; }
+  .onda-tip .ot-v b{ font-family:var(--font-display); font-size:20px; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .onda-tip .ot-v small{ color:var(--fg-faint); margin-left:4px; }
+  .onda-tip .ot-p{ display:flex; flex-wrap:wrap; gap:4px 10px; margin:6px 0 4px; }
+  .onda-tip .ot-p span{ display:inline-flex; align-items:center; gap:5px; }
+  .onda-tip .ot-p i{ width:7px; height:7px; border-radius:50%; display:inline-block; }
+  .onda-tip .ot-p b{ color:var(--fg); }
+  .onda-tip .ot-m{ border-top:1px solid var(--border); padding-top:6px; margin-top:4px; font-size:11.5px; }
+</style>
