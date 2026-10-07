@@ -35,6 +35,7 @@ function classifyCupom(cupomRaw) {
   if (ac) {
     canal = ac.canal;
     if (ac.grupo === 'ORGANICO') origem = 'ORGANICO';
+    if (ac.grupo === 'INTERNA') origem = 'INTERNA';
   }
   return { origem, canal, grupo: ac ? ac.grupo : null, gestao: ac ? ac.gestao : null };
 }
@@ -46,7 +47,8 @@ const MAPA_ANALISE = {
   STARTADS:       { grupo: 'ADS', canal: 'ADS_GESTAO_NOVA',   gestao: 'NOVA',   rotulo: 'Venda 100% ADS · gestão nova' },
   MOVINGMANIACO15:{ grupo: 'ADS', canal: 'ADS_GESTAO_ANTIGA', gestao: 'ANTIGA', rotulo: 'Venda 100% ADS · gestão antiga' },
   MOVINGBIO:      { grupo: 'ORGANICO', canal: 'ORGANICO_BIO',      rotulo: 'Orgânico · link na bio' },
-  MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' }
+  MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' },
+  ANINHA:         { grupo: 'INTERNA', canal: 'INTERNA_PROSPECCAO', rotulo: 'Lista interna Moving · prospecção direta' }
 };
 function analiseCanal(u) {
   const k = String(u || '').toUpperCase().replace(/\s+/g, '');
@@ -165,7 +167,7 @@ async function consolidateLiveSources(env) {
     return Array.from(m.values());
   };
   const canaisAnalise = {};
-  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO']) {
+  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA']) {
     const lst = combined.filter(c => c.grupo === g);
     const cps = porCupom(lst);
     for (const [k, v] of Object.entries(MAPA_ANALISE)) {

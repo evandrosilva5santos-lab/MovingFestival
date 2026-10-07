@@ -972,10 +972,10 @@
 
         <!-- ANALISE_ADS: cupons por canal (mapa do Evandro) -->
         <div class="card" id="analiseAdsCard" style="margin-bottom:16px">
-          <div class="ttl">Análise de canais por cupom <span class="tag">ADS · WhatsApp · Orgânico</span></div>
-          <div class="grid g3" id="analiseAdsGrupos" style="margin-top:12px"></div>
+          <div class="ttl">Análise de canais por cupom <span class="tag">ADS · WhatsApp · Orgânico · Interna</span></div>
+          <div class="grid g4" id="analiseAdsGrupos" style="margin-top:12px"></div>
           <div class="tscroll" style="margin-top:14px"><table class="fat-tab" id="analiseAdsTab"></table></div>
-          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico). Só ingressos confirmados; receita líquida.</p>
+          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico) · ANINHA = lista interna Moving (prospecção direta). Só ingressos confirmados; receita líquida.</p>
         </div>
 
         <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
@@ -1405,6 +1405,7 @@
     'ADS_GESTAO_ANTIGA': 'Venda 100% ADS · gestão antiga',
     'ORGANICO_BIO': 'Orgânico · link na bio',
     'ORGANICO_MANYCHAT': 'Orgânico · automação ManyChat',
+    'INTERNA_PROSPECCAO': 'Lista interna Moving · prospecção direta',
     'ANIVERSARIANTE': 'Aniversariante (Sympla)',
     'PARCERIA_FESTASRS': 'Parceria Festasrs',
     'PARCERIA_KIOMA': 'Parceria Kioma',
@@ -1780,7 +1781,8 @@
       var G = [
         {k:'ads', nome:'ADS (venda 100% ADS)', cor:'#2B6CF6'},
         {k:'whatsapp', nome:'Grupos do WhatsApp', cor:'#10B981'},
-        {k:'organico', nome:'Orgânico', cor:'#8B5CF6'}
+        {k:'organico', nome:'Orgânico', cor:'#8B5CF6'},
+        {k:'interna', nome:'Lista interna Moving', cor:'#E08A00'}
       ];
       var totIng = G.reduce(function(a,g){ return a + ((ca[g.k]||{}).ingressos||0); },0) || 1;
       $('analiseAdsGrupos').innerHTML = G.map(function(g){
@@ -1794,7 +1796,7 @@
         }
         var pct = ((x.ingressos||0)/totIng*100).toFixed(1).replace('.',',');
         return '<div class="card" style="border-top:3px solid ' + g.cor + '">' +
-          '<div class="ttl">' + g.nome + ' <span class="tag">' + pct + '% dos 3 canais</span></div>' +
+          '<div class="ttl">' + g.nome + ' <span class="tag">' + pct + '% dos canais</span></div>' +
           '<div class="val tnum" style="font-family:var(--font-display);font-size:22px;font-weight:800">' + num(x.ingressos||0) + ' ing.</div>' +
           '<div class="sub" style="font-size:11.5px;color:var(--fg-muted)">' + brl(x.receita||0) + ' · ' + num(x.pedidos||0) + ' pedidos</div>' +
           '<div class="sub" style="font-size:11.5px;color:var(--fg-muted);margin-top:6px;line-height:1.5">' + sub + '</div>' +
