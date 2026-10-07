@@ -1414,7 +1414,7 @@
     window.__movingDados = d; setTimeout(function(){ if(window.movingOnda) window.movingOnda(); }, 0);
     if(!vendas.length && d.por_dia){
       vendas = (d.por_dia||[]).map(function(p){
-        return { dia: p.dia, plataforma: 'UTICKET', setor: 'FULLPASS', total: p.total, receita: p.total * 130 };
+        return { dia: p.dia, plataforma: 'UTICKET', setor: 'FULLPASS', total: p.total, receita: p.receita || 0 };
       });
     }
 

@@ -393,7 +393,11 @@ def get_vendas_diarias():
             dt = s.get('data_compra')
             if not dt:
                 continue
-            dia = dt[:10]
+            try:
+                dt_obj = datetime.fromisoformat(dt)
+                dia = dt_obj.astimezone(TZ_BR).strftime('%Y-%m-%d')
+            except Exception:
+                dia = dt[:10]
             plat = s.get('plataforma') or 'OUTRA'
             tipo = s.get('tipo') or 'INGRESSO'
             setor = s.get('setor') or (tipo if tipo in ['CAMPING', 'COPO'] else 'OUTROS')
@@ -520,7 +524,8 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 resumo_obj['outras_acoes'] = CUPONS_CACHE.get('outras_acoes_summary', {})
                 resumo_obj['plataformas_coupons'] = CUPONS_CACHE.get('plataformas_summary', {})
                 resumo_obj['regioes'] = CUPONS_CACHE.get('regioes_summary', {})
-                resumo_obj['vendas_diarias'] = get_vendas_diarias()
+                if not resumo_obj.get('vendas_diarias'):
+                    resumo_obj['vendas_diarias'] = get_vendas_diarias()
                 self.wfile.write(json.dumps(resumo_obj).encode('utf-8'))
             except Exception as e:
                 err_resp = json.dumps({'error': str(e)}).encode('utf-8')
@@ -590,7 +595,8 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                 resumo_data['outras_acoes'] = CUPONS_CACHE.get('outras_acoes_summary', {})
                 resumo_data['plataformas_coupons'] = CUPONS_CACHE.get('plataformas_summary', {})
                 resumo_data['regioes'] = CUPONS_CACHE.get('regioes_summary', {})
-                resumo_data['vendas_diarias'] = get_vendas_diarias()
+                if not resumo_data.get('vendas_diarias'):
+                    resumo_data['vendas_diarias'] = get_vendas_diarias()
                     
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json; charset=utf-8')

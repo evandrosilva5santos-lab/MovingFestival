@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-10-06T23:32:05.313118-03:00",
+  "gerado_em": "2026-10-06T23:47:30.764518-03:00",
   "evento": "3419289",
   "api": {
     "ingressos_confirmados": 815,
@@ -77,26 +77,26 @@
   "valor_diferente": {
     "qtd": 303,
     "exemplos": [
-      "SYMPLA-UV1S-XZ-6XSS",
-      "SYMPLA-UUY4-JU-J5Z4",
+      "SYMPLA-UVKZ-A9-E4D6",
       "SYMPLA-UVPG-N7-8MKQ",
-      "SYMPLA-UV7B-QX-8WDT",
-      "SYMPLA-UVL3-MU-SNBX",
-      "SYMPLA-UU72-MK-C7NV",
-      "SYMPLA-UVHP-2C-M1ZU",
-      "SYMPLA-URTM-F4-88TE",
-      "SYMPLA-UUHD-CC-N0ZP",
-      "SYMPLA-UZDX-7M-B2NW",
-      "SYMPLA-UV7B-MH-4JWA",
-      "SYMPLA-URTF-QU-BTUF",
-      "SYMPLA-URLT-RK-0Q42",
-      "SYMPLA-UVPW-L4-NL0N",
-      "SYMPLA-UVPS-T9-LP3Z",
-      "SYMPLA-UVZW-CR-SRMW",
-      "SYMPLA-UUSG-67-APTV",
-      "SYMPLA-URAN-CN-R2XM",
-      "SYMPLA-UR6N-P3-WV5X",
-      "SYMPLA-UUC6-NE-3C32"
+      "SYMPLA-UUR5-BA-XVUT",
+      "SYMPLA-URLR-Z7-K01S",
+      "SYMPLA-UUKP-3T-9TLT",
+      "SYMPLA-UV5G-CT-P3FQ",
+      "SYMPLA-URJC-UF-VVM1",
+      "SYMPLA-URK4-TN-TQJU",
+      "SYMPLA-UUGZ-TH-EL0U",
+      "SYMPLA-URH5-6T-Y24S",
+      "SYMPLA-UUPM-VF-W251",
+      "SYMPLA-UUUH-SF-3XG9",
+      "SYMPLA-UURN-GZ-KKN5",
+      "SYMPLA-UVQA-3N-FF2D",
+      "SYMPLA-URX5-ZX-H7WV",
+      "SYMPLA-UUF8-PZ-J5MD",
+      "SYMPLA-UVAQ-VM-BHQK",
+      "SYMPLA-USZC-1L-NCPK",
+      "SYMPLA-URHC-8L-V8MH",
+      "SYMPLA-USDK-FH-1MJ1"
     ]
   },
   "setor_diferente": {

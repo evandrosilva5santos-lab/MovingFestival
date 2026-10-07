@@ -250,28 +250,37 @@ async function getFullResumo(env, supabaseUrl, supabaseAnon) {
     data.lotes = normalizarLotes(data.lotes);
   }
 
-  // Buscar dados de vendas diárias
-  const diarioRes = await fetch(`${supabaseUrl}/rest/v1/moving_excluir_vendas?select=data_compra,plataforma,setor,tipo,valor&status=eq.CONFIRMADO&limit=10000`, {
-    headers: {
-      'apikey': supabaseAnon,
-      'Authorization': `Bearer ${supabaseAnon}`
-    }
-  });
+  // Vendas diárias já vêm calculadas com fuso de Brasília pelo RPC moving_excluir_resumo.
+  // Somente faz fallback se o RPC vier vazio:
+  if (!data.vendas_diarias || !data.vendas_diarias.length) {
+    const diarioRes = await fetch(`${supabaseUrl}/rest/v1/moving_excluir_vendas?select=data_compra,plataforma,setor,tipo,valor&status=eq.CONFIRMADO&data_compra=not.is.null&order=data_compra.desc&limit=1000`, {
+      headers: {
+        'apikey': supabaseAnon,
+        'Authorization': `Bearer ${supabaseAnon}`
+      }
+    });
 
-  if (diarioRes.ok) {
-    const vendas = await diarioRes.json();
-    const aggr = {};
-    for (const v of vendas) {
-      if (!v.data_compra) continue;
-      const dia = v.data_compra.slice(0, 10);
-      const plat = v.plataforma || 'OUTROS';
-      const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
-      const key = `${dia}|${plat}|${setor}`;
-      if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
-      aggr[key].total += 1;
-      aggr[key].receita += (Number(v.valor) || 0);
+    if (diarioRes.ok) {
+      const vendas = await diarioRes.json();
+      const aggr = {};
+      for (const v of vendas) {
+        if (!v.data_compra) continue;
+        let dia;
+        try {
+          const dt = new Date(v.data_compra);
+          dia = new Intl.DateTimeFormat('fr-CA', { timeZone: 'America/Sao_Paulo' }).format(dt);
+        } catch (e) {
+          dia = v.data_compra.slice(0, 10);
+        }
+        const plat = v.plataforma || 'OUTROS';
+        const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
+        const key = `${dia}|${plat}|${setor}`;
+        if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
+        aggr[key].total += 1;
+        aggr[key].receita += (Number(v.valor) || 0);
+      }
+      data.vendas_diarias = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
     }
-    data.vendas_diarias = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
   }
 
   // Puxar consolidado de cupons e ações ao vivo na nuvem
@@ -346,26 +355,8 @@ export default {
     // 2. Endpoint /api/vendas_diarias
     if (url.pathname === '/api/vendas_diarias') {
       try {
-        const diarioRes = await fetch(`${supabaseUrl}/rest/v1/moving_excluir_vendas?select=data_compra,plataforma,setor,tipo,valor&status=eq.CONFIRMADO&limit=10000`, {
-          headers: {
-            'apikey': supabaseAnon,
-            'Authorization': `Bearer ${supabaseAnon}`
-          }
-        });
-        const vendas = diarioRes.ok ? await diarioRes.json() : [];
-        const aggr = {};
-        for (const v of vendas) {
-          if (!v.data_compra) continue;
-          const dia = v.data_compra.slice(0, 10);
-          const plat = v.plataforma || 'OUTROS';
-          const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
-          const key = `${dia}|${plat}|${setor}`;
-          if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
-          aggr[key].total += 1;
-          aggr[key].receita += (Number(v.valor) || 0);
-        }
-        const vd = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
-        return new Response(JSON.stringify({ vendas_diarias: vd }), {
+        const full = await getFullResumo(env, supabaseUrl, supabaseAnon);
+        return new Response(JSON.stringify({ vendas_diarias: full.vendas_diarias || [] }), {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
