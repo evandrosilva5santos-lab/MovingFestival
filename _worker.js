@@ -376,6 +376,12 @@ export default {
         const login = String(body.login || '').trim();
         const senha = String(body.senha || '').trim();
         const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_login', { p_login: login, p_senha: senha });
+        if (!res.ok && res.erro && (res.erro.includes('PGRST202') || res.erro.includes('moving_excluir_login'))) {
+          return new Response(JSON.stringify({
+            ok: false,
+            erro: 'Banco de dados pendente: execute o script migration_auth.sql no SQL Editor do Supabase para ativar o login.'
+          }), { status: 503, headers: corsHeaders() });
+        }
         const status = res.ok ? 200 : 401;
         return new Response(JSON.stringify(res), { status, headers: corsHeaders() });
       } catch (err) {

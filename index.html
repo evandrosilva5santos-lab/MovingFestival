@@ -4089,6 +4089,9 @@
           if(window.movingRecarregarDados) window.movingRecarregarDados();
         } else {
           var erroMsg = (res.data && (res.data.erro || res.data.error)) || 'Falha ao autenticar. Verifique seus dados.';
+          if (String(erroMsg).indexOf('PGRST202') > -1 || String(erroMsg).indexOf('moving_excluir_login') > -1) {
+            erroMsg = 'Banco de dados pendente: execute o script migration_auth.sql no SQL Editor do Supabase para ativar o login.';
+          }
           alertBox.textContent = erroMsg;
           alertBox.style.display = 'block';
           $('loginPass').value = '';
