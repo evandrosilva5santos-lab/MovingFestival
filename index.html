@@ -2075,6 +2075,12 @@
     });
   }
 
+  window.renderCuponsTable = renderCuponsTable;
+  window.setCupomOrigFilter = function(orig){
+    CUPOM_ORIG_FILTER = orig;
+    renderCuponsTable();
+  };
+
   // ===== Vendas por Dia (Filtros Multidimensionais) =====
   function renderDiarioView(d){
     if(!d) return;
@@ -4335,16 +4341,14 @@
       });
 
       if(isUsuarioComum){
-        if(typeof CUPOM_ORIG_FILTER !== 'undefined' && CUPOM_ORIG_FILTER !== 'PREMIADOS'){
-          CUPOM_ORIG_FILTER = 'PROMOTER';
-        }
-        var btnProm = origG.querySelector('button[data-orig="' + (CUPOM_ORIG_FILTER || 'PROMOTER') + '"]');
+        var btnProm = origG.querySelector('button[data-orig="PROMOTER"]');
         [].slice.call(origG.children).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
         if(btnProm) btnProm.setAttribute('aria-pressed', 'true');
+        if(window.setCupomOrigFilter) window.setCupomOrigFilter('PROMOTER');
       }
     }
 
-    if(typeof renderCuponsTable === 'function') renderCuponsTable();
+    if(window.renderCuponsTable) window.renderCuponsTable();
   }
 
   // ===== Logout =====
@@ -4882,28 +4886,50 @@
   // INICIALIZAÇÃO DO ESTADO DE SESSÃO
   // =========================================================================
   var tokenSalvo = localStorage.getItem(TOKEN_KEY);
-  {
-    // Validar token no backend (sem token também pergunta: se o login ainda não estiver ativado no banco, o painel abre em acesso livre)
+  if(!tokenSalvo){
+    // Sem token gravado: abrir tela de login
+    mostrarLogin();
+  } else {
+    // Validar token no backend
     fetch('/api/me', {
       method: 'GET',
-      headers: tokenSalvo ? { 'X-Moving-Token': tokenSalvo } : {}
+      headers: { 'X-Moving-Token': tokenSalvo }
     })
     .then(function(r){
-      if(!r.ok) throw new Error('Token inválido');
+      if(r.status === 401){
+        window.MOVING_AUTH.logoutLocal();
+        return null;
+      }
+      if(!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     })
     .then(function(res){
-      if(res && (res.ok === true || res.status === 'ok') && res.usuario){
+      if(!res) return;
+      if((res.ok === true || res.status === 'ok') && res.usuario){
         usuarioAtual = res.usuario;
+        window.movingUsuario = usuarioAtual;
         esconderLogin();
-        aplicarPermissoes(usuarioAtual);
-        if(window.movingRecarregarDados) window.movingRecarregarDados();
+        try {
+          aplicarPermissoes(usuarioAtual);
+        } catch(eA){
+          console.error('[Auth] Erro ao aplicar permissoes:', eA);
+        }
+        try {
+          if(window.movingRecarregarDados) window.movingRecarregarDados();
+        } catch(eB){
+          console.error('[Auth] Erro ao recarregar dados:', eB);
+        }
       } else {
         window.MOVING_AUTH.logoutLocal();
       }
     })
-    .catch(function(){
-      window.MOVING_AUTH.logoutLocal();
+    .catch(function(err){
+      console.warn('[Auth] Erro de conexao ao validar sessao:', err);
+      // Erro temporário de rede: NAO faz logout automatico para nao perder a sessao do usuario em refresh
+      esconderLogin();
+      try {
+        if(window.movingRecarregarDados) window.movingRecarregarDados();
+      } catch(eC){}
     });
   }
 

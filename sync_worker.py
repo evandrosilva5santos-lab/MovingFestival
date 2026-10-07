@@ -523,7 +523,9 @@ def run_sync(cloud_mode=False):
         uticket_records = extract_uticket_records(uticket_bytes)
         all_records.extend(uticket_records)
     elif not cloud_mode:
-        fallback_path = '/Users/evandro/Downloads/participantes-01M5QB24FA2PLL (1).xlsx'
+        import glob
+        candidatos = sorted(glob.glob('/Users/evandro/Downloads/participantes-01M5QB24FA2PLL*.xlsx'), key=os.path.getmtime, reverse=True)
+        fallback_path = candidatos[0] if candidatos else '/Users/evandro/Downloads/participantes-01M5QB24FA2PLL.xlsx'
         if os.path.exists(fallback_path):
             print(f"[*] Usando fallback local do Uticket: {fallback_path}")
             with open(fallback_path, 'rb') as f:

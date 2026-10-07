@@ -13,7 +13,7 @@ import urllib.error
 import subprocess
 import time
 import threading
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import HTTPServer, ThreadingHTTPServer, SimpleHTTPRequestHandler
 
 PORT = 7777
 DIR = os.path.dirname(os.path.abspath(__file__))
@@ -497,6 +497,8 @@ def call_supabase_rpc(rpc_name, params=None):
     except Exception as e:
         return {'ok': False, 'erro': str(e)}
 
+AUTH_CACHE = {}
+
 def extract_req_token(handler):
     t = handler.headers.get('X-Moving-Token')
     if t:
@@ -510,12 +512,23 @@ def authenticate_req(handler):
     token = extract_req_token(handler)
     if not token:
         return None
+    now = time.time()
+    cached = AUTH_CACHE.get(token)
+    if cached and cached.get('exp', 0) > now:
+        return {'token': token, 'usuario': cached['usuario']}
     try:
         res = call_supabase_rpc('moving_excluir_me', {'p_token': token})
         if res and res.get('ok') and res.get('usuario'):
+            AUTH_CACHE[token] = {
+                'usuario': res['usuario'],
+                'exp': now + 60
+            }
             return {'token': token, 'usuario': res['usuario']}
     except Exception as e:
         print(f"[!] Erro ao autenticar token local: {e}")
+        # Fallback de tolerância se a rede falhar momentaneamente mas tínhamos sessão recente
+        if cached and cached.get('exp', 0) + 300 > now:
+            return {'token': token, 'usuario': cached['usuario']}
     return None
 
 class PlatformHandler(SimpleHTTPRequestHandler):
@@ -962,7 +975,7 @@ def start_periodic_sync(interval_seconds=900):
 def run_server():
     start_periodic_sync(900)  # Motor automático: sincroniza a cada 15 minutos
     server_address = ('0.0.0.0', PORT)
-    httpd = HTTPServer(server_address, PlatformHandler)
+    httpd = ThreadingHTTPServer(server_address, PlatformHandler)
     print("=" * 60)
     print(f"🚀 PAINEL MOVING FESTIVAL 2026 INICIADO NA PORTA {PORT}")
     print(f"👉 Acesse no seu navegador: http://localhost:{PORT}")
