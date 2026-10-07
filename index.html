@@ -785,6 +785,7 @@
             <button type="button" role="tab" data-fat-tab="resumo" aria-selected="true">Resumo e metas</button>
             <button type="button" role="tab" data-fat-tab="receitas" aria-selected="false">Receitas extras</button>
             <button type="button" role="tab" data-fat-tab="despesas" aria-selected="false">Despesas</button>
+            <button type="button" role="tab" data-fat-tab="recebimentos" aria-selected="false">Recebimentos</button>
           </div>
           <div class="fat-pane" data-fat-pane="resumo">
           <div class="card fat-caixa">
@@ -794,7 +795,9 @@
               <div><small>Custo atual do evento</small><b id="fatCustos">—</b><i id="fatCustosSub">—</i></div>
               <div><small>Total pago</small><b id="fatPago" class="fat-pos">—</b><i id="fatPagoSub">—</i></div>
               <div><small>Falta pagar</small><b id="fatFalta">—</b><i id="fatFaltaSub">—</i></div>
-              <div><small>Saldo (faturado − pago)</small><b id="fatSaldo">—</b><i>dinheiro que sobra hoje, se as ticketeiras já tivessem repassado tudo</i></div>
+              <div><small>Recebido das ticketeiras</small><b id="fatRecebido" class="fat-pos">—</b><i id="fatRecebidoSub">—</i></div>
+              <div><small>A receber das ticketeiras</small><b id="fatAReceber">—</b><i id="fatAReceberSub">—</i></div>
+              <div><small>Caixa hoje (recebido − pago)</small><b id="fatSaldo">—</b><i>dinheiro que já entrou menos o que já saiu</i></div>
             </div>
             <div class="fat-barra-pag" id="fatBarraPag"></div>
           </div>
@@ -883,6 +886,28 @@
             <button type="button" class="fat-btn fat-add" id="fatAddCusto" hidden>+ Adicionar despesa</button>
             <div class="fat-msg" data-msg hidden></div>
           </div>
+          </div>
+          <div class="fat-pane" data-fat-pane="recebimentos" hidden>
+            <p class="fat-intro">Quanto cada ticketeira já repassou (dinheiro que entrou na conta) e quanto ainda falta receber. Lance cada repasse do extrato financeiro da Uticket, da Sympla e da Wix.</p>
+            <div class="card">
+              <div class="ttl">Recebido × a receber por ticketeira</div>
+              <div class="tscroll"><table class="fat-tab" id="fatRecTab"></table></div>
+            </div>
+            <div class="card fat-custos" id="fatRepCard" style="margin-top:16px">
+              <div class="ttl">Repasses recebidos
+                <span class="fat-acoes">
+                  <button type="button" class="fat-btn" data-acao="editar">Editar</button>
+                  <button type="button" class="fat-btn" data-acao="cancelar" hidden>Cancelar</button>
+                  <button type="button" class="fat-btn fat-btn-pri" data-acao="salvar" hidden>Salvar</button>
+                </span>
+              </div>
+              <div class="tscroll"><table class="fat-tab fat-ctab">
+                <thead><tr><th>Data</th><th>Ticketeira</th><th>Valor recebido</th><th>Observação</th><th class="fat-col-x"></th></tr></thead>
+                <tbody id="fatRepBody"></tbody>
+              </table></div>
+              <button type="button" class="fat-btn fat-add" id="fatAddRep" hidden>+ Adicionar repasse</button>
+              <div class="fat-msg" data-msg hidden></div>
+            </div>
           </div>
           <p class="fat-nota" id="fatInfo">—</p>
 
@@ -2831,7 +2856,7 @@
 .fat-g2{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-faint); margin:22px 0 12px; padding-top:16px; border-top:1px solid var(--border); }
 @media (min-width:1200px){ .fat-bottom{ grid-template-columns:minmax(0,1fr) minmax(0,1.55fr); } }
 .fat-ctab td:nth-child(2){ white-space:normal; color:var(--fg-muted); }
-.fat-caixa-g{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+.fat-caixa-g{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
 .fat-caixa-g > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:0; }
 .fat-caixa-g small{ display:block; font-size:11.5px; font-weight:600; color:var(--fg-muted); }
 .fat-caixa-g b{ display:block; font-family:var(--font-display); font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; margin:4px 0 2px; }
@@ -2875,7 +2900,7 @@
 <script>
 /* FATURAMENTO: premissas + custos guardados no Supabase (via /api/estimativas). Editar só admin/superadmin. */
 (function(){
-  var PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70,cmv_bar:0,taxa_ingresso:0,data_evento:'2026-10-17',ritmo_dias:7,custos:[]};
+  var PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70,cmv_bar:0,taxa_ingresso:0,data_evento:'2026-10-17',ritmo_dias:7,custos:[],repasses:[]};
   function vPago(c){ return c.valor_pago!=null && c.valor_pago!=='' ? (+c.valor_pago||0) : (c.pago? (+c.valor||0) : 0); }
   var CATS=['Atrações / artistas','Estrutura / palco / som','Produção','Equipe / staff','Segurança','Marketing / tráfego','Bar (insumos)','Estacionamento','Taxas / impostos','Outros'];
   var prem=JSON.parse(JSON.stringify(PAD)), info=null, ult=null, metas=[], rasc=null;
@@ -2926,7 +2951,11 @@
     set('fatPago', din(pago,0)); set('fatPagoSub', fx? Math.round(pago/fx*100)+'% do custo já pago' : '—');
     var nAb=lista.filter(function(c){ return (+c.valor||0)-vPago(c)>0; }).length; set('fatFalta', din(falta,0)); set('fatFaltaSub', nAb? (nAb+(nAb===1?' despesa em aberto':' despesas em aberto')) : 'tudo pago');
     g('fatFalta').classList.toggle('fat-neg', falta>0);
-    var saldo=fat-pago; set('fatSaldo',(saldo<0?'− ':'')+din(Math.abs(saldo),0)); sinal('fatSaldo',saldo);
+    var receb=(prem.repasses||[]).reduce(function(a,x){ return a+(+x.valor||0); },0), arec=Math.max(0,fat-receb);
+    set('fatRecebido', din(receb,0)); set('fatRecebidoSub', (prem.repasses||[]).length? (prem.repasses.length+(prem.repasses.length===1?' repasse lançado':' repasses lançados')+' · '+(fat? Math.round(receb/fat*100):0)+'% do faturado') : 'nenhum repasse lançado ainda');
+    set('fatAReceber', din(arec,0)); set('fatAReceberSub', 'faturado − recebido'); g('fatAReceber').classList.toggle('fat-neg', arec>0);
+    var saldo=receb-pago; set('fatSaldo',(saldo<0?'− ':'')+din(Math.abs(saldo),0)); sinal('fatSaldo',saldo);
+    desenharRec(fat);
     var pc=fx? Math.min(100,pago/fx*100):0;
     g('fatBarraPag').innerHTML = fx? '<div class="bp"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+Math.round(pc)+'% pago · '+din(falta,0)+' a pagar</small>' : '';
     var pj=projecaoDia(), dt=pj.alvo.split('-');
@@ -3028,6 +3057,42 @@
     g('fatCats').innerHTML=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; }).map(function(k){ return '<span>'+esc(k)+'<b>'+din(cats[k],0)+'</b></span>'; }).join('');
     g('fatAddCusto').hidden=!ed.custos;
   }
+  var edRep=false, rascRep=null, PLATN={UTICKET:'Uticket',SYMPLA:'Sympla',WIX:'Wix',OUTRO:'Outro'};
+  function desenharRec(fat){
+    var t=g('fatRecTab'); if(!t || !ult) return;
+    var fp={UTICKET:0,SYMPLA:0,WIX:0}; (ult.vendasDiarias||[]).forEach(function(v){ if(fp[v.plataforma]!=null) fp[v.plataforma]+=+v.receita||0; });
+    var rp={UTICKET:0,SYMPLA:0,WIX:0,OUTRO:0}; (prem.repasses||[]).forEach(function(x){ rp[x.plataforma]=(rp[x.plataforma]||0)+(+x.valor||0); });
+    var h='<thead><tr><th>Ticketeira</th><th>Faturado</th><th>Recebido</th><th>A receber</th><th>% recebido</th></tr></thead><tbody>', T=[0,0];
+    ['UTICKET','SYMPLA','WIX'].forEach(function(k){ var f=fp[k], r=rp[k], a=f-r; T[0]+=f; T[1]+=r;
+      h+='<tr><td>'+PLATN[k]+'</td><td>'+din(f,0)+'</td><td class="fat-pos">'+din(r,0)+'</td><td class="'+(a>0?'fat-neg':'')+'">'+din(a,0)+'</td><td>'+(f? Math.round(r/f*100) : 0)+'%</td></tr>'; });
+    if(rp.OUTRO){ T[1]+=rp.OUTRO; h+='<tr><td>Outro</td><td>—</td><td class="fat-pos">'+din(rp.OUTRO,0)+'</td><td>—</td><td>—</td></tr>'; }
+    h+='</tbody><tfoot><tr><td><b>Total</b></td><td><b>'+din(T[0],0)+'</b></td><td class="fat-pos"><b>'+din(T[1],0)+'</b></td><td class="fat-neg"><b>'+din(T[0]-T[1],0)+'</b></td><td><b>'+(T[0]? Math.round(T[1]/T[0]*100):0)+'%</b></td></tr></tfoot>';
+    t.innerHTML=h; desenharRep();
+  }
+  function lerRep(){ if(!rascRep) return; document.querySelectorAll('#fatRepBody tr[data-k]').forEach(function(tr){ var c=rascRep[+tr.getAttribute('data-k')]; if(!c) return; tr.querySelectorAll('[data-c]').forEach(function(i){ var k=i.getAttribute('data-c'); c[k]= k==='valor'? (i.value===''?'':Number(String(i.value).replace(',','.'))) : i.value; }); }); }
+  function desenharRep(){
+    var b=g('fatRepBody'); if(!b) return; var l=edRep? rascRep : (prem.repasses||[]);
+    if(!l.length) b.innerHTML='<tr><td colspan="5" class="fat-vazio">'+(edRep?'Clique em “+ Adicionar repasse”.':'Nenhum repasse lançado. Clique em Editar para lançar o que já entrou na conta.')+'</td></tr>';
+    else if(!edRep) b.innerHTML=l.map(function(x){ return '<tr><td>'+(x.data? String(x.data).split('-').reverse().join('/') : '—')+'</td><td>'+(PLATN[x.plataforma]||x.plataforma)+'</td><td class="fat-pos">'+din(x.valor)+'</td><td>'+esc(x.obs||'')+'</td><td></td></tr>'; }).join('');
+    else b.innerHTML=l.map(function(x,i){ return '<tr data-k="'+i+'"><td><input data-c="data" type="date" value="'+esc(x.data||'')+'"></td><td><select data-c="plataforma">'+['UTICKET','SYMPLA','WIX','OUTRO'].map(function(k){ return '<option value="'+k+'"'+(x.plataforma===k?' selected':'')+'>'+PLATN[k]+'</option>'; }).join('')+'</select></td><td><input data-c="valor" type="number" min="0" step="100" inputmode="decimal" value="'+(x.valor===''?'':(+x.valor||0))+'"></td><td><input data-c="obs" maxlength="80" value="'+esc(x.obs||'')+'" placeholder="ex.: repasse semanal"></td><td><button type="button" class="fat-x" data-del="'+i+'" title="Remover">×</button></td></tr>'; }).join('');
+    var C=g('fatRepCard'); C.querySelector('[data-acao=editar]').hidden=edRep||!podeEditar(); C.querySelector('[data-acao=cancelar]').hidden=!edRep; C.querySelector('[data-acao=salvar]').hidden=!edRep; g('fatAddRep').hidden=!edRep;
+  }
+  function iniRep(){
+    var C=g('fatRepCard'); if(!C) return;
+    C.querySelector('[data-acao=editar]').addEventListener('click',function(){ if(!podeEditar()) return; rascRep=JSON.parse(JSON.stringify(prem.repasses||[])); edRep=true; msg(C,''); desenharRep(); });
+    C.querySelector('[data-acao=cancelar]').addEventListener('click',function(){ edRep=false; rascRep=null; msg(C,''); desenharRep(); });
+    g('fatAddRep').addEventListener('click',function(){ lerRep(); rascRep.push({data:hojeSPstr(0),plataforma:'UTICKET',valor:'',obs:''}); desenharRep(); });
+    g('fatRepBody').addEventListener('click',function(e){ var x=e.target.closest('[data-del]'); if(!x) return; lerRep(); rascRep.splice(+x.getAttribute('data-del'),1); desenharRep(); });
+    C.querySelector('[data-acao=salvar]').addEventListener('click',function(){
+      lerRep(); var l=(rascRep||[]).filter(function(x){ return x.valor!=='' && !isNaN(+x.valor); });
+      var bt=C.querySelector('[data-acao=salvar]'); bt.disabled=true; bt.textContent='Salvando…'; var u=window.movingUsuario;
+      fetch('/api/estimativas',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':token()},body:JSON.stringify({repasses:l.map(function(x){ return {data:x.data||null,plataforma:x.plataforma,valor:+x.valor,obs:x.obs||''}; }),quem:u&&u.nome||''})})
+        .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
+        .then(function(j){ bt.disabled=false; bt.textContent='Salvar'; if(j&&j.erro){ msg(C,j.erro,'erro'); return; }
+          if(j&&j.dados){ prem=Object.assign({},PAD,j.dados); info=j; } edRep=false; rascRep=null; desenhar(); msg(C,'Salvo. Já vale para todos que abrirem o painel.','ok'); setTimeout(function(){ msg(C,''); },4000); })
+        .catch(function(){ bt.disabled=false; bt.textContent='Salvar'; msg(C,'Sem conexão. Tente de novo.','erro'); });
+    });
+  }
   function botoes(){
     [['fatPrem','prem'],['fatCustosCard','custos']].forEach(function(p){
       var card=g(p[0]); if(!card) return; var em=ed[p[1]];
@@ -3051,8 +3116,9 @@
     var rec=0,total=0,pagos=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ var x=por[k]||{}; rec+=+x.receita||0; total+=+x.total||0; pagos+=+x.pagos||0; });
     var ex={}; (d.extras||[]).forEach(function(x){ ex[x.tipo]=x; });
     var cR=+((ex.CAMPING||{}).receita)||0, oR=+((ex.COPO||{}).receita)||0;
+    var vendasDiarias=d.vendas_diarias||[];
     var porDia={}; (d.por_dia||[]).forEach(function(x){ porDia[String(x.dia).slice(0,10)]=+x.total||0; });
-    ult={porDia:porDia,total:total,pagos:pagos,receita:rec,campReal:cR,copoReal:oR,extraReal:cR+oR,campPagos:+((ex.CAMPING||{}).pagos)||0,copoPagos:+((ex.COPO||{}).pagos)||0};
+    ult={vendasDiarias:vendasDiarias,porDia:porDia,total:total,pagos:pagos,receita:rec,campReal:cR,copoReal:oR,extraReal:cR+oR,campPagos:+((ex.CAMPING||{}).pagos)||0,copoPagos:+((ex.COPO||{}).pagos)||0};
     metas=(d.metas||[]).slice().sort(function(a,b){ return a.valor-b.valor; });
     g('finSetores').innerHTML=['FULLPASS','ZONE','GOLD','BLACK'].map(function(k){
       var x=por[k]||{}, r=+x.receita||0, pc=rec?r/rec*100:0, tm=(+x.pagos)? r/x.pagos : 0;
@@ -3082,6 +3148,7 @@
   }
   function ini(){
     var P=g('fatPrem'), C=g('fatCustosCard'); if(!P||!C) return;
+    iniRep();
     P.querySelector('[data-acao=editar]').addEventListener('click',function(){ if(!podeEditar()) return; ed.prem=true; msg(P,''); desenhar(); });
     P.querySelector('[data-acao=cancelar]').addEventListener('click',function(){ ed.prem=false; msg(P,''); desenhar(); });
     P.querySelector('[data-acao=salvar]').addEventListener('click',function(){
@@ -3174,11 +3241,11 @@
   var XLSX_URL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
   var linhas=null, cab=null, nomeArq='', plat=null, res=null, filtro='todos';
   var CAMPOS=[
-    {k:'cod', nome:'Código do ingresso', obrig:true, chaves:['cod ingresso','codigo do ingresso','numero do ingresso','n do ingresso','no do ingresso','nº do ingresso','ticket number','numero ingresso','codigo ingresso','ingresso n','localizador','codigo','cod']},
+    {k:'cod', nome:'Código do ingresso', obrig:true, chaves:['cod ingresso','no ingresso','n ingresso','codigo do ingresso','numero do ingresso','n do ingresso','no do ingresso','nº do ingresso','ticket number','numero ingresso','codigo ingresso','ingresso n','localizador','codigo','cod']},
     {k:'lote', nome:'Lote / tipo de ingresso', chaves:['tipo de ingresso','tipo ingresso','nome do ingresso','ingresso','lote','tipo','categoria']},
     {k:'valor', nome:'Valor', chaves:['valor do ingresso','valor ingresso','valor pago','preco','valor','total']},
-    {k:'status', nome:'Status', chaves:['status do pedido','situacao do pedido','status','situacao','estado']},
-    {k:'data', nome:'Data da compra', chaves:['data da compra','data do pedido','data de compra','data']}
+    {k:'status', nome:'Status', chaves:['status do pedido','estado de pagamento','situacao do pedido','status','situacao']},
+    {k:'data', nome:'Data da compra', chaves:['data da compra','data compra','data do pedido','data de compra']}
   ];
   function g(id){ return document.getElementById(id); }
   function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -3190,7 +3257,7 @@
   function classificar(t){ t=String(t||'').toUpperCase(); var s=null;
     if(t.indexOf('FULLPASS')>=0||t.indexOf('FULL PASS')>=0) s='FULLPASS'; else if(t.indexOf('ZONE')>=0) s='ZONE'; else if(t.indexOf('GOLD')>=0) s='GOLD'; else if(t.indexOf('BLACK')>=0) s='BLACK';
     if(s) return ['INGRESSO',s]; if(t.indexOf('CAMPING')>=0) return ['CAMPING',null]; if(t.indexOf('COPO')>=0) return ['COPO',null]; return ['INGRESSO',null]; }
-  function statusArq(v){ var t=norm(v); if(!t) return 'CONFIRMADO'; return /cancel|estorn|reembols|devolv|recusad|expirad|chargeback|nao aprovad|pendente/.test(t)? 'CANCELADO' : 'CONFIRMADO'; }
+  function statusArq(v){ var t=norm(v); if(!t) return 'CANCELADO'; return /cancel|estorn|reembols|devolv|recusad|expirad|chargeback|nao aprovad|nao pago|pendente|aguardando/.test(t)? 'CANCELADO' : 'CONFIRMADO'; }
   function carregarXLSX(){ return new Promise(function(ok,erro){ if(window.XLSX) return ok(); var s=document.createElement('script'); s.src=XLSX_URL; s.onload=function(){ ok(); }; s.onerror=function(){ erro(new Error('Não consegui carregar o leitor de planilhas. Confira a internet e tente de novo.')); }; document.head.appendChild(s); }); }
   function acharCabecalho(rows){
     var melhor=-1, pontos=-1;
@@ -3212,7 +3279,7 @@
   function detectarPlat(h){
     var t=h.map(norm).join('|');
     if(t.indexOf('cod ingresso')>=0 || t.indexOf('data da compra')>=0 && t.indexOf('sympla')<0 && t.indexOf('numero do ingresso')<0) return 'UTICKET';
-    if(t.indexOf('numero do ingresso')>=0 || t.indexOf('no do ingresso')>=0 || t.indexOf('n do ingresso')>=0 || t.indexOf('ticket number')>=0 || t.indexOf('sympla')>=0) return 'SYMPLA';
+    if(t.indexOf('estado de pagamento')>=0 || t.indexOf('no ingresso')>=0 || t.indexOf('numero do ingresso')>=0 || t.indexOf('no do ingresso')>=0 || t.indexOf('n do ingresso')>=0 || t.indexOf('ticket number')>=0 || t.indexOf('sympla')>=0) return 'SYMPLA';
     return null;
   }
   function lerArquivo(f){
@@ -3222,9 +3289,14 @@
     msg('Lendo '+f.name+'…','info');
     carregarXLSX().then(function(){ return f.arrayBuffer(); }).then(function(buf){
       var wb = /\.csv$/i.test(f.name) ? XLSX.read(new TextDecoder(detectarCodificacao(buf)).decode(buf),{type:'string',raw:true}) : XLSX.read(buf,{type:'array',cellDates:false});
+      var bo0=null; wb.SheetNames.some(function(n){ corrigirFaixa(wb.Sheets[n]); bo0=lerBordero(XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''})); return !!(bo0 && bo0.grupos.length); });
+      if(bo0 && bo0.grupos.length){ conferirBordero(bo0); return; }
       var melhor=null;
-      wb.SheetNames.forEach(function(n){ var rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''}); var hi=acharCabecalho(rows); if(hi>=0 && (!melhor || rows.length>melhor.rows.length)) melhor={rows:rows,hi:hi,aba:n}; });
-      if(!melhor){ msg('Não encontrei o cabeçalho (código do ingresso, valor, lote…). Confira se é a exportação de participantes ou o extrato de vendas.','erro'); return; }
+      wb.SheetNames.forEach(function(n){ corrigirFaixa(wb.Sheets[n]); var rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''}); var hi=acharCabecalho(rows); if(hi>=0 && (!melhor || rows.length>melhor.rows.length)) melhor={rows:rows,hi:hi,aba:n}; });
+      if(!melhor){
+        var bo=null; wb.SheetNames.some(function(n){ var rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''}); bo=lerBordero(rows); return !!bo; });
+        if(bo && bo.grupos.length){ conferirBordero(bo); return; }
+        msg('Não encontrei o cabeçalho (código do ingresso, valor, lote…). Confira se é a exportação de participantes ou o extrato de vendas.','erro'); return; }
       cab=melhor.rows[melhor.hi].map(function(c){ return String(c||'').trim(); });
       linhas=melhor.rows.slice(melhor.hi+1).filter(function(r){ return r.some(function(c){ return String(c||'').trim(); }); });
       var m=autoMapa(cab), pd=detectarPlat(cab), esc2=g('cfPlat').value;
@@ -3236,6 +3308,25 @@
       g('cfMapa').hidden=false;
       if(plat && m.cod!=null) conferir();
     }).catch(function(e){ msg('Não consegui ler o arquivo: '+(e&&e.message||e),'erro'); });
+  }
+  // Algumas exportações (Sympla) declaram a faixa só como A1:A1255; recalcula pela posição real das células
+  function corrigirFaixa(ws){ var R={s:{r:1e9,c:1e9},e:{r:0,c:0}}, tem=false; Object.keys(ws).forEach(function(k){ if(k.charAt(0)==='!') return; var a=XLSX.utils.decode_cell(k); tem=true; if(a.r<R.s.r)R.s.r=a.r; if(a.c<R.s.c)R.s.c=a.c; if(a.r>R.e.r)R.e.r=a.r; if(a.c>R.e.c)R.e.c=a.c; }); if(tem) ws['!ref']=XLSX.utils.encode_range(R); }
+  // Borderô da Uticket: resumo por lote (grupo + linhas Lote/Valor/QTD/Total), sem código de ingresso
+  function lerBordero(rows){
+    var hi=-1; for(var i=0;i<Math.min(rows.length,60);i++){ var n=rows[i].map(norm); if(n.indexOf('lote')>=0 && n.indexOf('qtd')>=0 && n.indexOf('total')>=0){ hi=i; break; } }
+    if(hi<0) return null;
+    var h=rows[hi].map(norm), cV=h.indexOf('valor'), cQ=h.indexOf('qtd'), cT=h.indexOf('total');
+    var grupos=[], g=null, cupons=0, liquido=null, rec=null, vendidos=null, cort=null;
+    rows.slice(0,hi).forEach(function(r,ri){ r.forEach(function(c,ci){ var n=norm(c); var acima=(rows[ri-1]||[])[ci];
+      if(n==='receita liquida') rec=preco(acima); if(n==='cortesias') cort=+String(acima).replace(/\D/g,'')||0; if(n==='ingressos vendidos' && acima!=='' && acima!=null) vendidos=+String(acima).replace(/\D/g,'')||null; }); });
+    rows.slice(hi+1).forEach(function(r){
+      var a=String(r[0]||'').trim(), q=String(r[cQ]||'').trim(), t=String(r[cT]||'').trim();
+      if(/cupons de desconto/i.test(a)){ cupons=preco(t); return; }
+      if(/total liquido/i.test(r.join(' '))){ liquido=preco(t); return; }
+      if(a && !q && !t && !/descontos|taxa/i.test(a)){ g={nome:a, linhas:[]}; grupos.push(g); return; }
+      if(a && q && g){ g.linhas.push({lote:a, valor:preco(r[cV]), qtd:+q.replace(/\D/g,'')||0, total:preco(t)}); }
+    });
+    return {grupos:grupos, cupons:cupons, liquido:liquido, receitaLiquida:rec, vendidos:vendidos, cortesias:cort};
   }
   function detectarCodificacao(buf){ var b=new Uint8Array(buf.slice(0,4)); if(b[0]===0xEF&&b[1]===0xBB&&b[2]===0xBF) return 'utf-8'; try{ new TextDecoder('utf-8',{fatal:true}).decode(buf); return 'utf-8'; }catch(e){ return 'windows-1252'; } }
   function montarMapa(m){
@@ -3312,6 +3403,28 @@
     g('cfDivBody').innerHTML = lista.length? lista.slice(0,300).map(function(d){ return '<tr><td><span class="cf-tag '+d.t+'">'+esc(d.p)+'</span></td><td>'+esc(d.cod)+'</td><td>'+esc(d.lote||'—')+'</td><td>'+(d.va==null?'—':din(d.va))+'</td><td>'+(d.vb==null?'—':din(d.vb))+'</td><td>'+esc(d.sa)+'</td><td>'+esc(d.sb)+'</td></tr>'; }).join('') : '<tr><td colspan="7" class="fat-vazio">Nenhuma diferença 🎉</td></tr>';
     g('cfDivNota').textContent = (lista.length>300? 'Mostrando 300 de '+int(lista.length)+'. Baixe o CSV para ver tudo. ' : '')+'Para quem está só no painel, o código não aparece aqui por segurança (o painel guarda só o hash).';
     g('cfRes').hidden=false;
+  }
+  function conferirBordero(bo){
+    plat='UTICKET'; g('cfMapa').hidden=true; msg('Borderô da Uticket lido ('+bo.grupos.length+' grupos de lote). Comparando com o painel…','info');
+    fetch('/api/conferencia?plataforma=UTICKET',{cache:'no-store',headers:{'X-Moving-Token':token()}}).then(function(r){ return r.json(); }).then(function(j){
+      if(!j || j.erro){ msg('Não consegui buscar os dados do painel: '+(j&&j.erro||'erro'),'erro'); return; }
+      var K=['FULLPASS','ZONE','GOLD','BLACK','CAMPING','COPO'], N={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black',CAMPING:'Camping',COPO:'Copo'};
+      var A={}, B={}; K.forEach(function(k){ A[k]=[0,0]; B[k]=[0,0]; });
+      bo.grupos.forEach(function(gr){ var c=classificar(gr.nome), k=c[0]==='INGRESSO'? c[1] : c[0]; if(!k||!A[k]) return; gr.linhas.forEach(function(l){ A[k][0]+=l.qtd; A[k][1]+=l.total; }); });
+      (j.registros||[]).forEach(function(x){ if(x[1]!=='CONFIRMADO') return; var k=x[2]==='INGRESSO'? x[3] : x[2]; if(!B[k]) return; B[k][0]++; B[k][1]+=+x[5]||0; });
+      var h='<thead><tr><th>Setor / tipo</th><th>Qtd. borderô</th><th>Qtd. painel</th><th>Diferença</th><th>R$ borderô (preço de tabela)</th><th>R$ painel (valor pago)</th><th>Diferença</th></tr></thead><tbody>', sa=[0,0], sb=[0,0], difQ=0;
+      K.forEach(function(k){ var a=A[k], b=B[k]; sa[0]+=a[0]; sa[1]+=a[1]; sb[0]+=b[0]; sb[1]+=b[1]; difQ+=Math.abs(a[0]-b[0]);
+        h+='<tr><td>'+N[k]+'</td><td>'+int(a[0])+'</td><td>'+int(b[0])+'</td><td class="'+(a[0]-b[0]?'fat-neg':'')+'">'+(a[0]-b[0]>0?'+':'')+int(a[0]-b[0])+'</td><td>'+din(a[1])+'</td><td>'+din(b[1])+'</td><td class="'+(Math.abs(a[1]-b[1])>0.5?'fat-neg':'')+'">'+din(a[1]-b[1])+'</td></tr>'; });
+      h+='</tbody><tfoot><tr><td><b>Total</b></td><td><b>'+int(sa[0])+'</b></td><td><b>'+int(sb[0])+'</b></td><td><b>'+int(sa[0]-sb[0])+'</b></td><td><b>'+din(sa[1])+'</b></td><td><b>'+din(sb[1])+'</b></td><td><b>'+din(sa[1]-sb[1])+'</b></td></tr></tfoot>';
+      g('cfTotais').innerHTML=h; g('cfResTag').textContent='Borderô Uticket · '+nomeArq;
+      function k2(t,v,cls){ return '<div><small>'+t+'</small><b'+(cls?' class="'+cls+'"':'')+'>'+v+'</b></div>'; }
+      g('cfKpis').innerHTML = k2('Itens no borderô',int(sa[0])) + k2('Itens no painel',int(sb[0])) + k2('Diferença de quantidade',int(sa[0]-sb[0]),(sa[0]-sb[0])?'fat-neg':'fat-pos') + k2('Cupons de desconto',din(bo.cupons)) + k2('Total líquido do borderô',bo.liquido!=null?din(bo.liquido):'—') + k2('Painel (valor pago)',din(sb[1]));
+      var v=g('cfVeredito'), dv=(bo.liquido!=null? bo.liquido : sa[1]-bo.cupons)-sb[1];
+      v.className='cf-veredito '+(difQ||Math.abs(dv)>1?'alerta':'ok');
+      v.textContent = (difQ? 'Quantidades diferentes em '+int(difQ)+' itens (veja a tabela). ' : 'As quantidades por setor batem. ')+'O borderô soma pelo preço de tabela e desconta os cupons no final ('+din(bo.cupons)+'); o painel guarda o valor pago de cada ingresso. Diferença entre o total líquido do borderô e o painel: '+din(dv)+'.';
+      g('cfFiltros').innerHTML=''; g('cfDivBody').innerHTML='<tr><td colspan="7" class="fat-vazio">O borderô é um resumo por lote (sem código de ingresso). Para ver ingresso por ingresso, suba a Lista de Participantes.</td></tr>'; g('cfDivNota').textContent='';
+      res=null; g('cfRes').hidden=false; msg('','');
+    }).catch(function(e){ msg('Falhou: '+(e&&e.message||e),'erro'); });
   }
   function baixar(){
     if(!res) return; var l=[['problema','codigo','lote','valor_planilha','valor_painel','status_planilha','status_painel']];

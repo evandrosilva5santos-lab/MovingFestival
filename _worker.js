@@ -341,7 +341,11 @@ export default {
         }
         if (request.method === 'POST') {
           const corpo = await request.json().catch(() => ({}));
-          const r = await rpc('moving_excluir_estimativas_salvar', {
+          const r = Array.isArray(corpo.repasses) ? await rpc('moving_excluir_estimativas_repasses_salvar', {
+            p_repasses: corpo.repasses,
+            p_quem: String(corpo.quem || '').slice(0, 60) || null,
+            p_token: request.headers.get('X-Moving-Token') || null
+          }) : await rpc('moving_excluir_estimativas_salvar', {
             p_dados: corpo.dados || {},
             p_quem: String(corpo.quem || '').slice(0, 60) || null,
             p_token: request.headers.get('X-Moving-Token') || null

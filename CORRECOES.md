@@ -122,3 +122,9 @@
 - O arquivo é lido **no navegador**. Detecta sozinho a linha de cabeçalho, as colunas (código, lote, valor, status, data) e a ticketeira; o usuário pode corrigir as colunas.
 - Compara pelo **hash SHA-256** de `PLATAFORMA-código` com a RPC `moving_excluir_conferencia(plataforma, token)` (via `GET /api/conferencia`). O banco nunca devolve código, nome ou e-mail.
 - Mostra: batem, faltam no painel, sobram no painel, valor diferente, status diferente, lote sem setor; totais por tipo (ingresso/camping/copo) e CSV das divergências.
+
+## 16. Uticket cancelados, conferência com arquivos reais e recebimentos
+- **Bug corrigido na sincronização (Edge Function v4):** o extrato da Uticket tem a coluna "Status do Pedido"; antes tudo entrava como CONFIRMADO. Agora "Cancelado" vira CANCELADO (95 ingressos corrigidos em 07/10).
+- Importar e conferir: aceita a **Lista de participantes da Uticket**, a **Lista de participantes da Sympla** (o arquivo declara faixa só na coluna A; o painel recalcula) e o **Borderô da Uticket** (resumo por lote: compara quantidade por setor; o borderô usa preço de tabela e desconta cupons no fim).
+- Sympla: quantidades batem 100% com a planilha; 400 ingressos ("PRÉ VENDA LOTE 2") têm no banco o valor com a taxa de 10% da Sympla (ex.: 141,08 × 128,25). Pendente decidir se o faturamento usa o valor sem taxa.
+- Faturamento ganhou a sub-aba **Recebimentos** (repasses lançados por ticketeira, guardados na linha `id='repasses'` de `moving_excluir_estimativas`) e os cartões Recebido / A receber / Caixa hoje (recebido − pago).
