@@ -1930,7 +1930,7 @@
       // Busca por texto
       if(CUPOM_SEARCH){
         var q = CUPOM_SEARCH;
-        var txt = (c.cupom + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
+        var txt = (c.cupom + ' ' + (c.nomes||[]).join(' ') + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
         if(txt.indexOf(q) === -1) return false;
       }
       return true;
@@ -2010,7 +2010,7 @@
       }
 
       return '<tr>' +
-        '<td><b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b></td>' +
+        '<td><b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b>' + ((c.nomes||[]).length > 1 ? '<div style="font-size:11px;color:var(--fg-muted)">mesmo cupom: ' + esc(c.nomes.join(' + ')) + '</div>' : '') + '</td>' +
         '<td><span class="badge-orig ' + oCls + '">' + oLbl + '</span></td>' +
         '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='AMBAS'?'Uticket + Sympla':(c.plataforma==='UTICKET'?'Uticket':'Sympla')) + '</span></td>' +
         '<td style="font-size:12px;color:var(--fg-muted)">' + esc(cNome) + '</td>' +

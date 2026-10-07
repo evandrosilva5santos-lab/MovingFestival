@@ -100,9 +100,10 @@ const CUPOM_UNIFICADO = new Set(Object.values(ALIAS_CUPOM));
 
 function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
+    const original = String(c.cupom || '').trim().toUpperCase();
     const code = nomeCupom(c.cupom);
     const { origem, canal, grupo, gestao } = classifyCupom(code);
-    return { cupom: code, plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
+    return { cupom: code, nomes: [`${original} (${plataforma === 'UTICKET' ? 'Uticket' : 'Sympla'})`], plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
              receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
   });
 }
@@ -117,10 +118,11 @@ async function consolidateLiveSources(env) {
     const unif = CUPOM_UNIFICADO.has(c.cupom.toUpperCase());
     const k = unif ? `${c.cupom.toUpperCase()}|*` : `${c.cupom}|${c.plataforma}`;
     if (!map.has(k)) {
-      map.set(k, { ...c, plataformas: [c.plataforma] });
+      map.set(k, { ...c, plataformas: [c.plataforma], nomes: [...(c.nomes || [])] });
     } else {
       const ex = map.get(k);
       if (!ex.plataformas.includes(c.plataforma)) { ex.plataformas.push(c.plataforma); ex.plataforma = 'AMBAS'; }
+      for (const n of c.nomes || []) if (!ex.nomes.includes(n)) ex.nomes.push(n);
       ex.total += c.total;
       ex.pedidos += c.pedidos;
       ex.receita += c.receita;
