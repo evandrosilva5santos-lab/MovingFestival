@@ -2,6 +2,8 @@
 
 > ## ⚠️ ANTES DE MEXER NO PAINEL OU NO SERVIDOR
 > Leia **`CORRECOES.md`**: lista o que já foi corrigido (F5 com número velho, botão Sincronizar, `hidden`, layout iPhone/iPad/Mac, acentos, régua, Vendas por Dia) e as regras para não quebrar de novo.
+>
+> **SINCRONIZAÇÃO NA NUVEM:** o app roda na Cloudflare. Vendas vêm da função `moving-excluir-sync` (Supabase) com segredos no Vault. **Nunca** usar arquivos, pastas ou Python do computador do Evandro como fonte de dados e nunca escrever senhas/tokens no código. Ver `CORRECOES.md` item 9.
 
 > ## ⚠️ REGRAS DE VISUAL — OBRIGATÓRIAS
 > 1. O visual do painel é **LIGHT, limpo, estilo ManyChat**: fundo `#F5F6F8`, cards brancos, azul `#2B6CF6`, fontes **Plus Jakarta Sans + Inter**.

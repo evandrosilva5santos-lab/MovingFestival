@@ -63,3 +63,17 @@
 2. F5: tem que aparecer "carregando…" e depois o número real, sem piscar o número antigo.
 3. Clicar em Sincronizar: tem que aparecer o aviso verde ou vermelho.
 4. Diminuir a janela até a largura de celular (402px) e de iPad (820px): sem rolagem lateral, com o menu certo para cada tamanho.
+
+---
+
+## 9. Sincronização 100% na nuvem (nunca mais usar arquivos do computador)
+- **Regra:** o app roda na **Cloudflare**. Nenhuma venda pode depender de pasta Downloads, planilha, `.env` ou Python do Mac.
+- **Quem sincroniza:** a função **`moving-excluir-sync`** (Supabase Edge Function). Ela entra na Uticket, baixa o extrato de vendas, lê a API oficial da Sympla (só o evento Moving 2026, ID 3419289), grava em `moving_excluir_vendas` e registra a fonte em `moving_excluir_sync_log`.
+- **Quando roda:** sozinha **a cada 15 min** (`pg_cron`, job `moving-excluir-sync-15min`) e quando clicar em **Sincronizar** (o `_worker.js` chama a função em `/api/sync`). Trava de 1 min contra disparos repetidos.
+- **Segredos:** e-mail/senha da Uticket e token da Sympla ficam no **Vault do Supabase** (`moving_excluir_uticket_email`, `moving_excluir_uticket_senha`, `moving_excluir_sympla_token`). **Nunca** colocar no `_worker.js`, `wrangler.toml`, `index.html` ou GitHub.
+- **Cancelamentos:** ingresso confirmado no banco que some da fonte ao vivo vira `CANCELADO` (trava: se sumir mais de 10% de uma vez, não mexe e avisa).
+- **Fontes no painel:** o RPC `moving_excluir_resumo()` devolve `fontes` e a Visão geral mostra o quadro "De onde vêm os números" (AO VIVO / VALOR FIXO / FALHOU). Se uma API falhar, o painel **não inventa dado**: mantém o último salvo e mostra FALHOU.
+- **Wix:** continua valor fixo (366 ingressos, 01/06). Não tem integração.
+- **Cookie da Uticket:** não é usado. Login por e-mail/senha renova sozinho.
+- **Não voltar:** `sync_worker.py`, `run_sync_daemon.py` e `server.py` são só para uso local de teste; não são a fonte oficial.
+- Depois de mexer no `index.html`, copiar para `public/index.html` (é a pasta que a Cloudflare publica).

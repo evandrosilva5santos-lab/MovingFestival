@@ -12,8 +12,4 @@ crons = ["*/15 * * * *"]
 [vars]
 SUPABASE_URL = "https://etjqbqorawnnvdlmztka.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0anFicW9yYXdubnZkbG16dGthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMDQ3MzYsImV4cCI6MjA4ODY4MDczNn0.LuLbWvZEt90ha53_36LgWQ_9tXY4tm0Fd03Q5lIruz0"
-# SYMPLA_API_TOKEN removido (usar secret)
-SYMPLA_EVENT_ID = "3419289"
-# UTICKET_EMAIL removido (usar secret)
-# UTICKET_SENHA removido (usar secret)
-UTICKET_EVENT_ID = "01M5QB24FA2PLL"
+# Senhas da Uticket e token da Sympla NÃO ficam aqui: estão no cofre (Vault) do Supabase.

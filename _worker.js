@@ -33,141 +33,52 @@ function classifyCupom(cupomRaw) {
   return { origem, canal };
 }
 
-async function fetchUticketCouponsLive(env) {
+// SYNC_NUVEM — nenhum segredo neste arquivo. Uticket/Sympla são consultadas pela função
+// "moving-excluir-sync" no Supabase (senhas ficam no cofre/Vault).
+function funcaoUrl(env, query = '') {
+  const base = env?.SUPABASE_URL || SUPABASE_DEFAULT_URL;
+  return `${base}/functions/v1/moving-excluir-sync${query}`;
+}
+function funcaoHeaders(env) {
+  const anon = env?.SUPABASE_ANON_KEY || SUPABASE_DEFAULT_ANON;
+  return { 'Authorization': `Bearer ${anon}`, 'apikey': anon, 'Content-Type': 'application/json' };
+}
+
+async function chamarSyncNuvem(env) {
   try {
-    const email = env?.UTICKET_EMAIL || 'REMOVIDO';
-    const password = env?.UTICKET_SENHA || 'REMOVIDO';
-    const eventId = env?.UTICKET_EVENT_ID || '01M5QB24FA2PLL';
-
-    // 1. Signin
-    const signinRes = await fetch('https://auth.uticket.com.br/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-        'Origin': 'https://uticket.com.br',
-        'Referer': 'https://uticket.com.br/',
-        'Accept': 'application/json, text/plain, */*'
-      },
-      body: JSON.stringify({ email, password })
-    });
-
-    if (!signinRes.ok) return [];
-    const signinData = await signinRes.json();
-    const token = signinData?.token;
-    if (!token) return [];
-
-    // 2. Fetch coupons
-    const authBasic = btoa(`${email}:${token}`);
-    const coupRes = await fetch(`https://api.uticket.com.br/event/${eventId}/coupons`, {
-      headers: {
-        'Authorization': `Basic ${authBasic}`,
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-        'Origin': 'https://uticket.com.br',
-        'Referer': `https://uticket.com.br/admin/event/${eventId}/coupons`,
-        'Accept': 'application/json, text/plain, */*'
-      }
-    });
-
-    if (!coupRes.ok) return [];
-    const data = await coupRes.json();
-    const eventCoupons = data?.eventCoupons || [];
-
-    return eventCoupons.map(c => {
-      const code = String(c.name || '').trim();
-      const { origem, canal } = classifyCupom(code);
-      const total = Number(c.ticketCount) || 0;
-      const pedidos = Number(c.totalSell) || 0;
-      const val = Number(c.totalPrice) || 0;
-      const desc = Number(c.totalDiscount) || 0;
-      return {
-        cupom: code,
-        plataforma: 'UTICKET',
-        origem,
-        canal,
-        total,
-        pedidos,
-        receita: val,
-        desconto: desc,
-        ativo: c.active !== false
-      };
-    });
+    const r = await fetch(funcaoUrl(env), { method: 'POST', headers: funcaoHeaders(env), body: '{}' });
+    const j = await r.json().catch(() => null);
+    if (!r.ok || !j) return { status: 'ERRO', erro: `função de sincronização respondeu HTTP ${r.status}` };
+    return j;
   } catch (err) {
-    console.error('Erro fetchUticketCouponsLive:', err);
-    return [];
+    return { status: 'ERRO', erro: `não consegui chamar a sincronização na nuvem: ${String(err)}` };
   }
 }
 
-async function fetchSymplaCouponsLive(env) {
+async function buscarCuponsNuvem(env) {
   try {
-    const token = env?.SYMPLA_API_TOKEN || 'REMOVIDO';
-    const eventId = env?.SYMPLA_EVENT_ID || '3419289';
-
-    // 8 páginas em paralelo
-    const pages = [1, 2, 3, 4, 5, 6, 7, 8];
-    const results = await Promise.all(pages.map(async p => {
-      try {
-        const res = await fetch(`https://api.sympla.com.br/public/v3/events/${eventId}/participants?page=${p}&page_size=100`, {
-          headers: {
-            's_token': token,
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
-          }
-        });
-        if (!res.ok) return [];
-        const j = await res.json();
-        return j.data || [];
-      } catch {
-        return [];
-      }
-    }));
-
-    const allParts = results.flat();
-    const coupons = {};
-
-    for (const p of allParts) {
-      if (p.order_status !== 'A') continue;
-      const disc = p.order_discount;
-      if (!disc) continue;
-      const m = disc.match(/-\s*(.+)$/);
-      let code = (m ? m[1] : disc).trim().toUpperCase();
-      const price = Number(p.ticket_sale_price) || 0;
-      const orderId = p.order_id;
-
-      if (!coupons[code]) {
-        const { origem, canal } = classifyCupom(code);
-        coupons[code] = {
-          cupom: code,
-          plataforma: 'SYMPLA',
-          origem,
-          canal,
-          pedidos_set: new Set(),
-          total: 0,
-          receita: 0.0,
-          desconto: 0.0,
-          ativo: true
-        };
-      }
-      coupons[code].total += 1;
-      coupons[code].receita += price;
-      if (orderId) coupons[code].pedidos_set.add(orderId);
-    }
-
-    return Object.values(coupons).map(c => {
-      const pedidos = c.pedidos_set.size;
-      delete c.pedidos_set;
-      return { ...c, pedidos };
-    });
+    const r = await fetch(funcaoUrl(env, '?cupons=1'), { method: 'POST', headers: funcaoHeaders(env), body: '{}' });
+    if (!r.ok) return { uticket: [], sympla: [] };
+    return await r.json();
   } catch (err) {
-    console.error('Erro fetchSymplaCouponsLive:', err);
-    return [];
+    console.error('Erro cupons nuvem:', err);
+    return { uticket: [], sympla: [] };
   }
+}
+
+function comClasse(lista, plataforma) {
+  return (lista || []).map(c => {
+    const code = String(c.cupom || '').trim();
+    const { origem, canal } = classifyCupom(code);
+    return { cupom: code, plataforma, origem, canal, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
+             receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
+  });
 }
 
 async function consolidateLiveSources(env) {
-  const [utCupons, syCupons] = await Promise.all([
-    fetchUticketCouponsLive(env),
-    fetchSymplaCouponsLive(env)
-  ]);
+  const cn = await buscarCuponsNuvem(env);
+  const utCupons = comClasse(cn.uticket, 'UTICKET');
+  const syCupons = comClasse(cn.sympla, 'SYMPLA');
 
   const map = new Map();
   for (const c of [...utCupons, ...syCupons]) {
@@ -377,7 +288,7 @@ export default {
   // Disparo Agendado (Cron Trigger na Cloudflare a cada 15 min 24/7)
   async scheduled(event, env, ctx) {
     console.log(`[Cloudflare Cron] Disparando sync periódico 15min às ${new Date().toISOString()}`);
-    ctx.waitUntil(consolidateLiveSources(env));
+    ctx.waitUntil(chamarSyncNuvem(env));
   },
 
   async fetch(request, env, ctx) {
@@ -388,10 +299,13 @@ export default {
     // Rota POST /api/sync (Disparo manual na nuvem)
     if (url.pathname === '/api/sync') {
       try {
+        const sync = await chamarSyncNuvem(env);
         const resumoData = await getFullResumo(env, supabaseUrl, supabaseAnon);
         return new Response(JSON.stringify({
-          status: 'OK',
-          erro: null,
+          status: sync.status === 'OK' ? 'OK' : 'ERRO',
+          erro: sync.erro || null,
+          fontes: sync.fontes || null,
+          pulou: sync.pulou || null,
           resumo: resumoData
         }), {
           headers: {
@@ -415,7 +329,7 @@ export default {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'public, max-age=30, s-maxage=60'
+            'Cache-Control': 'no-store'
           }
         });
       } catch (err) {
@@ -455,7 +369,7 @@ export default {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'public, max-age=30, s-maxage=60'
+            'Cache-Control': 'no-store'
           }
         });
       } catch (err) {

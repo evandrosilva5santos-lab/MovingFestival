@@ -404,6 +404,10 @@
           </table></div></div>
           <div class="card"><div class="ttl">Qual plataforma vende mais</div><div class="chart" id="chartPlat"></div></div>
         </div>
+        <div class="card fontes-card" id="fontesCard" style="margin-top:18px">
+          <div class="ttl">De onde vêm os números <span class="tag" id="fontesTag">—</span></div>
+          <div id="fontesLista" class="fontes-lista"></div>
+        </div>
       </section>
 
       <!-- VENDAS POR DIA (FILTROS MULTIDIMENSIONAIS) -->
@@ -745,6 +749,27 @@
 
       <!-- INGRESSOS -->
       <section data-view="ingressos" hidden>
+        <!-- TICKET_MEDIO -->
+        <div class="tm-hero card" id="tmHero">
+          <div class="tm-hero-l">
+            <small>Ticket médio geral</small>
+            <b id="tmGeral">—</b>
+            <span id="tmGeralSub">—</span>
+          </div>
+          <div class="tm-hero-r">
+            <div><small>Receita (pagos)</small><b id="tmReceita">—</b></div>
+            <div><small>Ingressos pagos</small><b id="tmPagos">—</b></div>
+            <div><small>Cortesias (fora da conta)</small><b id="tmCort">—</b></div>
+          </div>
+        </div>
+        <div class="tm-grid" id="tmSetores"></div>
+        <div class="card" style="margin-bottom:18px"><div class="ttl">Ticket médio por plataforma <span class="tag">só ingressos pagos</span></div>
+          <div class="tscroll"><table>
+            <thead><tr><th>Setor</th><th>Uticket</th><th>Sympla</th><th>Wix</th><th>Geral</th></tr></thead>
+            <tbody id="tmPlatBody"></tbody><tfoot id="tmPlatFoot"></tfoot>
+          </table></div>
+        </div>
+        <p class="tm-nota">Ticket médio = receita dos ingressos pagos ÷ quantidade de ingressos pagos. Cortesias, Camping e Copo não entram na conta.</p>
         <div class="card"><div class="ttl">Ingressos que mais vendem (por lote)</div>
           <ol class="rank" id="lotes"></ol>
         </div>
@@ -897,7 +922,7 @@
     diario:['Vendas por Dia','Análise analítica dia a dia com filtros de período, plataforma e setor'],
     plataformas:['Plataformas & canais','De onde vêm as vendas'],
     promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
-    ingressos:['Ingressos','Lotes que mais vendem'],
+    ingressos:['Ingressos','Ticket médio e lotes que mais vendem'],
     tendencias:['Tendências','Vendas por dia, hora e dia da semana']
   };
   var views = [].slice.call(document.querySelectorAll('section[data-view]'));
@@ -959,6 +984,8 @@
   // ===== Render =====
   function render(){
     var d = DATA; if(!d) return;
+    if(window.movingTicketMedio) try{ window.movingTicketMedio(d); }catch(e){}
+    if(window.movingFontes) try{ window.movingFontes(d); }catch(e){}
     var setores = {}; (d.setores||[]).forEach(function(s){ setores[s.setor]=s; });
     var totalGeral = ORDEM.reduce(function(a,k){ return a+((setores[k]||{}).total||0); },0);
     var f = (FILTRO && FILTRO!=='CAMPING') ? FILTRO : '';
@@ -2320,3 +2347,154 @@
   .onda-tip .ot-p b{ color:var(--fg); }
   .onda-tip .ot-m{ border-top:1px solid var(--border); padding-top:6px; margin-top:4px; font-size:11.5px; }
 </style>
+
+<style>
+  /* FILTROS MOBILE — filtros da tela Vendas por Dia sem estourar no iPhone/iPad pequeno */
+  @media (max-width:767px){
+    [data-view="diario"] .card > .ttl{ display:flex; flex-direction:column; align-items:flex-start; gap:6px; }
+    [data-view="diario"] .card > .ttl .tag{ white-space:normal; line-height:1.35; max-width:100%; font-size:11px; }
+    [data-view="diario"] .filter-bar{ display:flex; flex-direction:column; align-items:stretch; gap:10px; }
+    /* chips quebram em linhas, 3 por linha (período) — nada fica cortado nem rola de lado */
+    [data-view="diario"] .chip-group{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; overflow:visible; }
+    [data-view="diario"] #diarioPlatChips{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    [data-view="diario"] .chip-btn{ white-space:normal; line-height:1.15; padding:9px 6px; min-height:40px; font-size:12px; text-align:center; }
+    /* datas: De / Até em duas colunas, cada uma com o campo inteiro */
+    [data-view="diario"] .date-picker-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; padding:10px; }
+    [data-view="diario"] .date-picker-wrap > span{ grid-row:1; font-size:11px; font-weight:700; color:var(--fg-muted); }
+    [data-view="diario"] .date-picker-wrap > span:nth-of-type(1){ grid-column:1; }
+    [data-view="diario"] .date-picker-wrap > span:nth-of-type(2){ grid-column:2; }
+    [data-view="diario"] .date-picker-wrap input[type="date"]{ grid-row:2; width:100%; min-width:0; max-width:100%; box-sizing:border-box;
+      font-size:16px; /* 16px evita o zoom automático do iPhone */ padding:8px 8px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+    [data-view="diario"] #filtroDataIni{ grid-column:1; }
+    [data-view="diario"] #filtroDataFim{ grid-column:2; }
+    [data-view="diario"] .btn-clear-filter{ width:100%; padding:10px; min-height:40px; }
+  }
+  /* iPad: mesma ideia, só que 6 chips cabem em uma linha */
+  @media (min-width:768px) and (max-width:1199px){
+    [data-view="diario"] .chip-group{ flex-wrap:wrap; }
+    [data-view="diario"] .date-picker-wrap input[type="date"]{ min-width:0; }
+  }
+</style>
+
+<style>
+  /* FONTES_PAINEL */
+  .fontes-lista{ display:grid; gap:8px; }
+  .fonte{ display:grid; grid-template-columns:auto 1fr auto; gap:4px 12px; align-items:center; padding:10px 12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-2); }
+  .fonte .dot{ width:9px; height:9px; border-radius:50%; background:var(--fg-faint); }
+  .fonte.ok .dot{ background:#22C55E; } .fonte.erro .dot{ background:#DC2626; } .fonte.fixo .dot{ background:#F59E0B; }
+  .fonte b{ font-size:13px; }
+  .fonte small{ grid-column:2; font-size:11.5px; color:var(--fg-muted); line-height:1.35; }
+  .fonte time{ font-size:11.5px; color:var(--fg-faint); font-variant-numeric:tabular-nums; }
+  .fonte .sel{ font-size:10px; font-weight:700; letter-spacing:.04em; padding:2px 7px; border-radius:999px; margin-left:6px; }
+  .fonte.ok .sel{ color:#15803D; background:color-mix(in srgb,#22C55E 14%,transparent); }
+  .fonte.erro .sel{ color:#B91C1C; background:color-mix(in srgb,#DC2626 12%,transparent); }
+  .fonte.fixo .sel{ color:#B45309; background:color-mix(in srgb,#F59E0B 16%,transparent); }
+  @media (max-width:560px){ .fonte{ grid-template-columns:auto 1fr; } .fonte time{ grid-column:2; } }
+</style>
+<script>
+// FONTES_PAINEL — mostra de onde veio cada número (API ao vivo, valor fixo ou falha)
+(function(){
+  var NOMES = { UTICKET:'Uticket', SYMPLA:'Sympla', WIX:'Wix' };
+  function hora(iso){ if(!iso) return '—'; var d = new Date(iso); if(isNaN(d)) return '—';
+    return d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+  window.movingFontes = function(d){
+    var box = document.getElementById('fontesLista'); if(!box) return;
+    var lista = d && d.fontes;
+    var tag = document.getElementById('fontesTag');
+    if(!lista || !lista.length){ box.innerHTML = '<div class="fonte"><span class="dot"></span><div><b>Sem informação ainda</b></div><small>A próxima sincronização preenche esta lista.</small></div>'; if(tag) tag.textContent = '—'; return; }
+    var ordem = ['UTICKET','SYMPLA','WIX']; var mapa = {}; lista.forEach(function(f){ mapa[f.plataforma] = f; });
+    var falhou = 0;
+    box.innerHTML = ordem.filter(function(k){ return mapa[k]; }).map(function(k){
+      var f = mapa[k], erro = f.status === 'ERRO', fixo = k === 'WIX';
+      if(erro) falhou++;
+      var cls = erro ? 'erro' : (fixo ? 'fixo' : 'ok');
+      var sel = erro ? 'FALHOU' : (fixo ? 'VALOR FIXO' : 'AO VIVO');
+      var det = erro ? ('Não atualizou — mostrando o último dado salvo. ' + (f.detalhe || '')) : (f.detalhe || '');
+      return '<div class="fonte ' + cls + '"><span class="dot"></span><div><b>' + NOMES[k] + '</b><span class="sel">' + sel + '</span></div><time>' + hora(f.finalizado_em) + '</time><small>' + String(det).replace(/</g,'&lt;') + '</small></div>';
+    }).join('');
+    if(tag) tag.textContent = falhou ? (falhou + ' com falha') : 'tudo atualizado';
+  };
+  if(window.DATA) try{ window.movingFontes(window.DATA); }catch(e){}
+})();
+</script>
+
+<style>
+  /* TICKET_MEDIO */
+  .tm-hero{ display:flex; gap:24px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:14px; }
+  .tm-hero small{ display:block; font-size:11.5px; font-weight:600; color:var(--fg-muted); }
+  .tm-hero-l b{ display:block; font-family:var(--font-display); font-size:44px; line-height:1.05; color:var(--accent); font-variant-numeric:tabular-nums; margin:2px 0; }
+  .tm-hero-l span{ font-size:12px; color:var(--fg-muted); }
+  .tm-hero-r{ display:grid; grid-template-columns:repeat(3,auto); gap:6px 28px; }
+  .tm-hero-r b{ font-family:var(--font-display); font-size:20px; font-variant-numeric:tabular-nums; }
+  .tm-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:14px; }
+  .tm-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius, 16px); padding:16px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+  .tm-card::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--cor); }
+  .tm-card .nm{ display:flex; align-items:center; justify-content:space-between; font-weight:700; font-size:13px; }
+  .tm-card .nm i{ font-style:normal; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; background:color-mix(in srgb, var(--cor) 14%, transparent); color:var(--cor); }
+  .tm-card .v{ font-family:var(--font-display); font-size:30px; font-weight:800; margin:6px 0 2px; font-variant-numeric:tabular-nums; }
+  .tm-card .d{ font-size:12px; color:var(--fg-muted); }
+  .tm-card .barra{ height:6px; border-radius:999px; background:var(--surface-2); margin:10px 0 6px; overflow:hidden; }
+  .tm-card .barra span{ display:block; height:100%; background:var(--cor); border-radius:999px; }
+  .tm-card .rod{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px; color:var(--fg-faint); }
+  .tm-nota{ font-size:11.5px; color:var(--fg-faint); margin:0 0 14px; }
+  @media (max-width:1199px){ .tm-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media (max-width:767px){
+    .tm-hero{ flex-direction:column; align-items:flex-start; gap:14px; }
+    .tm-hero-l b{ font-size:40px; }
+    .tm-hero-r{ grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; }
+    .tm-hero-r > div:last-child{ grid-column:1 / -1; }
+    .tm-card .v{ font-size:26px; }
+  }
+  @media (max-width:380px){ .tm-grid{ grid-template-columns:1fr; } }
+</style>
+<script>
+// TICKET_MEDIO — ticket médio por setor (Full Pass, Zone, Gold, Black) e geral. Só ingressos PAGOS.
+(function(){
+  function dinheiro(n, casas){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:casas===0?0:2,maximumFractionDigits:casas===0?0:2}); }
+  function inteiro(n){ return (+n||0).toLocaleString('pt-BR'); }
+  function tm(rec, qtd){ return qtd > 0 ? rec / qtd : null; }
+  function txt(v){ return v === null ? '—' : dinheiro(v); }
+  var ORD = ['FULLPASS','ZONE','GOLD','BLACK'];
+  window.movingTicketMedio = function(d){
+    var box = document.getElementById('tmSetores'); if(!box) return;
+    var por = {}; (d.setores || []).forEach(function(x){ por[x.setor] = x; });
+    var pagos = 0, rec = 0;
+    ORD.forEach(function(k){ var x = por[k]; if(x){ pagos += +x.pagos||0; rec += +x.receita||0; } });
+    var geral = tm(rec, pagos);
+    var set = function(id, v){ var e = document.getElementById(id); if(e) e.textContent = v; };
+    set('tmGeral', txt(geral));
+    set('tmReceita', dinheiro(rec, 0)); set('tmPagos', inteiro(pagos)); set('tmCort', inteiro(d.cortesias));
+    set('tmGeralSub', pagos ? ('média de ' + inteiro(pagos) + ' ingressos pagos (Full Pass + Zone + Gold + Black)') : 'sem ingressos pagos ainda');
+
+    var valores = ORD.map(function(k){ var x = por[k] || {}; return tm(+x.receita||0, +x.pagos||0) || 0; });
+    var maximo = Math.max.apply(null, valores.concat([1]));
+    var nomes = { FULLPASS:'Full Pass', ZONE:'Zone', GOLD:'Gold', BLACK:'Black' };
+    var cores = { FULLPASS:'var(--c-fullpass)', ZONE:'var(--c-zone)', GOLD:'var(--c-gold)', BLACK:'var(--c-black)' };
+    box.innerHTML = ORD.map(function(k, i){
+      var x = por[k] || {}, v = tm(+x.receita||0, +x.pagos||0);
+      var difGeral = (v !== null && geral) ? Math.round((v / geral - 1) * 100) : null;
+      var sel = difGeral === null ? '' : ('<i>' + (difGeral >= 0 ? '+' : '') + difGeral + '% vs geral</i>');
+      return '<div class="tm-card" style="--cor:' + cores[k] + '">' +
+        '<div class="nm"><span>' + nomes[k] + '</span>' + sel + '</div>' +
+        '<div class="v">' + txt(v) + '</div>' +
+        '<div class="d">ticket médio</div>' +
+        '<div class="barra"><span style="width:' + Math.max(3, Math.round((valores[i] / maximo) * 100)) + '%"></span></div>' +
+        '<div class="rod"><span>' + inteiro(x.pagos) + ' pagos</span><span>' + dinheiro(x.receita, 0) + '</span></div>' +
+        '</div>';
+    }).join('');
+
+    var corpo = document.getElementById('tmPlatBody'), pe = document.getElementById('tmPlatFoot');
+    if(corpo){
+      var tot = { u:[0,0], s:[0,0], w:[0,0] };
+      corpo.innerHTML = ORD.map(function(k){
+        var x = por[k] || {};
+        var u = [+x.receita_uticket||0, +x.pagos_uticket||0], s = [+x.receita_sympla||0, +x.pagos_sympla||0], w = [+x.receita_wix||0, +x.pagos_wix||0];
+        tot.u[0]+=u[0]; tot.u[1]+=u[1]; tot.s[0]+=s[0]; tot.s[1]+=s[1]; tot.w[0]+=w[0]; tot.w[1]+=w[1];
+        return '<tr><td><b>' + nomes[k] + '</b></td><td>' + txt(tm(u[0],u[1])) + '</td><td>' + txt(tm(s[0],s[1])) + '</td><td>' + txt(tm(w[0],w[1])) + '</td><td><b>' + txt(tm(+x.receita||0, +x.pagos||0)) + '</b></td></tr>';
+      }).join('');
+      if(pe) pe.innerHTML = '<tr><td>TODOS OS SETORES</td><td>' + txt(tm(tot.u[0],tot.u[1])) + '</td><td>' + txt(tm(tot.s[0],tot.s[1])) + '</td><td>' + txt(tm(tot.w[0],tot.w[1])) + '</td><td>' + txt(geral) + '</td></tr>';
+    }
+  };
+  if(window.DATA) try{ window.movingTicketMedio(window.DATA); }catch(e){}
+})();
+</script>
