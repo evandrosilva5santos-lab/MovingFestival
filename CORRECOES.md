@@ -96,3 +96,35 @@
 - **Segurança de Endpoints:** Todas as rotas de API no Cloudflare Worker (`_worker.js`) e no servidor local (`server.py`) exigem o header `X-Moving-Token`. Sessões inválidas respondem HTTP 401 e redirecionam para a tela de login.
 - **Sincronia de Arquivos:** `index.html` e `public/index.html` mantidos rigorosamente idênticos.
 
+
+## 10. Monitores largos (3440×1440, 2048×858, 1920×1080, 1720×720)
+- Bloco `TELAS_GRANDES` no fim do `index.html`: conteúdo centralizado com largura máxima por faixa (1440 → 1720 → 2560 → 3000px) e compactação vertical quando a altura é ≤ 900px / ≤ 760px.
+- Prints de referência em `design/dispositivos/monitor_*.jpg`. Não remover esse bloco ao mexer em `.content`.
+
+## 11. Visão geral só com ingressos · aba Faturamento (antiga Tendências)
+- **Visão geral não mostra receita.** É só venda de ingresso (o card "Vendidos (pagos)" mostra "ingressos pagos").
+- A aba `tendencias` agora se chama **Faturamento** (o `data-view` continua `tendencias`). Mostra: faturamento real dos ingressos, ticket médio, estacionamento e bar estimados, total projetado, faturamento por setor e, no fim, os gráficos de tendência de vendas.
+- **Premissas da estimativa** (público base, % que vai de carro, pessoas por carro, R$ por carro, ticket do bar) ficam no Supabase, na tabela `moving_excluir_estimativas`, lidas e gravadas por `GET/POST /api/estimativas` (Worker → RPCs `moving_excluir_estimativas_ler` / `moving_excluir_estimativas_salvar`). Valem para todos os usuários.
+- Fluxo: botão **Editar** → campos → **Salvar** / **Cancelar**. O banco valida os limites.
+- Permissão: o front usa `window.movingUsuario = {papel, nome}` e o header `X-Moving-Token` (token em `localStorage.moving_token`). Só `admin` e `superadmin` editam. **Enquanto o login não existir, qualquer um consegue editar.** A RPC de salvar já passa a exigir token de admin/superadmin automaticamente assim que existir a tabela `moving_excluir_usuarios` com algum usuário.
+
+## 12. Faturamento completo: custos, lucro/prejuízo, ponto de equilíbrio e projeção por meta
+- Aba Faturamento: KPIs (faturamento real, custos, resultado projetado hoje, ponto de equilíbrio) → DRE "Resultado projetado com as vendas de hoje" → receita por origem + por setor → tabela "Projeção de lucro por meta" (usa as mesmas metas de `moving_excluir_metas`, ticket médio e % de pagos atuais) → Premissas | Custos → tendência de vendas.
+- Custos e investimentos: lista editável (item, categoria, valor, pago/previsto) com Editar / + Adicionar / Salvar / Cancelar. Premissas ganharam "custo do bar (%)" e "taxa das ticketeiras (%)".
+- Tudo fica em `moving_excluir_estimativas.dados` (`custos`, `cmv_bar`, `taxa_ingresso` + premissas). A RPC `moving_excluir_estimativas_salvar` **mescla** com o que já está salvo, então salvar só os custos não apaga as premissas e vice-versa.
+- Ponto de equilíbrio = custos cadastrados ÷ lucro que cada ingresso a mais traz (ingresso + estacionamento + bar − custo do bar − taxa).
+
+## 13. Divergência de faturamento (Vendas por Dia × Faturamento) — corrigida
+- Causa: Vendas por Dia somava **camping e copo** na quantidade e na receita, e o ticket médio dividia por todos os itens (incluindo cortesias/camping).
+- Regra agora (fonte única = `moving_excluir_resumo()`):
+  - **Quantidade de ingressos** (Visão geral e Vendas por Dia com "Todos os setores"): só `tipo = INGRESSO`.
+  - **Faturamento** (aba Faturamento e "Faturamento no período" em Vendas por Dia): ingressos pagos **+ camping + copo** = receita real total.
+  - **Ticket médio do ingresso** = receita de ingressos pagos ÷ ingressos pagos (em todas as telas).
+- `vendas_diarias` agora vem só do RPC (fuso de São Paulo) e traz `tipo` e `pagos`; `extras` traz `pagos` e `receita`.
+- Aba Faturamento dividida em sub-abas: **Resumo e metas** (KPIs reais, simulador "e se bater a meta", DRE, projeção por meta, tendência), **Receitas extras** (premissas de estacionamento/bar) e **Despesas** (lista editável). Despesa de R$ 2.000.000 cadastrada como **exemplo fictício** — substituir.
+
+## 14. Faturamento: custo do evento, caixa e projeção do dia do evento
+- Gráficos de tendência (vendas por dia/hora/semana) **removidos** da aba Faturamento (não eram usados). As chamadas `line/barv` ficaram protegidas com `if($('chartX'))`.
+- Topo do Resumo: **Total faturado** (ingressos + camping + copo), **Custo atual do evento**, **Total pago**, **Falta pagar**, **Saldo (faturado − pago)** e barra de pagamento.
+- Despesas têm **valor total** e **já pago** (pagamento parcial), botão **Quitar**, situação automática (Pago / Parcial / A pagar).
+- **Projeção no dia do evento** = ingressos atuais + média diária dos últimos N dias completos × dias até a data do evento. Data do evento (padrão 17/10/2026) e N (padrão 7) editáveis em Receitas extras. Camping e copo projetados na mesma proporção dos ingressos.

@@ -617,7 +617,7 @@
       <a data-view="plataformas" title="Plataformas & Regiões"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><span class="nav-txt">Plataformas</span></a>
       <a data-view="promoters" title="Ações Start & Cupons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Ações Start & Cupons</span></a>
       <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
-      <a data-view="tendencias" title="Tendências"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="nav-txt">Tendências</span></a>
+      <a data-view="tendencias" title="Faturamento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="nav-txt">Faturamento</span></a>
       <a data-view="usuarios" id="navUsuarios" title="Gestão de Usuários" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Usuários</span></a>
     </nav>
     <div class="side-foot">
@@ -773,7 +773,7 @@
             <div class="s" id="diarioKpiTotalSub">ingressos/itens</div>
           </div>
           <div class="card kpi">
-            <div class="k">Receita Gerada no Período</div>
+            <div class="k" id="diarioKpiReceitaLbl">Faturamento de ingressos no período</div>
             <div class="v tnum" id="diarioKpiReceita">—</div>
             <div class="s" id="diarioKpiReceitaSub">valor faturado</div>
           </div>
@@ -1080,10 +1080,113 @@
 
       <!-- TENDÊNCIAS -->
       <section data-view="tendencias" hidden>
-        <div class="grid g3">
-          <div class="card"><div class="ttl">Vendas por dia <span class="tag">últimos 30 dias</span></div><div class="chart" id="chartDia"></div></div>
-          <div class="card"><div class="ttl">Vendas por hora</div><div class="chart" id="chartHora"></div></div>
-          <div class="card"><div class="ttl">Por dia da semana</div><div class="chart" id="chartSemana"></div></div>
+        <!-- FATURAMENTO -->
+        <div id="financeiroCard" class="fat">
+          <div class="fat-tabs" role="tablist">
+            <button type="button" role="tab" data-fat-tab="resumo" aria-selected="true">Resumo e metas</button>
+            <button type="button" role="tab" data-fat-tab="receitas" aria-selected="false">Receitas extras</button>
+            <button type="button" role="tab" data-fat-tab="despesas" aria-selected="false">Despesas</button>
+          </div>
+          <div class="fat-pane" data-fat-pane="resumo">
+          <div class="card fat-caixa">
+            <div class="ttl">Custo do evento e caixa <span class="tag" id="fatCaixaTag">valores reais</span></div>
+            <div class="fat-caixa-g">
+              <div><small>Total faturado <span class="fat-real">real</span></small><b id="fatIngressos" style="color:var(--accent)">—</b><i id="fatIngressosSub">—</i></div>
+              <div><small>Custo atual do evento</small><b id="fatCustos">—</b><i id="fatCustosSub">—</i></div>
+              <div><small>Total pago</small><b id="fatPago" class="fat-pos">—</b><i id="fatPagoSub">—</i></div>
+              <div><small>Falta pagar</small><b id="fatFalta">—</b><i id="fatFaltaSub">—</i></div>
+              <div><small>Saldo (faturado − pago)</small><b id="fatSaldo">—</b><i>dinheiro que sobra hoje, se as ticketeiras já tivessem repassado tudo</i></div>
+            </div>
+            <div class="fat-barra-pag" id="fatBarraPag"></div>
+          </div>
+
+          <div class="grid g4">
+            <div class="card kpi hl-k"><div class="k">Faturamento projetado no dia do evento <span class="fat-est">estimado</span></div><div class="v tnum" id="fatProjDia" style="color:var(--accent)">—</div><div class="s" id="fatProjDiaSub">—</div></div>
+            <div class="card kpi"><div class="k">Ingressos projetados no dia do evento</div><div class="v tnum" id="fatProjIng">—</div><div class="s" id="fatProjIngSub">—</div></div>
+            <div class="card kpi"><div class="k">Resultado projetado até agora <span class="fat-est">estimado</span></div><div class="v tnum" id="fatLucro">—</div><div class="s" id="fatLucroSub">—</div></div>
+            <div class="card kpi"><div class="k">Ponto de equilíbrio</div><div class="v tnum" id="fatEquil">—</div><div class="s" id="fatEquilSub">—</div></div>
+          </div>
+
+          <div class="card fat-sim">
+            <div class="ttl">Simulador: e se a gente bater a meta? <span class="tag">ticket médio, premissas e despesas atuais</span></div>
+            <div class="fat-sim-chips" id="fatSimChips"></div>
+            <div class="fat-sim-res" id="fatSimRes"></div>
+          </div>
+
+          <div class="grid g2 fat-dre-grid">
+            <div class="card">
+              <div class="ttl">Resultado projetado com as vendas até agora <span class="tag" id="fatPublicoTag">—</span></div>
+              <div class="fat-dre" id="fatDre"></div>
+            </div>
+            <div class="card">
+              <div class="ttl">De onde vem a receita</div>
+              <div class="fat-total-v tnum" id="fatTotal">—</div>
+              <div class="fat-total-s">receita total projetada · <b id="fatPorPessoa">—</b> por pessoa</div>
+              <div class="fat-stack" id="fatStack"></div>
+              <div class="fat-leg" id="fatLeg"></div>
+              <div class="fat-g2">Faturamento de ingressos por setor</div>
+              <div id="finSetores" class="fin-setores"></div>
+            </div>
+          </div>
+
+          <div class="card fat-metas">
+            <div class="ttl">Projeção de lucro por meta <span class="tag">mesmas metas da Visão geral · ticket médio e premissas atuais</span></div>
+            <div class="tscroll"><table class="fat-tab">
+              <thead><tr><th>Cenário</th><th>Ingressos</th><th>Ingressos (R$)</th><th>Estacion. + bar</th><th>Receita total</th><th>Custos</th><th class="fat-th-l">Lucro / prejuízo</th><th>Margem</th></tr></thead>
+              <tbody id="fatMetasBody"></tbody>
+            </table></div>
+            <p class="fat-nota" id="fatMetasNota">—</p>
+          </div>
+
+          </div>
+          <div class="fat-pane" data-fat-pane="receitas" hidden>
+            <p class="fat-intro">Premissas de receita além dos ingressos (estacionamento e bar). O que for salvo aqui entra no Resumo, no simulador e na projeção por meta.</p>
+            <div class="card fat-prem" id="fatPrem">
+              <div class="ttl">Premissas da estimativa
+                <span class="fat-acoes">
+                  <button type="button" class="fat-btn" data-acao="editar">Editar</button>
+                  <button type="button" class="fat-btn" data-acao="cancelar" hidden>Cancelar</button>
+                  <button type="button" class="fat-btn fat-btn-pri" data-acao="salvar" hidden>Salvar</button>
+                </span>
+              </div>
+              <div class="fat-rows">
+                <label class="fat-row"><span>Público base</span><b data-v="base">—</b>
+                  <select data-i="base" hidden><option value="total">Ingressos totais</option><option value="pagos">Só ingressos pagos</option></select></label>
+                <label class="fat-row"><span>% do público que vai de carro</span><b data-v="carro">—</b><input data-i="carro" type="number" min="0" max="100" step="5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Pessoas por carro</span><b data-v="pessoas">—</b><input data-i="pessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Estacionamento (R$ por carro)</span><b data-v="preco">—</b><input data-i="preco" type="number" min="0" max="1000" step="5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Ticket médio do bar (R$ por pessoa)</span><b data-v="bar">—</b><input data-i="bar" type="number" min="0" max="5000" step="5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Custo do bar (% da venda do bar)</span><b data-v="cmv_bar">—</b><input data-i="cmv_bar" type="number" min="0" max="100" step="1" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Data do evento (1º dia)</span><b data-v="data_evento">—</b><input data-i="data_evento" type="date" hidden></label>
+                <label class="fat-row"><span>Ritmo de vendas: média dos últimos (dias)</span><b data-v="ritmo_dias">—</b><input data-i="ritmo_dias" type="number" min="1" max="60" step="1" inputmode="numeric" hidden></label>
+                <label class="fat-row"><span>Taxa das ticketeiras (% do faturamento)</span><b data-v="taxa_ingresso">—</b><input data-i="taxa_ingresso" type="number" min="0" max="100" step="0.5" inputmode="decimal" hidden></label>
+              </div>
+              <div class="fat-msg" data-msg hidden></div>
+              <div class="fat-calc" id="fatCalc"></div>
+            </div>
+          </div>
+          <div class="fat-pane" data-fat-pane="despesas" hidden>
+            <p class="fat-intro">Lista de despesas e investimentos do evento. O total entra no Resumo como custo e define o ponto de equilíbrio.</p>
+            <div class="card fat-custos" id="fatCustosCard">
+            <div class="ttl">Despesas do evento
+              <span class="fat-acoes">
+                <button type="button" class="fat-btn" data-acao="editar">Editar</button>
+                <button type="button" class="fat-btn" data-acao="cancelar" hidden>Cancelar</button>
+                <button type="button" class="fat-btn fat-btn-pri" data-acao="salvar" hidden>Salvar</button>
+              </span>
+            </div>
+            <div class="fat-cats" id="fatCats"></div>
+            <div class="tscroll"><table class="fat-tab fat-ctab">
+              <thead><tr><th>Item</th><th>Categoria</th><th>Valor total</th><th>Já pago</th><th>Falta pagar</th><th>Situação</th><th class="fat-col-x"></th></tr></thead>
+              <tbody id="fatCustosBody"></tbody>
+              <tfoot id="fatCustosFoot"></tfoot>
+            </table></div>
+            <button type="button" class="fat-btn fat-add" id="fatAddCusto" hidden>+ Adicionar despesa</button>
+            <div class="fat-msg" data-msg hidden></div>
+          </div>
+          </div>
+          <p class="fat-nota" id="fatInfo">—</p>
+
         </div>
       </section>
 
@@ -1261,8 +1364,7 @@
     diario:['Vendas por Dia','Análise analítica dia a dia com filtros de período, plataforma e setor'],
     plataformas:['Plataformas & canais','De onde vêm as vendas'],
     promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
-    ingressos:['Ingressos','Ticket médio e lotes que mais vendem'],
-    tendencias:['Tendências','Vendas por dia, hora e dia da semana'],
+    tendencias:['Faturamento','Faturamento real dos ingressos e estimativa de estacionamento e bar'],
     usuarios:['Gestão de Usuários & Acessos','Controle de permissões e relatórios permitidos']
   };
   var views = [].slice.call(document.querySelectorAll('section[data-view]'));
@@ -1362,12 +1464,13 @@
     $('kTotal').textContent = num(sel.total);
     $('kTotalS').textContent = f ? ((totalGeral? Math.round(sel.total/totalGeral*100):0)+'% do total geral') : 'ingressos consolidados';
     $('kPagos').textContent = num(sel.pagos);
-    $('kReceita').textContent = f ? 'ingressos pagos' : ('receita '+brl(d.receita));
+    $('kReceita').textContent = 'ingressos pagos';
     $('kCort').textContent = num(sel.cortesias);
     var dias={}; (d.por_dia||[]).forEach(function(x){ dias[String(x.dia).slice(0,10)]=x.total; });
     $('kHoje').textContent = num(dias[hojeSP(0)]||0);
     $('kOntem').textContent = 'ontem: '+num(dias[hojeSP(1)]||0)+(f?' · todos os setores':'');
     if(window.movingHoje) window.movingHoje(d); /* HOJE_DETALHE */
+    if(window.movingFinanceiro) try{ window.movingFinanceiro(d); }catch(e){} /* FINANCEIRO_PAINEL */
 
     // Cards de setor
     $('setores').innerHTML = ORDEM.map(function(k){
@@ -1439,13 +1542,13 @@
     // Tendências
     var diaRows=[], i;
     for(i=29;i>=0;i--){ var k=hojeSP(i); diaRows.push([(i%5===0)? k.slice(8,10)+'/'+k.slice(5,7) : '', dias[k]||0]); }
-    line($('chartDia'), diaRows);
+    if($('chartDia')) line($('chartDia'), diaRows);
     var horas={}; (d.por_hora||[]).forEach(function(h){ horas[h.hora]=h.total; });
     var horaRows=[]; for(i=0;i<24;i++){ horaRows.push([(i%3===0)? i+'h' : '', horas[i]||0]); }
-    barv($('chartHora'), horaRows, true);
+    if($('chartHora')) barv($('chartHora'), horaRows, true);
     var sem={}; (d.por_dia_semana||[]).forEach(function(w){ sem[w.dia_semana]=w.total; });
     var semRows=[]; for(i=1;i<=7;i++){ semRows.push([SEMANA[i], sem[i]||0]); }
-    barv($('chartSemana'), semRows);
+    if($('chartSemana')) barv($('chartSemana'), semRows);
 
     // Regiões e Geografia
     renderRegioes(d);
@@ -1783,6 +1886,8 @@
       if(DIARIO_DATA_FIM && v.dia > DIARIO_DATA_FIM) return false;
       if(DIARIO_PLAT !== 'ALL' && v.plataforma !== DIARIO_PLAT) return false;
       if(DIARIO_SETOR !== 'ALL' && v.setor !== DIARIO_SETOR) return false;
+      // Todos os setores = só INGRESSO (camping e copo não somam; Camping tem chip próprio)
+      if(DIARIO_SETOR === 'ALL' && ['FULLPASS','ZONE','GOLD','BLACK'].indexOf(String(v.setor||'').toUpperCase()) < 0) return false;
       return true;
     });
 
@@ -1810,6 +1915,7 @@
       var rec = v.receita || 0;
       o.total += tot;
       o.receita += rec;
+      o.pagos = (o.pagos || 0) + (v.pagos != null ? (+v.pagos || 0) : (rec > 0 ? tot : 0));
       if(v.plataforma === 'UTICKET') o.uticket += tot;
       else if(v.plataforma === 'SYMPLA') o.sympla += tot;
       else if(v.plataforma === 'WIX') o.wix += tot;
@@ -1828,6 +1934,13 @@
     // KPIs da seleção
     var totFiltro = listaDias.reduce(function(acc, x){ return acc + x.total; }, 0);
     var recFiltro = listaDias.reduce(function(acc, x){ return acc + x.receita; }, 0);
+    var pagosFiltro = listaDias.reduce(function(acc, x){ return acc + (x.pagos || 0); }, 0);
+    // Faturamento = ingressos + camping + copo (receita real total). A quantidade continua só de ingressos.
+    var recExtras = 0;
+    if(DIARIO_SETOR === 'ALL') vendas.forEach(function(v){
+      var se = String(v.setor||'').toUpperCase(); if(se !== 'CAMPING' && se !== 'COPO') return;
+      if(DIARIO_DATA_INI && v.dia < DIARIO_DATA_INI) return; if(DIARIO_DATA_FIM && v.dia > DIARIO_DATA_FIM) return;
+      if(DIARIO_PLAT !== 'ALL' && v.plataforma !== DIARIO_PLAT) return; recExtras += +v.receita || 0; });
     var qtdDias = listaDias.filter(function(x){ return x.total > 0; }).length;
     var mediaDiaria = qtdDias > 0 ? (totFiltro / qtdDias).toFixed(1).replace('.',',') : '0';
 
@@ -1837,9 +1950,10 @@
     });
 
     if($('diarioKpiTotal')) $('diarioKpiTotal').textContent = num(totFiltro);
-    if($('diarioKpiTotalSub')) $('diarioKpiTotalSub').textContent = num(qtdDias) + ' dias com vendas no filtro';
-    if($('diarioKpiReceita')) $('diarioKpiReceita').textContent = brl(recFiltro);
-    if($('diarioKpiReceitaSub')) $('diarioKpiReceitaSub').textContent = totFiltro > 0 ? ('ticket médio ' + brl(recFiltro / totFiltro)) : 'sem receita';
+    if($('diarioKpiTotalSub')) $('diarioKpiTotalSub').textContent = (DIARIO_SETOR === 'CAMPING' ? 'vagas de camping · ' : (DIARIO_SETOR === 'ALL' ? 'só ingressos (sem camping e copo) · ' : '')) + num(qtdDias) + ' dias com vendas';
+    if($('diarioKpiReceita')) $('diarioKpiReceita').textContent = brl(recFiltro + recExtras);
+    if($('diarioKpiReceitaLbl')) $('diarioKpiReceitaLbl').textContent = DIARIO_SETOR === 'CAMPING' ? 'Faturamento de camping no período' : (DIARIO_SETOR === 'ALL' ? 'Faturamento no período' : 'Faturamento do setor no período');
+    if($('diarioKpiReceitaSub')) $('diarioKpiReceitaSub').textContent = DIARIO_SETOR === 'ALL' ? ('ingressos ' + brl(recFiltro) + ' + camping e copo ' + brl(recExtras)) : (pagosFiltro > 0 ? ('ticket médio ' + brl(recFiltro / pagosFiltro) + ' · ' + num(pagosFiltro) + ' pagos') : 'sem receita');
     if($('diarioKpiMedia')) $('diarioKpiMedia').textContent = mediaDiaria;
     if($('diarioKpiMediaSub')) $('diarioKpiMediaSub').textContent = 'vendas por dia ativo';
     if($('diarioKpiPicoVal')) $('diarioKpiPicoVal').textContent = picoDia ? num(picoDia.total) : '—';
@@ -2458,7 +2572,7 @@
   function diasVisiveis(){ return [].slice.call(document.querySelectorAll('#chartDiarioEvolucao rect[data-dia]')).map(function(r){ return r.getAttribute('data-dia'); }); }
   function filtrar(rows){
     var pl = chip('diarioPlatChips','data-plat'), st = chip('diarioSetorChips','data-setor');
-    return rows.filter(function(r){ return (pl==='ALL' || r.plataforma===pl) && (st==='ALL' || String(r.setor||'').toUpperCase()===st); });
+    return rows.filter(function(r){ var se=String(r.setor||'').toUpperCase(); return (pl==='ALL' || r.plataforma===pl) && (st==='ALL' ? ['FULLPASS','ZONE','GOLD','BLACK'].indexOf(se)>=0 : se===st); });
   }
   // Curva suave sem "passar" do valor real (interpolação monotônica)
   function curva(pts){
@@ -2691,7 +2805,7 @@
 <script>
 // Cabeçalho do celular (logo + tema) e nomes curtos das abas
 (function(){
-  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Tendências' };
+  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Faturamento' };
   [].slice.call(document.querySelectorAll('#nav a[data-view]')).forEach(function(a){
     a.setAttribute('data-curto', CURTO[a.getAttribute('data-view')] || (a.textContent||'').trim());
   });
@@ -2921,6 +3035,429 @@
 })();
 </script>
 
+<style>
+/* TELAS_GRANDES: monitores largos (1920x1080, 2048x858, 1720x720, 3440x1440) */
+@media (min-width:1500px){ .content{ margin-inline:auto; max-width:1440px; padding-inline:36px; } }
+@media (min-width:1900px){ .content{ max-width:1720px; } .grid{ gap:20px; } .grid + .grid{ margin-top:20px; } }
+@media (min-width:2400px){ .content{ max-width:2560px; padding:34px 56px 70px; } .grid{ gap:26px; } .grid + .grid{ margin-top:26px; }
+  .card{ padding-block:22px; } }
+@media (min-width:3000px){ .content{ max-width:3000px; } }
+/* telas largas e baixas (altura até 900px): compacta na vertical para caber mais sem rolar */
+@media (min-width:1200px) and (max-height:900px){
+  .content{ padding-top:16px; padding-bottom:36px; }
+  .grid{ gap:12px; } .grid + .grid{ margin-top:12px; }
+  .card{ padding-block:12px; }
+}
+@media (min-width:1200px) and (max-height:760px){
+  .card{ padding-block:9px; } .content{ padding-top:10px; }
+}
+</style>
+
+<style>
+/* TELA_ULTRAWIDE: em 3440 a Visão geral usa duas colunas (números ao lado dos setores etc.) */
+@media (min-width:2400px){
+  section[data-view="overview"]:not([hidden]){ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:26px;
+    grid-template-areas:"metas metas" "kpi set" "exh cross" "ext cross" "fontes fontes"; align-items:start; }
+  section[data-view="overview"] > *{ margin:0 !important; min-width:0; }
+  section[data-view="overview"] > #metas{ grid-area:metas; }
+  section[data-view="overview"] > .grid.g4:not(#setores){ grid-area:kpi; }
+  section[data-view="overview"] > #setores{ grid-area:set; }
+  section[data-view="overview"] > #extrasHead{ grid-area:exh; align-self:end; }
+  section[data-view="overview"] > #extras{ grid-area:ext; }
+  section[data-view="overview"] > .grid.g2:not(#extras){ grid-area:cross; align-self:stretch; }
+  section[data-view="overview"] > #fontesCard{ grid-area:fontes; }
+  section[data-view="overview"] > #setores .card, section[data-view="overview"] > .grid.g4:not(#setores) .card{ height:100%; }
+}
+</style>
+
+<style>
+/* DIARIO_ULTRAWIDE: em 3440, Vendas por Dia mostra o gráfico de evolução ao lado das ondas do dia */
+@media (min-width:2400px){
+  section[data-view="diario"]:not([hidden]){ display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:26px; align-items:start; }
+  section[data-view="diario"] > *{ margin:0 !important; min-width:0; }
+  section[data-view="diario"] > :nth-child(1), section[data-view="diario"] > :nth-child(2), section[data-view="diario"] > :nth-child(5){ grid-column:1 / -1; }
+  section[data-view="diario"] > #ondaCard{ height:100%; }
+}
+</style>
+
+<style>
+/* FATURAMENTO: aba Faturamento (antiga Tendências) — receita, custos, lucro e projeção por meta */
+.fat > .grid + .card, .fat > .card + .grid, .fat > .card + .card, .fat > .grid + .grid{ margin-top:16px; }
+.fat-real,.fat-est{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border-radius:999px; margin-left:4px; vertical-align:1px; }
+.fat-real{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 12%,transparent); }
+.fat-est{ color:var(--c-warning); background:color-mix(in srgb,var(--c-warning) 14%,transparent); }
+.fat-pos{ color:var(--c-success)!important; } .fat-neg{ color:var(--c-danger,#DC2626)!important; }
+.fat-dre{ display:flex; flex-direction:column; font-size:13px; }
+.fat-dre .l{ display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px dashed var(--border); }
+.fat-dre .l span{ color:var(--fg-muted); } .fat-dre .l b{ font-variant-numeric:tabular-nums; }
+.fat-dre .g{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-faint); margin-top:10px; }
+.fat-dre .st{ border-bottom:1px solid var(--border); } .fat-dre .st span,.fat-dre .st b{ color:var(--fg); font-weight:700; }
+.fat-dre .res{ border:0; margin-top:8px; padding:12px 14px; border-radius:12px; background:var(--surface-2); font-size:15px; }
+.fat-dre .res span{ color:var(--fg); font-weight:700; } .fat-dre .res b{ font-size:22px; font-family:var(--font-display); }
+.fat-total-v{ font-family:var(--font-display); font-size:36px; font-weight:800; line-height:1.1; color:var(--accent); margin-top:6px; }
+.fat-total-s{ font-size:12px; color:var(--fg-muted); margin:4px 0 16px; } .fat-total-s b{ color:var(--fg); }
+.fat-stack{ display:flex; height:14px; border-radius:99px; overflow:hidden; background:var(--surface-2); gap:2px; }
+.fat-stack span{ display:block; height:100%; }
+.fat-leg{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:12px; }
+.fat-leg div{ font-size:11.5px; color:var(--fg-muted); min-width:0; }
+.fat-leg i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.fat-leg b{ display:block; font-size:15px; color:var(--fg); font-variant-numeric:tabular-nums; margin-top:2px; }
+.fat-tab{ width:100%; border-collapse:collapse; font-size:12.5px; }
+.fat-tab th{ text-align:right; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--fg-faint); padding:8px 10px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.fat-tab th:first-child,.fat-tab td:first-child{ text-align:left; }
+.fat-tab td{ text-align:right; padding:9px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.fat-tab .cen b{ display:block; font-weight:700; } .fat-tab .cen small{ color:var(--fg-muted); font-size:11px; }
+.fat-tab tr.agora td{ background:color-mix(in srgb,var(--accent) 7%,transparent); }
+.fat-tab tr.agora .cen b{ color:var(--accent); }
+.fat-tab tr.prox td{ background:color-mix(in srgb,var(--c-warning) 7%,transparent); }
+.fat-tab tr.equil td{ background:color-mix(in srgb,var(--c-success) 8%,transparent); font-style:italic; }
+.fat-th-l{ text-align:left!important; min-width:220px; }
+.fat-lucro{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:0; min-width:220px; }
+.fat-lucro .neg,.fat-lucro .pos{ height:10px; display:flex; }
+.fat-lucro .neg{ justify-content:flex-end; border-right:1px solid var(--fg-faint); }
+.fat-lucro .neg span{ background:var(--c-danger,#DC2626); border-radius:4px 0 0 4px; }
+.fat-lucro .pos span{ background:var(--c-success); border-radius:0 4px 4px 0; }
+.fat-lucro b{ grid-column:1 / -1; text-align:center; font-size:12.5px; margin-top:3px; }
+.fin-setores{ display:flex; flex-direction:column; gap:14px; }
+.fin-set .t{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; font-weight:600; gap:8px; }
+.fin-set .t b{ font-variant-numeric:tabular-nums; font-size:14px; }
+.fin-set .bar{ height:8px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin:6px 0 3px; }
+.fin-set .bar span{ display:block; height:100%; border-radius:99px; background:var(--cor); }
+.fin-set small{ font-size:11px; color:var(--fg-muted); }
+.fat .ttl{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.fat-acoes{ margin-left:auto; display:flex; gap:6px; }
+.fat-acoes [hidden],.fat [hidden]{ display:none!important; }
+.fat-btn{ font:inherit; font-size:12px; font-weight:600; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--fg); cursor:pointer; }
+.fat-btn:hover{ background:var(--surface-2); }
+.fat-btn-pri{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.fat-btn-pri:hover{ background:var(--accent); filter:brightness(1.08); }
+.fat-btn:disabled{ opacity:.6; cursor:wait; }
+.fat-rows{ display:flex; flex-direction:column; }
+.fat-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.fat-row span{ color:var(--fg-muted); } .fat-row b{ font-variant-numeric:tabular-nums; text-align:right; }
+.fat input,.fat select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--accent); border-radius:8px; padding:6px 10px; max-width:100%; box-sizing:border-box; }
+.fat-row input{ width:140px; text-align:right; } .fat-row select{ width:200px; }
+.fat-msg{ margin-top:10px; font-size:12px; font-weight:600; padding:8px 12px; border-radius:8px; }
+.fat-msg.ok{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 10%,transparent); }
+.fat-msg.erro{ color:var(--c-danger,#DC2626); background:color-mix(in srgb,var(--c-danger,#DC2626) 10%,transparent); }
+.fat-calc{ margin-top:12px; display:grid; gap:4px; font-size:12px; color:var(--fg-muted); background:var(--surface-2); border-radius:10px; padding:10px 12px; }
+.fat-calc b{ color:var(--fg); font-variant-numeric:tabular-nums; }
+.fat-cats{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.fat-cats span{ font-size:11.5px; font-weight:600; color:var(--fg-muted); background:var(--surface-2); border:1px solid var(--border); padding:4px 10px; border-radius:999px; }
+.fat-cats b{ color:var(--fg); margin-left:4px; font-variant-numeric:tabular-nums; }
+.fat-ctab td:first-child{ white-space:normal; }
+.fat-ctab input,.fat-ctab select{ width:100%; min-width:110px; }
+.fat-ctab td input[data-c="valor"]{ text-align:right; min-width:120px; }
+.fat-col-x{ width:36px; }
+.fat-x{ border:0; background:none; color:var(--fg-faint); font-size:18px; cursor:pointer; line-height:1; padding:2px 6px; }
+.fat-x:hover{ color:var(--c-danger,#DC2626); }
+.fat-sit{ font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; }
+.fat-sit.pago{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 12%,transparent); }
+.fat-sit.prev{ color:var(--fg-muted); background:var(--surface-2); }
+.fat-add{ margin-top:10px; }
+.fat-vazio{ text-align:center!important; color:var(--fg-muted); padding:18px!important; white-space:normal!important; }
+.fat-nota{ font-size:11px; color:var(--fg-faint); margin:10px 0 0; line-height:1.45; }
+.fat-g2{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-faint); margin:22px 0 12px; padding-top:16px; border-top:1px solid var(--border); }
+@media (min-width:1200px){ .fat-bottom{ grid-template-columns:minmax(0,1fr) minmax(0,1.55fr); } }
+.fat-ctab td:nth-child(2){ white-space:normal; color:var(--fg-muted); }
+.fat-caixa-g{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+.fat-caixa-g > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:0; }
+.fat-caixa-g small{ display:block; font-size:11.5px; font-weight:600; color:var(--fg-muted); }
+.fat-caixa-g b{ display:block; font-family:var(--font-display); font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; margin:4px 0 2px; }
+.fat-caixa-g i{ font-style:normal; font-size:11px; color:var(--fg-muted); line-height:1.35; display:block; }
+.fat-barra-pag{ margin-top:12px; } .fat-barra-pag .bp{ height:10px; border-radius:99px; background:color-mix(in srgb,var(--c-danger,#DC2626) 18%,transparent); overflow:hidden; }
+.fat-barra-pag .bp span{ display:block; height:100%; background:var(--c-success); border-radius:99px; }
+.fat-barra-pag small{ display:block; font-size:11px; color:var(--fg-muted); margin-top:4px; }
+.fat-sit.parc{ color:var(--c-warning); background:color-mix(in srgb,var(--c-warning) 14%,transparent); }
+.fat-quitar{ padding:5px 10px; font-size:11.5px; }
+@media (max-width:1199px){ .fat-caixa-g{ grid-template-columns:repeat(2,minmax(0,1fr)); } .fat-caixa-g > div:first-child{ grid-column:1 / -1; } }
+@media (max-width:480px){ .fat-caixa-g b{ font-size:20px; } }
+.fat-tabs{ display:flex; gap:4px; padding:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; width:max-content; max-width:100%; overflow-x:auto; margin-bottom:16px; }
+.fat-tabs button{ font:inherit; font-size:13px; font-weight:600; color:var(--fg-muted); background:none; border:0; padding:8px 16px; border-radius:9px; cursor:pointer; white-space:nowrap; }
+.fat-tabs button[aria-selected="true"]{ background:var(--surface); color:var(--fg); box-shadow:0 1px 3px rgba(15,23,42,.1); }
+.fat-pane > .card + .card, .fat-pane > .grid + .card, .fat-pane > .card + .grid, .fat-pane > .grid + .grid{ margin-top:16px; }
+.fat-intro{ font-size:12.5px; color:var(--fg-muted); margin:0 0 12px; }
+.fat-sim-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; align-items:center; }
+.fat-sim-chips button{ font:inherit; font-size:12.5px; font-weight:600; padding:7px 12px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--fg); cursor:pointer; }
+.fat-sim-chips button small{ display:block; font-size:10px; font-weight:600; color:var(--fg-muted); }
+.fat-sim-chips button[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:#fff; } .fat-sim-chips button[aria-pressed="true"] small{ color:rgba(255,255,255,.8); }
+.fat-sim-chips label{ display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--fg-muted); margin-left:6px; }
+.fat-sim-chips input{ width:110px; }
+.fat-sim-res{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.fat-sim-res > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:0; }
+.fat-sim-res small{ display:block; font-size:11px; font-weight:600; color:var(--fg-muted); }
+.fat-sim-res b{ display:block; font-family:var(--font-display); font-size:22px; font-variant-numeric:tabular-nums; margin-top:2px; }
+.fat-sim-res i{ font-style:normal; font-size:11px; color:var(--fg-muted); }
+.fat-sim-res .big{ grid-column:span 2; } .fat-sim-res .big b{ font-size:30px; }
+@media (max-width:1000px){ .fat-sim-res{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:480px){ .fat-sim-res .big{ grid-column:1 / -1; } .fat-sim-res b{ font-size:18px; } .fat-sim-res .big b{ font-size:24px; } }
+.fat-sub{ display:flex; align-items:center; gap:10px; margin:26px 0 10px; }
+.fat-sub h2{ font-size:14px; font-weight:700; }
+.fat-sub .pill{ font-size:11px; font-weight:700; color:var(--fg-muted); background:var(--surface-2); border:1px dashed var(--border); padding:3px 10px; border-radius:999px; }
+@media (max-width:767px){
+  .fat-total-v{ font-size:30px; }
+  .fat-leg{ gap:6px; } .fat-leg b{ font-size:13px; }
+  .fat-row{ grid-template-columns:1fr; gap:6px; } .fat-row b{ text-align:left; }
+  .fat-row input,.fat-row select{ width:100%; text-align:left; }
+}
+</style>
+<script>
+/* FATURAMENTO: premissas + custos guardados no Supabase (via /api/estimativas). Editar só admin/superadmin. */
+(function(){
+  var PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70,cmv_bar:0,taxa_ingresso:0,data_evento:'2026-10-17',ritmo_dias:7,custos:[]};
+  function vPago(c){ return c.valor_pago!=null && c.valor_pago!=='' ? (+c.valor_pago||0) : (c.pago? (+c.valor||0) : 0); }
+  var CATS=['Atrações / artistas','Estrutura / palco / som','Produção','Equipe / staff','Segurança','Marketing / tráfego','Bar (insumos)','Estacionamento','Taxas / impostos','Outros'];
+  var prem=JSON.parse(JSON.stringify(PAD)), info=null, ult=null, metas=[], rasc=null;
+  var ed={prem:false,custos:false};
+  var NOME={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black'}, COR={FULLPASS:'var(--c-fullpass)',ZONE:'var(--c-zone)',GOLD:'var(--c-gold)',BLACK:'var(--c-black)'};
+  var C_ING='var(--accent)', C_EST='#F59E0B', C_BAR='#10B981';
+  function g(id){ return document.getElementById(id); }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function din(n,c){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:c===0?0:2,maximumFractionDigits:c===0?0:2}); }
+  function int(n){ return Math.round(+n||0).toLocaleString('pt-BR'); }
+  function nb(n){ return (+n||0).toLocaleString('pt-BR',{maximumFractionDigits:1}); }
+  function set(id,v){ var e=g(id); if(e) e.textContent=v; }
+  function sinal(el,v){ var e=typeof el==='string'?g(el):el; if(!e) return; e.classList.toggle('fat-pos',v>=0); e.classList.toggle('fat-neg',v<0); }
+  // Permissão: quando o login existir, window.movingUsuario = {papel,nome}. Sem login ainda, todos podem editar.
+  function podeEditar(){ var u=window.movingUsuario; return !u || u.papel==='admin' || u.papel==='superadmin'; }
+  function token(){ try{ return localStorage.getItem('moving_token')||''; }catch(e){ return ''; } }
+  function somaCustos(){ return (prem.custos||[]).reduce(function(a,c){ return a+(+c.valor||0); },0); }
+  // Cenário com N ingressos no total (pagos + cortesias), mantendo a proporção de pagos e o ticket médio atuais
+  function cenario(N, real){
+    var pctPago = ult.total? ult.pagos/ult.total : 1, tm = ult.pagos? ult.receita/ult.pagos : 0;
+    var pagos = real? ult.pagos : N*pctPago, recIng = real? ult.receita : pagos*tm;
+    var publico = prem.base==='pagos'? pagos : N;
+    var carros = publico*(Math.min(100,Math.max(0,+prem.carro||0))/100)/Math.max(1,+prem.pessoas||1);
+    var est = carros*(+prem.preco||0), bar = publico*(+prem.bar||0);
+    var cBar = bar*(+prem.cmv_bar||0)/100, cTaxa = recIng*(+prem.taxa_ingresso||0)/100, fixos = somaCustos();
+    var extraReal = real? (ult.extraReal||0) : (ult.total? (ult.extraReal||0)*N/ult.total : 0), receita = recIng+extraReal+est+bar, custos = fixos+cBar+cTaxa, lucro = receita-custos;
+    return {extraReal:extraReal,campReal:real?(ult.campReal||0):0,copoReal:real?(ult.copoReal||0):0,N:N,pagos:pagos,publico:publico,carros:carros,recIng:recIng,est:est,bar:bar,receita:receita,cBar:cBar,cTaxa:cTaxa,fixos:fixos,custos:custos,lucro:lucro,margem: receita? lucro/receita : 0};
+  }
+  function equilibrio(){
+    var a=cenario(1000,false), b=cenario(2000,false), contrib=(b.lucro-a.lucro)/1000; // lucro por ingresso a mais
+    if(contrib<=0) return null; return Math.max(0, Math.ceil(somaCustos()/contrib));
+  }
+  // Projeção para o dia do evento: ingressos atuais + ritmo médio dos últimos N dias completos × dias que faltam
+  function hojeSPstr(off){ var d=new Date(Date.now()-(off||0)*864e5); return new Intl.DateTimeFormat('fr-CA',{timeZone:'America/Sao_Paulo'}).format(d); }
+  function projecaoDia(){
+    var nd=Math.max(1,Math.min(60,+prem.ritmo_dias||7)), soma=0, i;
+    for(i=1;i<=nd;i++) soma += (ult.porDia||{})[hojeSPstr(i)]||0;
+    var ritmo=soma/nd, hoje=hojeSPstr(0), alvo=String(prem.data_evento||'2026-10-17');
+    var dias=Math.max(0, Math.round((Date.parse(alvo+'T12:00:00Z')-Date.parse(hoje+'T12:00:00Z'))/864e5));
+    var N=Math.round(ult.total+ritmo*dias);
+    return {ritmo:ritmo,dias:dias,N:N,nd:nd,c:cenario(N,false),alvo:alvo};
+  }
+  function desenharKpis(r){
+    var fat=ult.receita+(ult.extraReal||0);
+    set('fatIngressos', din(fat,0)); set('fatIngressosSub', 'ingressos '+din(ult.receita,0)+' · camping '+din(ult.campReal||0,0)+' · copo '+din(ult.copoReal||0,0));
+    var lista=prem.custos||[], fx=somaCustos(), pago=lista.reduce(function(a,c){ return a+vPago(c); },0), falta=fx-pago;
+    set('fatCustos', din(fx,0)); set('fatCustosSub', lista.length? (lista.length+(lista.length===1?' despesa cadastrada':' despesas cadastradas')+((r.cBar+r.cTaxa)? ' · + '+din(r.cBar+r.cTaxa,0)+' variáveis (bar e taxas)':'')) : 'nenhuma despesa cadastrada');
+    set('fatPago', din(pago,0)); set('fatPagoSub', fx? Math.round(pago/fx*100)+'% do custo já pago' : '—');
+    var nAb=lista.filter(function(c){ return (+c.valor||0)-vPago(c)>0; }).length; set('fatFalta', din(falta,0)); set('fatFaltaSub', nAb? (nAb+(nAb===1?' despesa em aberto':' despesas em aberto')) : 'tudo pago');
+    g('fatFalta').classList.toggle('fat-neg', falta>0);
+    var saldo=fat-pago; set('fatSaldo',(saldo<0?'− ':'')+din(Math.abs(saldo),0)); sinal('fatSaldo',saldo);
+    var pc=fx? Math.min(100,pago/fx*100):0;
+    g('fatBarraPag').innerHTML = fx? '<div class="bp"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+Math.round(pc)+'% pago · '+din(falta,0)+' a pagar</small>' : '';
+    var pj=projecaoDia(), dt=pj.alvo.split('-');
+    set('fatProjDia', din(pj.c.receita,0));
+    set('fatProjDiaSub', 'em '+dt[2]+'/'+dt[1]+' · ingressos '+din(pj.c.recIng,0)+' + camping/copo '+din(pj.c.extraReal,0)+' + estac. e bar '+din(pj.c.est+pj.c.bar,0));
+    set('fatProjIng', int(pj.N)); set('fatProjIngSub', pj.dias? (nb(pj.ritmo)+' por dia (média de '+pj.nd+' dias) × '+pj.dias+' dias que faltam') : 'dia do evento');
+    set('fatLucro', (r.lucro<0?'− ':'')+din(Math.abs(r.lucro),0)); sinal('fatLucro',r.lucro);
+    var lpj=pj.c.lucro;
+    set('fatLucroSub', (r.lucro>=0? ('lucro · margem '+Math.round(r.margem*100)+'%') : 'prejuízo se as vendas parassem agora')+(lista.length? ' · no dia do evento: '+(lpj<0?'− ':'')+din(Math.abs(lpj),0) : ''));
+    if(!lista.length){ set('fatLucro','—'); g('fatLucro').classList.remove('fat-pos','fat-neg'); set('fatLucroSub','cadastre as despesas para ver lucro ou prejuízo'); }
+    var eq=equilibrio();
+    if(!fx){ set('fatEquil','—'); set('fatEquilSub','cadastre as despesas para calcular'); g('fatEquil').classList.remove('fat-pos','fat-neg'); }
+    else if(eq===null){ set('fatEquil','—'); set('fatEquilSub','cada ingresso não cobre o custo variável'); }
+    else { set('fatEquil', int(eq)+' ingr.'); var fe=eq-ult.total;
+      set('fatEquilSub', fe>0? ('faltam '+int(fe)+' ingressos para empatar'+(pj.N>=eq?' · deve ser atingido até o evento':' · no ritmo atual não chega')) : ('atingido · '+int(-fe)+' ingressos acima'));
+      sinal('fatEquil', -fe); }
+  }
+  function desenharDre(r){
+    function l(t,v,cls){ return '<div class="l '+(cls||'')+'"><span>'+t+'</span><b>'+v+'</b></div>'; }
+    var cats={}; (prem.custos||[]).forEach(function(c){ cats[c.categoria||'Outros']=(cats[c.categoria||'Outros']||0)+(+c.valor||0); });
+    var h='<div class="g">Receitas</div>'+l('Ingressos <span class="fat-real">real</span>',din(r.recIng,0))+l('Estacionamento ('+int(r.carros)+' carros) <span class="fat-est">est.</span>',din(r.est,0))+l('Bar ('+int(r.publico)+' pessoas) <span class="fat-est">est.</span>',din(r.bar,0))+(r.campReal?l('Camping ('+int(ult.campPagos)+' vagas) <span class="fat-real">real</span>',din(r.campReal,0)):'')+(r.copoReal?l('Copo ('+int(ult.copoPagos)+') <span class="fat-real">real</span>',din(r.copoReal,0)):'')+l('Receita total',din(r.receita,0),'st');
+    h+='<div class="g">Custos</div>';
+    Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; }).forEach(function(k){ h+=l(esc(k),'− '+din(cats[k],0)); });
+    if(!Object.keys(cats).length) h+=l('Custos do evento','nenhum cadastrado');
+    if(r.cBar) h+=l('Custo do bar ('+nb(prem.cmv_bar)+'%)','− '+din(r.cBar,0));
+    if(r.cTaxa) h+=l('Taxa das ticketeiras ('+nb(prem.taxa_ingresso)+'%)','− '+din(r.cTaxa,0));
+    h+=l('Custo total','− '+din(r.custos,0),'st');
+    h+='<div class="l res"><span>'+(r.lucro>=0?'Lucro projetado':'Prejuízo projetado')+'</span><b class="'+(r.lucro>=0?'fat-pos':'fat-neg')+'">'+(r.lucro<0?'− ':'')+din(Math.abs(r.lucro),0)+'</b></div>';
+    g('fatDre').innerHTML=h; set('fatPublicoTag', int(ult.total)+' ingressos vendidos até agora');
+    set('fatTotal', din(r.receita,0)); set('fatPorPessoa', din(r.publico? r.receita/r.publico : 0));
+    var partes=[['Ingressos',r.recIng,C_ING],['Camping e copo',r.extraReal,'#8B5CF6'],['Estacionamento',r.est,C_EST],['Bar',r.bar,C_BAR]];
+    g('fatStack').innerHTML=partes.map(function(p){ return '<span title="'+p[0]+'" style="width:'+(r.receita? p[1]/r.receita*100 : 0).toFixed(2)+'%;background:'+p[2]+'"></span>'; }).join('');
+    g('fatLeg').innerHTML=partes.map(function(p){ return '<div><i style="background:'+p[2]+'"></i>'+p[0]+' · '+(r.receita? Math.round(p[1]/r.receita*100) : 0)+'%<b>'+din(p[1],0)+'</b></div>'; }).join('');
+  }
+  function desenharMetas(r){
+    var lin=[{nome:'Agora',sub:'vendas reais até agora',c:r,cls:'agora'}];
+    var prox=null; metas.forEach(function(m){ if(prox===null && m.valor>ult.total) prox=m.valor; });
+    metas.forEach(function(m){ lin.push({nome:m.nome,sub:m.classificacao||'',c:cenario(+m.valor,false),cls:(+m.valor===prox?'prox':''),val:+m.valor}); });
+    var eq=somaCustos()? equilibrio() : null;
+    if(eq && eq>ult.total){ lin.push({nome:'Ponto de equilíbrio',sub:'lucro zero',c:cenario(eq,false),cls:'equil',val:eq}); }
+    lin.sort(function(a,b){ return (a.cls==='agora'? ult.total : a.val) - (b.cls==='agora'? ult.total : b.val); });
+    var maxAbs=Math.max.apply(null,lin.map(function(x){ return Math.abs(x.c.lucro); }).concat([1]));
+    g('fatMetasBody').innerHTML=lin.map(function(x){
+      var c=x.c, w=(Math.abs(c.lucro)/maxAbs*100).toFixed(1);
+      var barra='<div class="fat-lucro"><div class="neg">'+(c.lucro<0?'<span style="width:'+w+'%"></span>':'')+'</div><div class="pos">'+(c.lucro>=0?'<span style="width:'+w+'%"></span>':'')+'</div><b class="'+(c.lucro>=0?'fat-pos':'fat-neg')+'">'+(c.lucro<0?'− ':'')+din(Math.abs(c.lucro),0)+'</b></div>';
+      return '<tr class="'+x.cls+'"><td class="cen"><b>'+esc(x.nome)+'</b><small>'+esc(x.sub)+(x.cls==='prox'?' · próxima meta':'')+'</small></td><td>'+int(c.N)+'</td><td>'+din(c.recIng,0)+'</td><td>'+din(c.est+c.bar,0)+'</td><td>'+din(c.receita,0)+'</td><td>'+din(c.custos,0)+'</td><td>'+barra+'</td><td class="'+(c.lucro>=0?'fat-pos':'fat-neg')+'">'+Math.round(c.margem*100)+'%</td></tr>';
+    }).join('');
+    var tm=ult.pagos? ult.receita/ult.pagos : 0;
+    set('fatMetasNota','Cada meta usa o ticket médio atual ('+din(tm)+'), a proporção atual de pagos ('+Math.round((ult.total? ult.pagos/ult.total:1)*100)+'%) e as premissas de estacionamento, bar e custos abaixo. Muda sozinho a cada venda e a cada edição.');
+  }
+  var simN=null;
+  function desenharSim(r){
+    var box=g('fatSimChips'); if(!box) return;
+    var prox=null; metas.forEach(function(m){ if(prox===null && +m.valor>ult.total) prox=+m.valor; });
+    if(simN===null) simN = prox || (metas.length? +metas[metas.length-1].valor : ult.total);
+    if(!box.getAttribute('data-ok')){
+      box.innerHTML = '<button type="button" data-n="agora">Agora<small>'+int(ult.total)+'</small></button>'+metas.map(function(m){ return '<button type="button" data-n="'+(+m.valor)+'">'+int(m.valor)+'<small>'+esc(m.classificacao||m.nome)+'</small></button>'; }).join('')+'<label>Outro número<input type="number" min="0" step="100" inputmode="numeric" id="fatSimOutro" placeholder="ex.: 7200"></label>';
+      box.setAttribute('data-ok','1');
+      box.addEventListener('click',function(e){ var b=e.target.closest('[data-n]'); if(!b) return; simN = b.getAttribute('data-n')==='agora'? 'agora' : +b.getAttribute('data-n'); g('fatSimOutro').value=''; desenharSim(); });
+      g('fatSimOutro').addEventListener('input',function(){ var v=+this.value; if(v>0){ simN=v; desenharSim(); } });
+    }
+    box.querySelectorAll('[data-n]').forEach(function(b){ var n=b.getAttribute('data-n'); b.setAttribute('aria-pressed', String(n==='agora'? simN==='agora' : +n===simN)); });
+    var agora=cenario(ult.total,true), c = simN==='agora'? agora : cenario(simN,false);
+    var dif=c.lucro-agora.lucro, semCusto=!(prem.custos||[]).length;
+    function cx(t,v,sub,cls){ return '<div class="'+(cls||'')+'"><small>'+t+'</small><b>'+v+'</b>'+(sub?'<i>'+sub+'</i>':'')+'</div>'; }
+    g('fatSimRes').innerHTML =
+      cx('Faturamento total',din(c.receita,0),(simN==='agora'?'com as vendas até agora':'com '+int(c.N)+' ingressos · +'+din(c.receita-agora.receita,0)+' sobre agora'),'big')+
+      cx(semCusto?'Lucro / prejuízo':(c.lucro>=0?'Lucro':'Prejuízo'), semCusto?'—':('<span class="'+(c.lucro>=0?'fat-pos':'fat-neg')+'">'+(c.lucro<0?'− ':'')+din(Math.abs(c.lucro),0)+'</span>'), semCusto?'cadastre as despesas':('margem '+Math.round(c.margem*100)+'%'+(simN==='agora'?'':' · '+(dif>=0?'+':'− ')+din(Math.abs(dif),0)+' vs agora')),'big')+
+      cx('Ingressos',din(c.recIng,0),int(c.N)+' ingressos · '+int(c.pagos)+' pagos')+
+      cx('Estacionamento',din(c.est,0),int(c.carros)+' carros')+
+      cx('Bar',din(c.bar,0),int(c.publico)+' pessoas')+
+      cx('Despesas',din(c.custos,0),semCusto?'nenhuma cadastrada':'despesas + custo do bar + taxas');
+  }
+  function desenharPrem(r){
+    var v={base: prem.base==='pagos'?'Só ingressos pagos':'Ingressos totais', carro:nb(prem.carro)+'%', pessoas:nb(prem.pessoas), preco:din(prem.preco), bar:din(prem.bar), cmv_bar:nb(prem.cmv_bar)+'%', taxa_ingresso:nb(prem.taxa_ingresso)+'%', data_evento:String(prem.data_evento||'').split('-').reverse().join('/'), ritmo_dias:nb(prem.ritmo_dias)+' dias'};
+    document.querySelectorAll('#fatPrem [data-v]').forEach(function(b){ b.textContent=v[b.getAttribute('data-v')]; b.hidden=ed.prem; });
+    document.querySelectorAll('#fatPrem [data-i]').forEach(function(i){ i.hidden=!ed.prem; if(!ed.prem) i.value=prem[i.getAttribute('data-i')]; });
+    if(r) g('fatCalc').innerHTML='<div>Público base hoje: <b>'+int(r.publico)+'</b> pessoas</div><div>Carros: '+int(r.publico)+' × '+nb(prem.carro)+'% ÷ '+nb(prem.pessoas)+' = <b>'+int(r.carros)+'</b></div><div>Estacionamento: '+int(r.carros)+' × '+din(prem.preco,0)+' = <b>'+din(r.est,0)+'</b></div><div>Bar: '+int(r.publico)+' × '+din(prem.bar,0)+' = <b>'+din(r.bar,0)+'</b></div>';
+  }
+  function desenharCustos(){
+    var lista = ed.custos? rasc : (prem.custos||[]);
+    var body=g('fatCustosBody');
+    function sit(c){ var v=+c.valor||0, p=vPago(c); return p>=v&&v>0? '<span class="fat-sit pago">Pago</span>' : (p>0? '<span class="fat-sit parc">Parcial</span>' : '<span class="fat-sit prev">A pagar</span>'); }
+    if(!lista.length) body.innerHTML='<tr><td colspan="7" class="fat-vazio">'+(ed.custos?'Clique em “+ Adicionar despesa”.':'Nenhuma despesa cadastrada. Clique em Editar para lançar as despesas do evento.')+'</td></tr>';
+    else if(!ed.custos) body.innerHTML=lista.map(function(c){ var v=+c.valor||0, p=vPago(c); return '<tr><td>'+esc(c.nome)+'</td><td>'+esc(c.categoria)+'</td><td>'+din(v)+'</td><td class="fat-pos">'+din(p)+'</td><td class="'+(v-p>0?'fat-neg':'')+'">'+din(v-p)+'</td><td>'+sit(c)+'</td><td></td></tr>'; }).join('');
+    else body.innerHTML=lista.map(function(c,i){
+      var v=c.valor===''?'':(+c.valor||0), p=vPago(c);
+      return '<tr data-k="'+i+'"><td><input data-c="nome" maxlength="80" value="'+esc(c.nome)+'" placeholder="Ex.: Cachê atração principal"></td>'+
+        '<td><select data-c="categoria">'+CATS.map(function(k){ return '<option'+(k===c.categoria?' selected':'')+'>'+esc(k)+'</option>'; }).join('')+(CATS.indexOf(c.categoria)<0&&c.categoria?'<option selected>'+esc(c.categoria)+'</option>':'')+'</select></td>'+
+        '<td><input data-c="valor" type="number" min="0" step="100" inputmode="decimal" value="'+v+'"></td>'+
+        '<td><input data-c="valor_pago" type="number" min="0" step="100" inputmode="decimal" value="'+p+'"></td>'+
+        '<td><button type="button" class="fat-btn fat-quitar" data-quitar="'+i+'" title="Marcar como totalmente pago">Quitar</button></td>'+
+        '<td>'+sit(c)+'</td>'+
+        '<td><button type="button" class="fat-x" data-del="'+i+'" title="Remover">×</button></td></tr>';
+    }).join('');
+    var tot=lista.reduce(function(a,c){ return a+(+c.valor||0); },0), pago=lista.reduce(function(a,c){ return a+vPago(c); },0);
+    g('fatCustosFoot').innerHTML= lista.length? '<tr><td><b>Total</b></td><td></td><td><b>'+din(tot)+'</b></td><td class="fat-pos"><b>'+din(pago)+'</b></td><td class="'+(tot-pago>0?'fat-neg':'')+'"><b>'+din(tot-pago)+'</b></td><td></td><td></td></tr>' : '';
+    var cats={}; lista.forEach(function(c){ cats[c.categoria||'Outros']=(cats[c.categoria||'Outros']||0)+(+c.valor||0); });
+    g('fatCats').innerHTML=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; }).map(function(k){ return '<span>'+esc(k)+'<b>'+din(cats[k],0)+'</b></span>'; }).join('');
+    g('fatAddCusto').hidden=!ed.custos;
+  }
+  function botoes(){
+    [['fatPrem','prem'],['fatCustosCard','custos']].forEach(function(p){
+      var card=g(p[0]); if(!card) return; var em=ed[p[1]];
+      card.querySelector('[data-acao=editar]').hidden = em || !podeEditar();
+      card.querySelector('[data-acao=cancelar]').hidden = !em; card.querySelector('[data-acao=salvar]').hidden = !em;
+    });
+    var quando = info && info.atualizado_em ? new Date(info.atualizado_em).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : null;
+    set('fatInfo', (quando? 'Última edição: '+(info.atualizado_por||'—')+' · '+quando+'. ' : '')+'Estacionamento e bar são estimativas. Os valores editados ficam salvos para todos. '+(podeEditar()?'Admin e SuperAdmin podem editar.':'Só admin e SuperAdmin podem editar.'));
+  }
+  function desenhar(daAtualizacao){
+    // durante a edição de custos, a atualização automática não redesenha a tabela (não perde o que está sendo digitado)
+    if(ed.custos && daAtualizacao) lerRascunho();
+    var pularCustos = ed.custos && daAtualizacao;
+    if(!ult){ if(!pularCustos) desenharCustos(); botoes(); return; }
+    var r=cenario(ult.total,true);
+    desenharKpis(r); desenharSim(r); desenharDre(r); desenharMetas(r); desenharPrem(r); if(!pularCustos) desenharCustos(); botoes();
+  }
+  window.movingFinanceiro=function(d){
+    if(!g('financeiroCard')) return;
+    var por={}; (d.setores||[]).forEach(function(x){ por[x.setor]=x; });
+    var rec=0,total=0,pagos=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ var x=por[k]||{}; rec+=+x.receita||0; total+=+x.total||0; pagos+=+x.pagos||0; });
+    var ex={}; (d.extras||[]).forEach(function(x){ ex[x.tipo]=x; });
+    var cR=+((ex.CAMPING||{}).receita)||0, oR=+((ex.COPO||{}).receita)||0;
+    var porDia={}; (d.por_dia||[]).forEach(function(x){ porDia[String(x.dia).slice(0,10)]=+x.total||0; });
+    ult={porDia:porDia,total:total,pagos:pagos,receita:rec,campReal:cR,copoReal:oR,extraReal:cR+oR,campPagos:+((ex.CAMPING||{}).pagos)||0,copoPagos:+((ex.COPO||{}).pagos)||0};
+    metas=(d.metas||[]).slice().sort(function(a,b){ return a.valor-b.valor; });
+    g('finSetores').innerHTML=['FULLPASS','ZONE','GOLD','BLACK'].map(function(k){
+      var x=por[k]||{}, r=+x.receita||0, pc=rec?r/rec*100:0, tm=(+x.pagos)? r/x.pagos : 0;
+      return '<div class="fin-set" style="--cor:'+COR[k]+'"><div class="t"><span>'+NOME[k]+'</span><b>'+din(r,0)+'</b></div><div class="bar"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+pc.toFixed(0)+'% do faturamento · '+int(x.pagos)+' pagos · ticket médio '+din(tm)+'</small></div>';
+    }).join('');
+    desenhar(true);
+  };
+  function msg(card,t,tipo){ var m=card.querySelector('[data-msg]'); if(!m) return; if(!t){ m.hidden=true; return; } m.hidden=false; m.className='fat-msg '+tipo; m.textContent=t; }
+  function lerRascunho(){
+    if(!rasc) return; document.querySelectorAll('#fatCustosBody tr[data-k]').forEach(function(tr){
+      var c=rasc[+tr.getAttribute('data-k')]; if(!c) return;
+      tr.querySelectorAll('[data-c]').forEach(function(i){ var k=i.getAttribute('data-c'); c[k]= (k==='valor'||k==='valor_pago')? (i.value===''?'':Number(String(i.value).replace(',','.'))) : i.value; });
+    });
+  }
+  function salvar(card,dados,qual){
+    var b=card.querySelector('[data-acao=salvar]'); b.disabled=true; b.textContent='Salvando…';
+    var u=window.movingUsuario;
+    fetch('/api/estimativas',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':token()},body:JSON.stringify({dados:dados,quem:u&&u.nome||''})})
+      .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
+      .then(function(j){
+        b.disabled=false; b.textContent='Salvar';
+        if(j && j.erro){ msg(card,j.erro,'erro'); return; }
+        if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; }
+        ed[qual]=false; if(qual==='custos') rasc=null; desenhar();
+        msg(card,'Salvo. Já vale para todos que abrirem o painel.','ok'); setTimeout(function(){ msg(card,''); },4000);
+      }).catch(function(){ b.disabled=false; b.textContent='Salvar'; msg(card,'Sem conexão. Tente de novo.','erro'); });
+  }
+  function ini(){
+    var P=g('fatPrem'), C=g('fatCustosCard'); if(!P||!C) return;
+    P.querySelector('[data-acao=editar]').addEventListener('click',function(){ if(!podeEditar()) return; ed.prem=true; msg(P,''); desenhar(); });
+    P.querySelector('[data-acao=cancelar]').addEventListener('click',function(){ ed.prem=false; msg(P,''); desenhar(); });
+    P.querySelector('[data-acao=salvar]').addEventListener('click',function(){
+      var dados={}; P.querySelectorAll('[data-i]').forEach(function(i){ var k=i.getAttribute('data-i'); dados[k]= (k==='base'||k==='data_evento')? i.value : Number(String(i.value).replace(',','.')); });
+      salvar(P,dados,'prem');
+    });
+    C.querySelector('[data-acao=editar]').addEventListener('click',function(){ if(!podeEditar()) return; rasc=JSON.parse(JSON.stringify(prem.custos||[])); ed.custos=true; msg(C,''); desenhar(); });
+    C.querySelector('[data-acao=cancelar]').addEventListener('click',function(){ ed.custos=false; rasc=null; msg(C,''); desenhar(); });
+    C.querySelector('[data-acao=salvar]').addEventListener('click',function(){
+      lerRascunho();
+      var lista=(rasc||[]).filter(function(c){ return String(c.nome||'').trim() || (+c.valor); });
+      for(var i=0;i<lista.length;i++){ if(!String(lista[i].nome||'').trim()){ msg(C,'Todo custo precisa de um nome.','erro'); return; } if(lista[i].valor===''||isNaN(+lista[i].valor)){ msg(C,'Preencha o valor de: '+lista[i].nome,'erro'); return; } }
+      for(var j=0;j<lista.length;j++){ if(vPago(lista[j])>(+lista[j].valor||0)){ msg(C,'O valor pago não pode passar do total em: '+lista[j].nome,'erro'); return; } }
+      salvar(C,{custos:lista.map(function(c){ return {nome:String(c.nome).trim(),categoria:c.categoria||'Outros',valor:+c.valor,valor_pago:vPago(c)}; })},'custos');
+    });
+    g('fatAddCusto').addEventListener('click',function(){ lerRascunho(); rasc.push({nome:'',categoria:CATS[0],valor:'',valor_pago:0}); desenharCustos(); var ins=document.querySelectorAll('#fatCustosBody input[data-c=nome]'); if(ins.length) ins[ins.length-1].focus(); });
+    g('fatCustosBody').addEventListener('click',function(e){ var q=e.target.closest('[data-quitar]'); if(q){ lerRascunho(); var cq=rasc[+q.getAttribute('data-quitar')]; if(cq){ cq.valor_pago=+cq.valor||0; } desenharCustos(); return; }
+    var x=e.target.closest('[data-del]'); if(!x) return; lerRascunho(); var it=rasc[+x.getAttribute('data-del')]; if(it && (String(it.nome||'').trim() || +it.valor) && !window.confirm('Remover "'+(it.nome||'este custo')+'"? Só vale depois de clicar em Salvar.')) return; rasc.splice(+x.getAttribute('data-del'),1); desenharCustos(); });
+    g('fatCustosBody').addEventListener('input',function(){ if(!ed.custos) return; lerRascunho(); var tot=rasc.reduce(function(a,c){ return a+(+c.valor||0); },0); var f=g('fatCustosFoot').querySelector('b+b, td:nth-child(3) b'); if(f) f.textContent=din(tot); });
+    desenhar();
+    fetch('/api/estimativas',{cache:'no-store'}).then(function(r){ return r.ok? r.json() : null; }).then(function(j){
+      if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; } desenhar();
+    }).catch(function(){ msg(P,'Não consegui carregar os valores salvos. Mostrando o padrão.','erro'); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
+})();
+</script>
+
+<script>
+/* FATURAMENTO_ABAS: Resumo e metas | Receitas extras | Despesas + simulador de meta */
+(function(){
+  function g(id){ return document.getElementById(id); }
+  function trocar(aba){
+    document.querySelectorAll('[data-fat-tab]').forEach(function(b){ b.setAttribute('aria-selected', b.getAttribute('data-fat-tab')===aba ? 'true':'false'); });
+    document.querySelectorAll('[data-fat-pane]').forEach(function(p){ p.hidden = p.getAttribute('data-fat-pane')!==aba; });
+    try{ localStorage.setItem('moving_fat_aba',aba); }catch(e){}
+  }
+  window.movingFatAba=trocar;
+  function ini(){
+    if(!document.querySelector('[data-fat-tab]')) return;
+    document.querySelectorAll('[data-fat-tab]').forEach(function(b){ b.addEventListener('click',function(){ trocar(b.getAttribute('data-fat-tab')); }); });
+    var a='resumo'; try{ a=localStorage.getItem('moving_fat_aba')||'resumo'; }catch(e){} trocar(a);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
+})();
+</script>
+
 <!-- MODAL DE CRIAÇÃO / EDIÇÃO DE USUÁRIO -->
 <div class="modal-backdrop" id="modalUsuario" style="display:none;">
   <div class="modal-card">
@@ -2997,8 +3534,8 @@
             <label class="tela-item-card" data-tela="tendencias">
               <input type="checkbox" name="tela" value="tendencias">
               <div class="tela-item-txt">
-                <b>Tendências</b>
-                <small>Horários de pico e dias da semana</small>
+                <b>Faturamento</b>
+                <small>Receitas, custos, margem e projeções de metas</small>
               </div>
             </label>
           </div>
@@ -3069,7 +3606,7 @@
     plataformas: 'Plataformas',
     promoters: 'Ações Start & Cupons',
     ingressos: 'Ingressos',
-    tendencias: 'Tendências'
+    tendencias: 'Faturamento'
   };
 
   // Objeto global de Auth
@@ -3082,6 +3619,7 @@
     logoutLocal: function(){
       localStorage.removeItem(TOKEN_KEY);
       usuarioAtual = null;
+      window.movingUsuario = null;
       mostrarLogin();
     }
   };
@@ -3170,6 +3708,7 @@
         if(res.ok && res.data && (res.data.token || res.data.status === 'ok')){
           localStorage.setItem(TOKEN_KEY, res.data.token);
           usuarioAtual = res.data.usuario;
+          window.movingUsuario = usuarioAtual;
           esconderLogin();
           aplicarPermissoes(usuarioAtual);
           if(window.movingRecarregarDados) window.movingRecarregarDados();

@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-10-07T12:40:45.165298-03:00",
+  "gerado_em": "2026-10-07T13:03:11.581951-03:00",
   "evento": "3419289",
   "api": {
     "ingressos_confirmados": 817,
@@ -31,74 +31,66 @@
     }
   },
   "planilha": {
-    "ingressos": 810,
+    "ingressos": 817,
     "por_setor": {
       "BLACK": {
-        "total": 42,
-        "pagos": 42,
+        "total": 44,
+        "pagos": 44,
         "cortesias": 0,
-        "receita": 12692.5
+        "receita": 13372.5
       },
       "FULLPASS": {
-        "total": 452,
-        "pagos": 452,
+        "total": 455,
+        "pagos": 455,
         "cortesias": 0,
-        "receita": 64882.75
+        "receita": 65245.25
       },
       "ZONE": {
-        "total": 192,
-        "pagos": 192,
+        "total": 193,
+        "pagos": 193,
         "cortesias": 0,
-        "receita": 24468.5
+        "receita": 24543.5
       },
       "GOLD": {
-        "total": 124,
-        "pagos": 124,
+        "total": 125,
+        "pagos": 125,
         "cortesias": 0,
-        "receita": 20096.5
+        "receita": 20311.5
       }
     }
   },
   "batem": false,
   "so_na_api": {
-    "qtd": 7,
-    "exemplos": [
-      "SYMPLA-UVRV-06-GJYM",
-      "SYMPLA-UVS0-NM-QNQ8",
-      "SYMPLA-UVS1-VT-TKGW",
-      "SYMPLA-UVS3-1A-2PCS",
-      "SYMPLA-UVS3-1A-2Z6V",
-      "SYMPLA-UVT2-0C-7QA7",
-      "SYMPLA-UVT4-0Y-WH1Y"
-    ]
+    "qtd": 0,
+    "exemplos": []
   },
   "so_na_planilha": {
     "qtd": 0,
     "exemplos": []
   },
   "valor_diferente": {
-    "qtd": 303,
+    "qtd": 308,
     "exemplos": [
+      "SYMPLA-USUT-1G-JZLM",
+      "SYMPLA-USCV-RN-3JKK",
+      "SYMPLA-UV8U-7N-HR32",
       "SYMPLA-UT47-W5-5HFS",
-      "SYMPLA-UVJC-S3-LV9N",
-      "SYMPLA-UUPU-XW-L4K4",
-      "SYMPLA-URH6-WC-Q389",
-      "SYMPLA-UR6Y-8M-6BE7",
-      "SYMPLA-URAJ-PW-LMWM",
-      "SYMPLA-UR97-GN-335B",
-      "SYMPLA-UVJ9-RB-DR9R",
-      "SYMPLA-UUC1-RT-4Z4E",
-      "SYMPLA-URJD-3A-5PM6",
-      "SYMPLA-UUR3-07-046J",
-      "SYMPLA-UV8Z-R5-Q1P4",
-      "SYMPLA-UQSQ-JU-Y9VD",
-      "SYMPLA-US5E-XU-8F61",
-      "SYMPLA-URJB-RD-KHVL",
-      "SYMPLA-UUF0-NQ-SVZX",
-      "SYMPLA-UTA0-V1-A4AS",
-      "SYMPLA-USCB-F7-FC18",
-      "SYMPLA-UR56-W5-8PX7",
-      "SYMPLA-UTA1-7J-1EWD"
+      "SYMPLA-UVKX-J0-HJEC",
+      "SYMPLA-URH5-6T-Y24S",
+      "SYMPLA-UU1S-ZF-AUT3",
+      "SYMPLA-URMY-UH-N6VU",
+      "SYMPLA-UTD5-SW-BEGE",
+      "SYMPLA-UQZ2-KC-Z3M2",
+      "SYMPLA-UQRA-6L-QNSD",
+      "SYMPLA-URH7-64-LAYQ",
+      "SYMPLA-UVH3-SD-T932",
+      "SYMPLA-UUPM-VF-W251",
+      "SYMPLA-UUUF-06-Z41X",
+      "SYMPLA-URTF-QU-BTUF",
+      "SYMPLA-UVQ1-H6-4SFP",
+      "SYMPLA-UUGY-JB-ECY8",
+      "SYMPLA-URAJ-PW-LMXL",
+      "SYMPLA-UURD-3K-TMPG"
     ]
   },
   "setor_diferente": {

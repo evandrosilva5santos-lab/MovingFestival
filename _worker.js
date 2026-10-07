@@ -273,10 +273,12 @@ async function getFullResumo(env, supabaseUrl, supabaseAnon) {
           dia = v.data_compra.slice(0, 10);
         }
         const plat = v.plataforma || 'OUTROS';
-        const setor = v.setor || (v.tipo === 'CAMPING' ? 'CAMPING' : 'OUTROS');
+        const tipo = v.tipo || 'INGRESSO';
+        const setor = v.setor || tipo;
         const key = `${dia}|${plat}|${setor}`;
-        if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, total: 0, receita: 0 };
+        if (!aggr[key]) aggr[key] = { dia, plataforma: plat, setor, tipo, total: 0, pagos: 0, receita: 0 };
         aggr[key].total += 1;
+        if ((Number(v.valor) || 0) > 0) aggr[key].pagos += 1;
         aggr[key].receita += (Number(v.valor) || 0);
       }
       data.vendas_diarias = Object.values(aggr).sort((a, b) => a.dia.localeCompare(b.dia));
@@ -477,6 +479,39 @@ export default {
         } catch (err) {
           return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
         }
+      }
+    }
+
+    // ============================================================================
+    // ESTIMATIVAS: premissas da projeção de faturamento (estacionamento e bar)
+    // ============================================================================
+    if (url.pathname === '/api/estimativas') {
+      const jh = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
+      const rpc = (nome, corpo) => fetch(`${supabaseUrl}/rest/v1/rpc/${nome}`, {
+        method: 'POST',
+        headers: { 'apikey': supabaseAnon, 'Authorization': `Bearer ${supabaseAnon}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(corpo || {})
+      });
+      try {
+        if (request.method === 'GET') {
+          const r = await rpc('moving_excluir_estimativas_ler');
+          return new Response(await r.text(), { status: r.ok ? 200 : 502, headers: jh });
+        }
+        if (request.method === 'POST') {
+          const corpo = await request.json().catch(() => ({}));
+          const r = await rpc('moving_excluir_estimativas_salvar', {
+            p_dados: corpo.dados || {},
+            p_quem: String(corpo.quem || '').slice(0, 60) || null,
+            p_token: request.headers.get('X-Moving-Token') || null
+          });
+          const t = await r.text();
+          let st = r.ok ? 200 : 502;
+          try { if (JSON.parse(t).erro) st = 400; } catch (e) {}
+          return new Response(t, { status: st, headers: jh });
+        }
+        return new Response(JSON.stringify({ erro: 'Método não permitido' }), { status: 405, headers: jh });
+      } catch (err) {
+        return new Response(JSON.stringify({ erro: String(err) }), { status: 500, headers: jh });
       }
     }
 
