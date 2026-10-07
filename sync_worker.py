@@ -281,7 +281,7 @@ def extract_uticket_records(xlsx_bytes):
                 canal = 'ANTIGO_MKT'
             else:
                 canal = 'AFILIADO_PROMOTER'
-                promoter = cupom_raw
+                promoter = 'GUTO' if 'GUTO' in cup_u else cupom_raw
                 
         # Status do Pedido na Uticket (Coluna J: Confirmado, Cancelado, etc.)
         status_raw = r.get('J', '').strip().upper()
@@ -371,9 +371,12 @@ def extract_sympla_records(file_path):
                 promoter = cupom
             elif 'MEIA' in c_u or 'ESTUDANTE' in c_u or 'PCD' in c_u:
                 canal = 'MEIA_ENTRADA'
-            elif any(k in c_u for k in ['KIOMA', 'TRIP', 'FESTASRS', 'GUTO']):
+            elif any(k in c_u for k in ['KIOMA', 'TRIP', 'FESTASRS']):
                 canal = 'PARCERIA'
                 promoter = cupom
+            elif 'GUTO' in c_u:
+                canal = 'AFILIADO_PROMOTER'
+                promoter = 'GUTO'
             else:
                 canal = 'CUPOM_CAMPANHA'
                 promoter = cupom

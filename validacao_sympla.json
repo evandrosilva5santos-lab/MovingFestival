@@ -1,14 +1,14 @@
 {
-  "gerado_em": "2026-10-07T15:54:19.930459-03:00",
+  "gerado_em": "2026-10-07T17:49:42.857891-03:00",
   "evento": "3419289",
   "api": {
-    "ingressos_confirmados": 821,
+    "ingressos_confirmados": 822,
     "por_setor": {
       "GOLD": {
-        "total": 125,
-        "pagos": 125,
+        "total": 126,
+        "pagos": 126,
         "cortesias": 0,
-        "receita": 21167.66
+        "receita": 21382.66
       },
       "ZONE": {
         "total": 194,
@@ -61,8 +61,10 @@
   },
   "batem": false,
   "so_na_api": {
-    "qtd": 0,
-    "exemplos": []
+    "qtd": 1,
+    "exemplos": [
+      "SYMPLA-UVTL-4U-4VFK"
+    ]
   },
   "so_na_planilha": {
     "qtd": 0,
@@ -71,26 +73,26 @@
   "valor_diferente": {
     "qtd": 311,
     "exemplos": [
-      "SYMPLA-UVFE-FL-N3V5",
-      "SYMPLA-UVS3-1A-2Z6V",
-      "SYMPLA-URTM-EP-097K",
-      "SYMPLA-UVM4-K4-PQYA",
-      "SYMPLA-UVEF-9Y-RHFC",
-      "SYMPLA-UUH0-ZS-BCDY",
-      "SYMPLA-UUK5-UE-HVVM",
-      "SYMPLA-URHC-8L-V8MH",
-      "SYMPLA-UV6U-ZK-QVU2",
-      "SYMPLA-UU1S-ZF-AUT3",
-      "SYMPLA-UURD-45-7GU7",
-      "SYMPLA-US0A-SH-9DQ5",
-      "SYMPLA-UVAQ-VM-BHQK",
-      "SYMPLA-UR9S-MW-Z8FJ",
-      "SYMPLA-UVPS-BX-GTVS",
-      "SYMPLA-URZB-X5-VRFZ",
-      "SYMPLA-UUSG-MG-TMJY",
-      "SYMPLA-UQKG-YD-X70E",
-      "SYMPLA-USM6-ZZ-VJ9Q",
-      "SYMPLA-US2B-Q8-GHMU"
+      "SYMPLA-UV8D-GQ-855S",
+      "SYMPLA-UQ6R-74-BF6E",
+      "SYMPLA-URCE-FT-110Z",
+      "SYMPLA-UT47-W5-5HFS",
+      "SYMPLA-UUPM-VF-W251",
+      "SYMPLA-UZBW-FB-YVF5",
+      "SYMPLA-US96-Z8-QJJX",
+      "SYMPLA-UUC1-RT-4Z4E",
+      "SYMPLA-USEG-2P-9E0S",
+      "SYMPLA-UUUH-SF-3XG9",
+      "SYMPLA-UV1S-XZ-6XSS",
+      "SYMPLA-UUKS-XB-A50Y",
+      "SYMPLA-UURD-3K-TMPG",
+      "SYMPLA-UTG3-W8-691R",
+      "SYMPLA-UUWY-T3-BYDA",
+      "SYMPLA-USEJ-F6-GAT5",
+      "SYMPLA-UTD5-SW-BEGE",
+      "SYMPLA-UV7G-ZE-NGUN",
+      "SYMPLA-USN8-XM-8TLK",
+      "SYMPLA-UVFH-CQ-6SYA"
     ]
   },
   "setor_diferente": {

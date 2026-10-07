@@ -1386,7 +1386,7 @@
     "extras":[{"tipo":"CAMPING","total":1030,"uticket":1030,"sympla":0,"wix":0},{"tipo":"COPO","total":75,"uticket":75,"sympla":0,"wix":0}],
     "lotes":[{"lote":"FULL PASS — CONVOCAÇÃO","setor":"FULLPASS","total":2918},{"lote":"FULL PASS — 2º LOTE","setor":"FULLPASS","total":515},{"lote":"FULL PASS — LOTE WIX","setor":"FULLPASS","total":197},{"lote":"ZONE — 2º LOTE","setor":"ZONE","total":139},{"lote":"FULL PASS — 3º LOTE","setor":"FULLPASS","total":119},{"lote":"GOLD — 2º LOTE","setor":"GOLD","total":105},{"lote":"GOLD — CONVOCAÇÃO","setor":"GOLD","total":103}],
     "canais":[{"canal":"GRUPO_VIP","total":2126},{"canal":"DIRETO","total":980},{"canal":"AFILIADO_PROMOTER","total":592},{"canal":"ORGANICO","total":556},{"canal":"DESCONHECIDO","total":454},{"canal":"ANTIGO_MKT","total":186},{"canal":"ANIVERSARIANTE","total":153},{"canal":"META_ADS","total":57},{"canal":"PARCERIA","total":35},{"canal":"CUPOM_CAMPANHA","total":14},{"canal":"EMAIL","total":9},{"canal":"MEIA_ENTRADA","total":6}],
-    "promoters":[{"promoter":"JONATAN","total":121},{"promoter":"DANIELASILVA","total":64},{"promoter":"FRANCIELES","total":58},{"promoter":"CAROLINANEVES","total":53},{"promoter":"LEOMARTINS","total":46},{"promoter":"CLAITIANE","total":31},{"promoter":"EGLAI","total":30},{"promoter":"ANDRESSALEMOS","total":27},{"promoter":"JEFERSONB","total":24},{"promoter":"SABRINASOUZA","total":21},{"promoter":"FULLDIVULGAÇAO","total":21},{"promoter":"STARTELEICAO","total":20},{"promoter":"Festasrs","total":18},{"promoter":"GOLDDIVULGAÇAO","total":15},{"promoter":"NATANIELE","total":12},{"promoter":"KARENV","total":11},{"promoter":"Kioma","total":5},{"promoter":"Triptrance","total":5},{"promoter":"GUTO","total":5},{"promoter":"KIOMA","total":5}],
+    "promoters":[{"promoter":"JONATAN","total":121},{"promoter":"DANIELASILVA","total":64},{"promoter":"FRANCIELES","total":58},{"promoter":"CAROLINANEVES","total":53},{"promoter":"LEOMARTINS","total":46},{"promoter":"CLAITIANE","total":31},{"promoter":"EGLAI","total":30},{"promoter":"ANDRESSALEMOS","total":27},{"promoter":"JEFERSONB","total":24},{"promoter":"SABRINASOUZA","total":21},{"promoter":"FULLDIVULGAÇAO","total":21},{"promoter":"STARTELEICAO","total":20},{"promoter":"Festasrs","total":18},{"promoter":"GOLDDIVULGAÇAO","total":15},{"promoter":"NATANIELE","total":12},{"promoter":"KARENV","total":11},{"promoter":"GUTO","total":6},{"promoter":"Kioma","total":5},{"promoter":"Triptrance","total":5},{"promoter":"KIOMA","total":5}],
     "por_dia":[{"dia":"2026-09-07","total":13},{"dia":"2026-09-08","total":29},{"dia":"2026-09-09","total":37},{"dia":"2026-09-10","total":41},{"dia":"2026-09-11","total":18},{"dia":"2026-09-12","total":25},{"dia":"2026-09-13","total":7},{"dia":"2026-09-14","total":25},{"dia":"2026-09-15","total":56},{"dia":"2026-09-16","total":28},{"dia":"2026-09-17","total":41},{"dia":"2026-09-18","total":40},{"dia":"2026-09-19","total":31},{"dia":"2026-09-20","total":25},{"dia":"2026-09-21","total":20},{"dia":"2026-09-22","total":22},{"dia":"2026-09-23","total":23},{"dia":"2026-09-24","total":31},{"dia":"2026-09-25","total":20},{"dia":"2026-09-26","total":19},{"dia":"2026-09-27","total":2},{"dia":"2026-09-28","total":11},{"dia":"2026-09-29","total":1284},{"dia":"2026-09-30","total":490},{"dia":"2026-10-01","total":758},{"dia":"2026-10-02","total":176},{"dia":"2026-10-03","total":85},{"dia":"2026-10-04","total":123},{"dia":"2026-10-05","total":122},{"dia":"2026-10-06","total":92}],
     "por_hora":[{"hora":0,"total":95},{"hora":1,"total":45},{"hora":2,"total":22},{"hora":3,"total":6},{"hora":4,"total":9},{"hora":5,"total":9},{"hora":6,"total":17},{"hora":7,"total":38},{"hora":8,"total":63},{"hora":9,"total":119},{"hora":10,"total":138},{"hora":11,"total":174},{"hora":12,"total":1240},{"hora":13,"total":376},{"hora":14,"total":259},{"hora":15,"total":241},{"hora":16,"total":231},{"hora":17,"total":202},{"hora":18,"total":280},{"hora":19,"total":298},{"hora":20,"total":359},{"hora":21,"total":312},{"hora":22,"total":317},{"hora":23,"total":230}],
     "por_dia_semana":[{"dia_semana":1,"total":700},{"dia_semana":2,"total":1624},{"dia_semana":3,"total":747},{"dia_semana":4,"total":1040},{"dia_semana":5,"total":419},{"dia_semana":6,"total":272},{"dia_semana":7,"total":278}],
@@ -1939,7 +1939,9 @@
       // Busca por texto
       if(CUPOM_SEARCH){
         var q = CUPOM_SEARCH;
-        var txt = (c.cupom + ' ' + (c.nomes||[]).join(' ') + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
+        var promStr = (c.promoter || '');
+        if((c.cupom || '').toUpperCase() === 'CUPOMGUTO') promStr = 'guto';
+        var txt = (c.cupom + ' ' + (c.nomes||[]).join(' ') + ' ' + promStr + ' ' + (c.canal||'') + ' ' + (c.origem||'') + ' ' + (c.plataforma||'')).toLowerCase();
         if(txt.indexOf(q) === -1) return false;
       }
       return true;
@@ -1992,6 +1994,17 @@
       var partPct = baseTotalCupons > 0 ? ((c.total / baseTotalCupons) * 100).toFixed(1) : '0.0';
       var partBar = Math.min(100, Math.max(3, Math.round((c.total / baseTotalCupons) * 100)));
 
+      // Renderização do Nome do Cupom e Promoter associado
+      var subInfo = '';
+      if((c.nomes||[]).length > 1){
+        subInfo = '<div style="font-size:11px;color:var(--fg-muted)">mesmo cupom: ' + esc(c.nomes.join(' + ')) + '</div>';
+      } else if(c.promoter && c.promoter !== c.cupom){
+        subInfo = '<div style="font-size:11px;color:var(--accent);font-weight:600;margin-top:2px">Promoter: ' + esc(c.promoter) + '</div>';
+      } else if((c.cupom||'').toUpperCase() === 'CUPOMGUTO'){
+        subInfo = '<div style="font-size:11px;color:var(--accent);font-weight:600;margin-top:2px">Promoter: GUTO</div>';
+      }
+      var cupomNomeHtml = '<b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b>' + subInfo;
+
       // Renderização da Coluna Recompensas / Metas
       var recompensaHtml = '<span style="color:var(--fg-faint);font-size:12px">—</span>';
       if(c.plataforma === 'UTICKET' && c.origem === 'PROMOTER'){
@@ -2024,7 +2037,7 @@
       }
 
       return '<tr>' +
-        '<td><b style="font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em">' + esc(c.cupom) + '</b>' + ((c.nomes||[]).length > 1 ? '<div style="font-size:11px;color:var(--fg-muted)">mesmo cupom: ' + esc(c.nomes.join(' + ')) + '</div>' : '') + '</td>' +
+        '<td>' + cupomNomeHtml + '</td>' +
         '<td><span class="badge-orig ' + oCls + '">' + oLbl + '</span></td>' +
         '<td><span class="badge-plat ' + pCls + '">' + (c.plataforma==='AMBAS'?'Uticket + Sympla':(c.plataforma==='UTICKET'?'Uticket':'Sympla')) + '</span></td>' +
         '<td style="font-size:12px;color:var(--fg-muted)">' + esc(cNome) + '</td>' +

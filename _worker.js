@@ -14,7 +14,7 @@ function classifyCupom(cupomRaw) {
   if (u.includes('START')) origem = 'START_INC';
   else if (u.includes('BDAY')) origem = 'ANIVERSARIANTE';
   else if (u.includes('MANIACO')) origem = 'ANTIGA_GESTAO';
-  else if (['FESTASRS', 'TRIPTRANCE', 'KIOMA', 'GUTO'].some(k => u.includes(k))) origem = 'PARCERIA';
+  else if (['FESTASRS', 'TRIPTRANCE', 'KIOMA'].some(k => u.includes(k))) origem = 'PARCERIA';
 
   let canal = 'PROMOTER';
   if (u.includes('STARTGRUPON')) canal = 'GRUPO_VIP_NOTURNO';
@@ -31,6 +31,9 @@ function classifyCupom(cupomRaw) {
   else if (origem === 'ANIVERSARIANTE') canal = 'ANIVERSARIANTE';
   else if (origem === 'PARCERIA') canal = 'PARCERIA';
 
+  // promoter unificado
+  const promoter = u.includes('GUTO') ? 'GUTO' : (origem === 'PROMOTER' ? cupomRaw : null);
+
   // ANALISE_ADS — mapa definido pelo Evandro (07/10)
   let ac = analiseCanal(u);
   if (!ac) ac = analisePorRegra(u);
@@ -40,7 +43,7 @@ function classifyCupom(cupomRaw) {
     else if (ac.grupo === 'ORGANICO') origem = 'ORGANICO';
     else if (ac.grupo === 'INTERNA') origem = 'INTERNA';
   }
-  return { origem, canal, grupo: ac ? ac.grupo : null, gestao: ac ? ac.gestao : null };
+  return { origem, canal, promoter, grupo: ac ? ac.grupo : null, gestao: ac ? ac.gestao : null };
 }
 
 // Cupons que entram na análise de ADS / canais (match exato do código do cupom).
@@ -115,8 +118,8 @@ function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
     const original = String(c.cupom || '').trim().toUpperCase();
     const code = nomeCupom(c.cupom);
-    const { origem, canal, grupo, gestao } = classifyCupom(code);
-    return { cupom: code, nomes: [`${original} (${plataforma === 'UTICKET' ? 'Uticket' : 'Sympla'})`], plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
+    const { origem, canal, promoter, grupo, gestao } = classifyCupom(code);
+    return { cupom: code, promoter: promoter || code, nomes: [`${original} (${plataforma === 'UTICKET' ? 'Uticket' : 'Sympla'})`], plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
              receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
   });
 }

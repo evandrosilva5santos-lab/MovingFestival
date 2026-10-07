@@ -61,7 +61,7 @@ def classify_cupom(cupom_raw):
         origem = 'ANIVERSARIANTE'
     elif 'MANIACO' in u:
         origem = 'ANTIGA_GESTAO'
-    elif any(k in u for k in ['FESTASRS', 'TRIPTRANCE', 'KIOMA', 'GUTO']):
+    elif any(k in u for k in ['FESTASRS', 'TRIPTRANCE', 'KIOMA']):
         origem = 'PARCERIA'
     else:
         origem = 'PROMOTER'
@@ -128,8 +128,10 @@ def fetch_sympla_coupons_live():
                     
                     if code not in coupons:
                         origem, canal = classify_cupom(code)
+                        promoter_nome = 'GUTO' if 'GUTO' in code else code
                         coupons[code] = {
                             'cupom': code,
+                            'promoter': promoter_nome,
                             'plataforma': 'SYMPLA',
                             'origem': origem,
                             'canal': canal,
@@ -176,8 +178,10 @@ def get_aggregated_coupons():
             for c in ut_data['eventCoupons']:
                 name = c.get('name', '').strip()
                 origem, canal = classify_cupom(name)
+                promoter_nome = 'GUTO' if 'GUTO' in name.upper() else name
                 combined.append({
                     'cupom': name,
+                    'promoter': promoter_nome,
                     'plataforma': 'UTICKET',
                     'origem': origem,
                     'canal': canal,
@@ -212,8 +216,10 @@ def get_aggregated_coupons():
                         continue
                     if c not in sympla_aggr:
                         origem, canal = classify_cupom(c)
+                        promoter_nome = 'GUTO' if 'GUTO' in c.upper() else c
                         sympla_aggr[c] = {
                             'cupom': c,
+                            'promoter': promoter_nome,
                             'plataforma': 'SYMPLA',
                             'origem': origem,
                             'canal': canal,
