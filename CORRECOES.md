@@ -184,3 +184,6 @@
 - ANINHA = lista interna Moving (prospecção direta), fora de Promoters.
 - Todos os cupons START* = ações de venda da Start Inc. (agência contratada). STARTADSNATIVO entra em ADS gestão nova; STARTSMS = SMS Marketing.
 - Para incluir cupom novo num canal, adicionar uma linha em `MAPA_ANALISE`.
+
+## 20. Aba Recebimentos removida — 07/10
+- A pedido do Evandro, a sub-aba "Recebimentos" saiu do Faturamento (botão removido; o bloco fica escondido no HTML). Quem tinha essa aba salva no navegador volta para "Resumo e metas".

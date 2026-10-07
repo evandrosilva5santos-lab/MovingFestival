@@ -1148,7 +1148,6 @@
             <button type="button" role="tab" data-fat-tab="resumo" aria-selected="true">Resumo e metas</button>
             <button type="button" role="tab" data-fat-tab="receitas" aria-selected="false">Receitas extras</button>
             <button type="button" role="tab" data-fat-tab="despesas" aria-selected="false">Despesas</button>
-            <button type="button" role="tab" data-fat-tab="recebimentos" aria-selected="false">Recebimentos</button>
           </div>
           <div class="fat-pane" data-fat-pane="resumo">
           <div class="card fat-caixa">
@@ -3709,7 +3708,7 @@
   function ini(){
     if(!document.querySelector('[data-fat-tab]')) return;
     document.querySelectorAll('[data-fat-tab]').forEach(function(b){ b.addEventListener('click',function(){ trocar(b.getAttribute('data-fat-tab')); }); });
-    var a='resumo'; try{ a=localStorage.getItem('moving_fat_aba')||'resumo'; }catch(e){} trocar(a);
+    var a='resumo'; try{ a=localStorage.getItem('moving_fat_aba')||'resumo'; }catch(e){} if(!document.querySelector('[data-fat-tab="'+a+'"]')) a='resumo'; trocar(a);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();
