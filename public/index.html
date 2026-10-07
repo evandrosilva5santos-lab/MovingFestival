@@ -668,7 +668,7 @@
       <a data-view="overview" class="active" title="Visão geral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg><span class="nav-txt">Visão geral</span></a>
       <a data-view="diario" title="Vendas por Dia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="nav-txt">Vendas por Dia</span></a>
       <a data-view="plataformas" title="Plataformas & Regiões"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><span class="nav-txt">Plataformas</span></a>
-      <a data-view="promoters" title="Ações Start & Cupons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Ações Start & Cupons</span></a>
+      <a data-view="promoters" title="Ações Start & Cupons" id="navLinkPromoters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt" id="navPromotersTxt">Ações Start & Cupons</span></a>
       <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
       <a data-view="tendencias" title="Faturamento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="nav-txt">Faturamento</span></a>
       <a data-view="conferencia" title="Importar e conferir planilhas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="nav-txt">Importar e conferir</span></a>
@@ -944,7 +944,7 @@
       <!-- AÇÕES START INC & CUPONS UNIFICADOS -->
       <section data-view="promoters" hidden>
         <!-- 1. HERO MASTER START INC -->
-        <div class="start-hero">
+        <div class="start-hero" id="startHeroCard">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
             <div>
               <div class="start-tag">🚀 Ação da Start Inc.</div>
@@ -1002,7 +1002,7 @@
         </div>
 
         <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px" id="outrasAcoesHeader">
           <h3 style="font-size:14px;font-weight:700">Outras Ações da Campanha (Promoters, Antiga Gestão & Sympla)</h3>
         </div>
         <div class="grid g4" id="outrasAcoesGrid" style="margin-bottom:16px">
@@ -1029,7 +1029,7 @@
         </div>
 
         <!-- 3. PAINEL DE RECOMPENSAS UTICKET (A CADA 10 VENDAS GANHA 1 INGRESSO) -->
-        <div class="card-recompensa">
+        <div class="card-recompensa" id="recompensasPromoterCard">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
             <div>
               <span class="badge-recompensa">🎁 Regra Uticket: 1 Ingresso Cortesia a cada 10 Vendas</span>
@@ -1060,9 +1060,9 @@
         </div>
 
         <!-- 4. MAPEAMENTO COMPLETO DE CUPONS (UTICKET + SYMPLA) -->
-        <div class="card">
+        <div class="card" id="mapeamentoCuponsCard">
           <div class="ttl" style="margin-bottom:12px">
-            Mapeamento Consolidado de Cupons (Uticket + Sympla)
+            <span id="tituloMapeamentoCupons">Mapeamento Consolidado de Cupons (Uticket + Sympla)</span>
             <span class="tag" id="couponCountBadge">219 cupons mapeados</span>
           </div>
 
@@ -1539,6 +1539,9 @@
     views.forEach(function(s){ s.hidden = s.getAttribute('data-view')!==v; });
     links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('data-view')===v); });
     var t = titles[v]||['',''];
+    if(v === 'promoters' && window.MOVING_AUTH && window.MOVING_AUTH.usuario && window.MOVING_AUTH.usuario.papel === 'usuario'){
+      t = ['Gestão de Promoters & Recompensas', 'Ranking, metas e cupons da equipe de promoters'];
+    }
     $('pageTitle').textContent = t[0]; $('pageSub').textContent = t[1];
 
     if(v === 'usuarios' && window.carregarUsuarios){
@@ -1894,7 +1897,13 @@
     var totCuponsIng = cupons.reduce(function(a,c){ return a + (c.total||0); }, 0) || 1;
 
     // Filtros
+    var isUsuarioRestrito = !!(window.MOVING_AUTH && window.MOVING_AUTH.usuario && window.MOVING_AUTH.usuario.papel === 'usuario');
     var filtrados = cupons.filter(function(c){
+      if(isUsuarioRestrito){
+        // Restrição estrita de dados: colaborador só tem acesso aos promoters
+        if(c.origem !== 'PROMOTER') return false;
+      }
+
       if(CUPOM_PLAT_FILTER !== 'ALL' && c.plataforma !== CUPOM_PLAT_FILTER) return false;
 
       // Filtros de Origem / Regras Especiais
@@ -1929,7 +1938,9 @@
     });
 
     if($('couponCountBadge')){
-      $('couponCountBadge').textContent = filtrados.length + ' de ' + cupons.length + ' cupons mapeados';
+      $('couponCountBadge').textContent = isUsuarioRestrito
+        ? filtrados.length + ' promoters listados'
+        : filtrados.length + ' de ' + cupons.length + ' cupons mapeados';
     }
 
     if(!$('couponsTableBody')) return;
@@ -1956,13 +1967,17 @@
       'PARCERIA': '🤝 Parceria'
     };
 
+    var baseTotalCupons = isUsuarioRestrito
+      ? ((DATA.outras_acoes && DATA.outras_acoes.promoters && DATA.outras_acoes.promoters.ingressos) || 767)
+      : (DATA.start_inc ? DATA.start_inc.ingressos : totCuponsIng);
+
     $('couponsTableBody').innerHTML = filtrados.map(function(c){
       var oCls = origClass[c.origem] || '';
       var oLbl = origLabel[c.origem] || c.origem;
       var pCls = c.plataforma === 'UTICKET' ? 'plat-uticket' : 'plat-sympla';
       var cNome = CANAL_LABEL[c.canal] || c.canal || 'Geral';
-      var partPct = ((c.total / totCuponsIng) * 100).toFixed(1);
-      var partBar = Math.min(100, Math.max(3, Math.round((c.total / (DATA.start_inc ? DATA.start_inc.ingressos : totCuponsIng)) * 100)));
+      var partPct = baseTotalCupons > 0 ? ((c.total / baseTotalCupons) * 100).toFixed(1) : '0.0';
+      var partBar = Math.min(100, Math.max(3, Math.round((c.total / baseTotalCupons) * 100)));
 
       // Renderização da Coluna Recompensas / Metas
       var recompensaHtml = '<span style="color:var(--fg-faint);font-size:12px">—</span>';
@@ -4007,8 +4022,8 @@
             <label class="tela-item-card" data-tela="promoters">
               <input type="checkbox" name="tela" value="promoters">
               <div class="tela-item-txt">
-                <b>Ações & Cupons</b>
-                <small>Performance Start Inc., promoters e campanhas</small>
+                <b>👥 Promoters & Recompensas</b>
+                <small>Ranking, metas e cupons da equipe (sem dados de agência/ADS)</small>
               </div>
             </label>
             <label class="tela-item-card" data-tela="ingressos">
@@ -4292,6 +4307,44 @@
     } else if(user.papel !== 'superadmin' && viewAtiva === 'usuarios'){
       if(window.movingShowView) window.movingShowView('overview');
     }
+
+    // ===== Restrição e Personalização de Visão de Promoters =====
+    var isUsuarioComum = (user.papel === 'usuario');
+    var navPromTxt = $('navPromotersTxt');
+    if(navPromTxt){
+      navPromTxt.textContent = isUsuarioComum ? 'Promoters' : 'Ações Start & Cupons';
+    }
+
+    var startHero = $('startHeroCard');
+    var analiseAds = $('analiseAdsCard');
+    var outrasHdr = $('outrasAcoesHeader');
+    var outrasGrid = $('outrasAcoesGrid');
+    var titMap = $('tituloMapeamentoCupons');
+    var origG = $('origemFilterGroup');
+
+    if(startHero) startHero.style.display = isUsuarioComum ? 'none' : '';
+    if(analiseAds) analiseAds.style.display = isUsuarioComum ? 'none' : '';
+    if(outrasHdr) outrasHdr.style.display = isUsuarioComum ? 'none' : '';
+    if(outrasGrid) outrasGrid.style.display = isUsuarioComum ? 'none' : '';
+    if(titMap) titMap.textContent = isUsuarioComum ? 'Ranking & Vendas dos Promoters' : 'Mapeamento Consolidado de Cupons (Uticket + Sympla)';
+
+    if(origG){
+      var chipsNaoPromoter = origG.querySelectorAll('button:not([data-orig="PROMOTER"]):not([data-orig="PREMIADOS"])');
+      chipsNaoPromoter.forEach(function(btn){
+        btn.style.display = isUsuarioComum ? 'none' : '';
+      });
+
+      if(isUsuarioComum){
+        if(typeof CUPOM_ORIG_FILTER !== 'undefined' && CUPOM_ORIG_FILTER !== 'PREMIADOS'){
+          CUPOM_ORIG_FILTER = 'PROMOTER';
+        }
+        var btnProm = origG.querySelector('button[data-orig="' + (CUPOM_ORIG_FILTER || 'PROMOTER') + '"]');
+        [].slice.call(origG.children).forEach(function(c){ c.setAttribute('aria-pressed', 'false'); });
+        if(btnProm) btnProm.setAttribute('aria-pressed', 'true');
+      }
+    }
+
+    if(typeof renderCuponsTable === 'function') renderCuponsTable();
   }
 
   // ===== Logout =====
