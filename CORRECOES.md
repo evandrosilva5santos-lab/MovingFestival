@@ -182,4 +182,5 @@
 - Tela Cupons: card "Análise de canais por cupom" (comentário `ANALISE_ADS`).
 - MOVINGBIO e MOVINGDIRECT saíram de "Promoters" (não ganham recompensa de 10 vendas).
 - ANINHA = lista interna Moving (prospecção direta), fora de Promoters.
+- Todos os cupons START* = ações de venda da Start Inc. (agência contratada). STARTADSNATIVO entra em ADS gestão nova; STARTSMS = SMS Marketing.
 - Para incluir cupom novo num canal, adicionar uma linha em `MAPA_ANALISE`.

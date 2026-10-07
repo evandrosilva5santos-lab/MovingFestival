@@ -21,6 +21,7 @@ function classifyCupom(cupomRaw) {
   else if (u.includes('STARTGRUPOA')) canal = 'GRUPO_VIP_ANTIGOS';
   else if (u.includes('STARTADS')) canal = 'META_ADS';
   else if (u.includes('STARTEMAIL')) canal = 'EMAIL_MARKETING';
+  else if (u.includes('STARTSMS')) canal = 'SMS_MARKETING';
   else if (u.includes('STARTELEICAO')) canal = 'CAMPANHA_ELEICAO';
   else if (u.includes('STARTBLACK')) canal = 'CAMPANHA_BLACK';
   else if (u.includes('STARTCASAMENTO')) canal = 'CAMPANHA_CASAMENTO';
@@ -45,6 +46,7 @@ const MAPA_ANALISE = {
   STARTGRUPON:    { grupo: 'WHATSAPP', canal: 'WHATSAPP_GRUPO', rotulo: 'Grupo do WhatsApp' },
   STARTGRUPOA:    { grupo: 'WHATSAPP', canal: 'WHATSAPP_GRUPO', rotulo: 'Grupo do WhatsApp' },
   STARTADS:       { grupo: 'ADS', canal: 'ADS_GESTAO_NOVA',   gestao: 'NOVA',   rotulo: 'Venda 100% ADS · gestão nova' },
+  STARTADSNATIVO: { grupo: 'ADS', canal: 'ADS_NATIVO',        gestao: 'NOVA',   rotulo: 'Venda 100% ADS · nativo (gestão nova)' },
   MOVINGMANIACO15:{ grupo: 'ADS', canal: 'ADS_GESTAO_ANTIGA', gestao: 'ANTIGA', rotulo: 'Venda 100% ADS · gestão antiga' },
   MOVINGBIO:      { grupo: 'ORGANICO', canal: 'ORGANICO_BIO',      rotulo: 'Orgânico · link na bio' },
   MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' },
