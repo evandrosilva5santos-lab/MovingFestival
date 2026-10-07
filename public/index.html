@@ -782,34 +782,43 @@
         <div id="financeiroCard" class="fat">
           <div class="grid g4">
             <div class="card kpi hl-k"><div class="k">Faturamento de ingressos <span class="fat-real">real</span></div><div class="v tnum" id="fatIngressos" style="color:var(--accent)">—</div><div class="s" id="fatIngressosSub">—</div></div>
-            <div class="card kpi"><div class="k">Ticket médio do ingresso <span class="fat-real">real</span></div><div class="v tnum" id="fatTicket">—</div><div class="s">faturamento ÷ ingressos pagos</div></div>
-            <div class="card kpi"><div class="k">Estacionamento <span class="fat-est">estimado</span></div><div class="v tnum" id="fatEst">—</div><div class="s" id="fatEstSub">—</div></div>
-            <div class="card kpi"><div class="k">Bar <span class="fat-est">estimado</span></div><div class="v tnum" id="fatBar">—</div><div class="s" id="fatBarSub">—</div></div>
+            <div class="card kpi"><div class="k">Custos do evento</div><div class="v tnum" id="fatCustos">—</div><div class="s" id="fatCustosSub">—</div></div>
+            <div class="card kpi"><div class="k">Resultado projetado hoje <span class="fat-est">estimado</span></div><div class="v tnum" id="fatLucro">—</div><div class="s" id="fatLucroSub">—</div></div>
+            <div class="card kpi"><div class="k">Ponto de equilíbrio</div><div class="v tnum" id="fatEquil">—</div><div class="s" id="fatEquilSub">—</div></div>
           </div>
 
-          <div class="card fat-total">
-            <div class="fat-total-l">
-              <div class="k">Faturamento total projetado</div>
-              <div class="v tnum" id="fatTotal">—</div>
-              <div class="s">ingressos (real) + estacionamento e bar (estimados) · <b id="fatPorPessoa">—</b> por pessoa</div>
+          <div class="grid g2 fat-dre-grid">
+            <div class="card">
+              <div class="ttl">Resultado projetado com as vendas de hoje <span class="tag" id="fatPublicoTag">—</span></div>
+              <div class="fat-dre" id="fatDre"></div>
             </div>
-            <div class="fat-total-r">
+            <div class="card">
+              <div class="ttl">De onde vem a receita</div>
+              <div class="fat-total-v tnum" id="fatTotal">—</div>
+              <div class="fat-total-s">receita total projetada · <b id="fatPorPessoa">—</b> por pessoa</div>
               <div class="fat-stack" id="fatStack"></div>
               <div class="fat-leg" id="fatLeg"></div>
+              <div class="fat-g2">Faturamento de ingressos por setor</div>
+              <div id="finSetores" class="fin-setores"></div>
             </div>
           </div>
 
-          <div class="grid g2">
-            <div class="card">
-              <div class="ttl">Faturamento por setor <span class="tag">só ingressos pagos</span></div>
-              <div id="finSetores" class="fin-setores"></div>
-            </div>
+          <div class="card fat-metas">
+            <div class="ttl">Projeção de lucro por meta <span class="tag">mesmas metas da Visão geral · ticket médio e premissas atuais</span></div>
+            <div class="tscroll"><table class="fat-tab">
+              <thead><tr><th>Cenário</th><th>Ingressos</th><th>Ingressos (R$)</th><th>Estacion. + bar</th><th>Receita total</th><th>Custos</th><th class="fat-th-l">Lucro / prejuízo</th><th>Margem</th></tr></thead>
+              <tbody id="fatMetasBody"></tbody>
+            </table></div>
+            <p class="fat-nota" id="fatMetasNota">—</p>
+          </div>
+
+          <div class="grid g2 fat-bottom">
             <div class="card fat-prem" id="fatPrem">
               <div class="ttl">Premissas da estimativa
                 <span class="fat-acoes">
-                  <button type="button" class="fat-btn" id="fatEditar">Editar</button>
-                  <button type="button" class="fat-btn" id="fatCancelar" hidden>Cancelar</button>
-                  <button type="button" class="fat-btn fat-btn-pri" id="fatSalvar" hidden>Salvar</button>
+                  <button type="button" class="fat-btn" data-acao="editar">Editar</button>
+                  <button type="button" class="fat-btn" data-acao="cancelar" hidden>Cancelar</button>
+                  <button type="button" class="fat-btn fat-btn-pri" data-acao="salvar" hidden>Salvar</button>
                 </span>
               </div>
               <div class="fat-rows">
@@ -819,12 +828,32 @@
                 <label class="fat-row"><span>Pessoas por carro</span><b data-v="pessoas">—</b><input data-i="pessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal" hidden></label>
                 <label class="fat-row"><span>Estacionamento (R$ por carro)</span><b data-v="preco">—</b><input data-i="preco" type="number" min="0" max="1000" step="5" inputmode="decimal" hidden></label>
                 <label class="fat-row"><span>Ticket médio do bar (R$ por pessoa)</span><b data-v="bar">—</b><input data-i="bar" type="number" min="0" max="5000" step="5" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Custo do bar (% da venda do bar)</span><b data-v="cmv_bar">—</b><input data-i="cmv_bar" type="number" min="0" max="100" step="1" inputmode="decimal" hidden></label>
+                <label class="fat-row"><span>Taxa das ticketeiras (% do faturamento)</span><b data-v="taxa_ingresso">—</b><input data-i="taxa_ingresso" type="number" min="0" max="100" step="0.5" inputmode="decimal" hidden></label>
               </div>
-              <div class="fat-msg" id="fatMsg" hidden></div>
+              <div class="fat-msg" data-msg hidden></div>
               <div class="fat-calc" id="fatCalc"></div>
-              <p class="fat-nota" id="fatInfo">—</p>
             </div>
+            <div class="card fat-custos" id="fatCustosCard">
+            <div class="ttl">Custos e investimentos do evento
+              <span class="fat-acoes">
+                <button type="button" class="fat-btn" data-acao="editar">Editar</button>
+                <button type="button" class="fat-btn" data-acao="cancelar" hidden>Cancelar</button>
+                <button type="button" class="fat-btn fat-btn-pri" data-acao="salvar" hidden>Salvar</button>
+              </span>
+            </div>
+            <div class="fat-cats" id="fatCats"></div>
+            <div class="tscroll"><table class="fat-tab fat-ctab">
+              <thead><tr><th>Item</th><th>Categoria</th><th>Valor</th><th>Situação</th><th class="fat-col-x"></th></tr></thead>
+              <tbody id="fatCustosBody"></tbody>
+              <tfoot id="fatCustosFoot"></tfoot>
+            </table></div>
+            <button type="button" class="fat-btn fat-add" id="fatAddCusto" hidden>+ Adicionar custo</button>
+            <div class="fat-msg" data-msg hidden></div>
           </div>
+          </div>
+
+          <p class="fat-nota" id="fatInfo">—</p>
 
           <div class="fat-sub"><h2>Tendência de vendas</h2><span class="pill">quantidade de ingressos</span></div>
         </div>
@@ -2639,144 +2668,270 @@
 </style>
 
 <style>
-/* FATURAMENTO: aba Faturamento (antiga Tendências) */
-.fat .grid + .card, .fat .card + .grid{ margin-top:16px; }
+/* FATURAMENTO: aba Faturamento (antiga Tendências) — receita, custos, lucro e projeção por meta */
+.fat > .grid + .card, .fat > .card + .grid, .fat > .card + .card, .fat > .grid + .grid{ margin-top:16px; }
 .fat-real,.fat-est{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border-radius:999px; margin-left:4px; vertical-align:1px; }
 .fat-real{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 12%,transparent); }
 .fat-est{ color:var(--c-warning); background:color-mix(in srgb,var(--c-warning) 14%,transparent); }
-.fat-total{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:32px; align-items:center; margin-top:16px; }
-.fat-total .k{ font-size:12px; font-weight:600; color:var(--fg-muted); }
-.fat-total .v{ font-family:var(--font-display); font-size:40px; font-weight:800; line-height:1.1; color:var(--accent); margin:4px 0; }
-.fat-total .s{ font-size:12px; color:var(--fg-muted); }
-.fat-total .s b{ color:var(--fg); }
+.fat-pos{ color:var(--c-success)!important; } .fat-neg{ color:var(--c-danger,#DC2626)!important; }
+.fat-dre{ display:flex; flex-direction:column; font-size:13px; }
+.fat-dre .l{ display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px dashed var(--border); }
+.fat-dre .l span{ color:var(--fg-muted); } .fat-dre .l b{ font-variant-numeric:tabular-nums; }
+.fat-dre .g{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-faint); margin-top:10px; }
+.fat-dre .st{ border-bottom:1px solid var(--border); } .fat-dre .st span,.fat-dre .st b{ color:var(--fg); font-weight:700; }
+.fat-dre .res{ border:0; margin-top:8px; padding:12px 14px; border-radius:12px; background:var(--surface-2); font-size:15px; }
+.fat-dre .res span{ color:var(--fg); font-weight:700; } .fat-dre .res b{ font-size:22px; font-family:var(--font-display); }
+.fat-total-v{ font-family:var(--font-display); font-size:36px; font-weight:800; line-height:1.1; color:var(--accent); margin-top:6px; }
+.fat-total-s{ font-size:12px; color:var(--fg-muted); margin:4px 0 16px; } .fat-total-s b{ color:var(--fg); }
 .fat-stack{ display:flex; height:14px; border-radius:99px; overflow:hidden; background:var(--surface-2); gap:2px; }
 .fat-stack span{ display:block; height:100%; }
 .fat-leg{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:12px; }
 .fat-leg div{ font-size:11.5px; color:var(--fg-muted); min-width:0; }
 .fat-leg i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
 .fat-leg b{ display:block; font-size:15px; color:var(--fg); font-variant-numeric:tabular-nums; margin-top:2px; }
+.fat-tab{ width:100%; border-collapse:collapse; font-size:12.5px; }
+.fat-tab th{ text-align:right; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--fg-faint); padding:8px 10px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.fat-tab th:first-child,.fat-tab td:first-child{ text-align:left; }
+.fat-tab td{ text-align:right; padding:9px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.fat-tab .cen b{ display:block; font-weight:700; } .fat-tab .cen small{ color:var(--fg-muted); font-size:11px; }
+.fat-tab tr.agora td{ background:color-mix(in srgb,var(--accent) 7%,transparent); }
+.fat-tab tr.agora .cen b{ color:var(--accent); }
+.fat-tab tr.prox td{ background:color-mix(in srgb,var(--c-warning) 7%,transparent); }
+.fat-tab tr.equil td{ background:color-mix(in srgb,var(--c-success) 8%,transparent); font-style:italic; }
+.fat-th-l{ text-align:left!important; min-width:220px; }
+.fat-lucro{ display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:0; min-width:220px; }
+.fat-lucro .neg,.fat-lucro .pos{ height:10px; display:flex; }
+.fat-lucro .neg{ justify-content:flex-end; border-right:1px solid var(--fg-faint); }
+.fat-lucro .neg span{ background:var(--c-danger,#DC2626); border-radius:4px 0 0 4px; }
+.fat-lucro .pos span{ background:var(--c-success); border-radius:0 4px 4px 0; }
+.fat-lucro b{ grid-column:1 / -1; text-align:center; font-size:12.5px; margin-top:3px; }
 .fin-setores{ display:flex; flex-direction:column; gap:14px; }
 .fin-set .t{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; font-weight:600; gap:8px; }
 .fin-set .t b{ font-variant-numeric:tabular-nums; font-size:14px; }
 .fin-set .bar{ height:8px; background:var(--surface-2); border-radius:99px; overflow:hidden; margin:6px 0 3px; }
 .fin-set .bar span{ display:block; height:100%; border-radius:99px; background:var(--cor); }
 .fin-set small{ font-size:11px; color:var(--fg-muted); }
-.fat-prem .ttl{ display:flex; align-items:center; gap:8px; }
+.fat .ttl{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .fat-acoes{ margin-left:auto; display:flex; gap:6px; }
-.fat-acoes [hidden]{ display:none!important; }
+.fat-acoes [hidden],.fat [hidden]{ display:none!important; }
 .fat-btn{ font:inherit; font-size:12px; font-weight:600; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--fg); cursor:pointer; }
 .fat-btn:hover{ background:var(--surface-2); }
 .fat-btn-pri{ background:var(--accent); border-color:var(--accent); color:#fff; }
 .fat-btn-pri:hover{ background:var(--accent); filter:brightness(1.08); }
 .fat-btn:disabled{ opacity:.6; cursor:wait; }
 .fat-rows{ display:flex; flex-direction:column; }
-.fat-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); font-size:13px; }
-.fat-row span{ color:var(--fg-muted); }
-.fat-row b{ font-variant-numeric:tabular-nums; text-align:right; }
-.fat-row [hidden]{ display:none!important; }
-.fat-row input,.fat-row select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--accent); border-radius:8px; padding:6px 10px; width:150px; max-width:100%; box-sizing:border-box; text-align:right; }
-.fat-row select{ width:230px; text-align:left; }
+.fat-row{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.fat-row span{ color:var(--fg-muted); } .fat-row b{ font-variant-numeric:tabular-nums; text-align:right; }
+.fat input,.fat select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--accent); border-radius:8px; padding:6px 10px; max-width:100%; box-sizing:border-box; }
+.fat-row input{ width:140px; text-align:right; } .fat-row select{ width:200px; }
 .fat-msg{ margin-top:10px; font-size:12px; font-weight:600; padding:8px 12px; border-radius:8px; }
 .fat-msg.ok{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 10%,transparent); }
 .fat-msg.erro{ color:var(--c-danger,#DC2626); background:color-mix(in srgb,var(--c-danger,#DC2626) 10%,transparent); }
 .fat-calc{ margin-top:12px; display:grid; gap:4px; font-size:12px; color:var(--fg-muted); background:var(--surface-2); border-radius:10px; padding:10px 12px; }
 .fat-calc b{ color:var(--fg); font-variant-numeric:tabular-nums; }
+.fat-cats{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.fat-cats span{ font-size:11.5px; font-weight:600; color:var(--fg-muted); background:var(--surface-2); border:1px solid var(--border); padding:4px 10px; border-radius:999px; }
+.fat-cats b{ color:var(--fg); margin-left:4px; font-variant-numeric:tabular-nums; }
+.fat-ctab td:first-child{ white-space:normal; }
+.fat-ctab input,.fat-ctab select{ width:100%; min-width:110px; }
+.fat-ctab td input[data-c="valor"]{ text-align:right; min-width:120px; }
+.fat-col-x{ width:36px; }
+.fat-x{ border:0; background:none; color:var(--fg-faint); font-size:18px; cursor:pointer; line-height:1; padding:2px 6px; }
+.fat-x:hover{ color:var(--c-danger,#DC2626); }
+.fat-sit{ font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; }
+.fat-sit.pago{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 12%,transparent); }
+.fat-sit.prev{ color:var(--fg-muted); background:var(--surface-2); }
+.fat-add{ margin-top:10px; }
+.fat-vazio{ text-align:center!important; color:var(--fg-muted); padding:18px!important; white-space:normal!important; }
 .fat-nota{ font-size:11px; color:var(--fg-faint); margin:10px 0 0; line-height:1.45; }
+.fat-g2{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--fg-faint); margin:22px 0 12px; padding-top:16px; border-top:1px solid var(--border); }
+@media (min-width:1200px){ .fat-bottom{ grid-template-columns:minmax(0,1fr) minmax(0,1.55fr); } }
+.fat-ctab td:nth-child(2){ white-space:normal; color:var(--fg-muted); }
 .fat-sub{ display:flex; align-items:center; gap:10px; margin:26px 0 10px; }
 .fat-sub h2{ font-size:14px; font-weight:700; }
 .fat-sub .pill{ font-size:11px; font-weight:700; color:var(--fg-muted); background:var(--surface-2); border:1px dashed var(--border); padding:3px 10px; border-radius:999px; }
-@media (max-width:1000px){ .fat-total{ grid-template-columns:1fr; gap:18px; } }
 @media (max-width:767px){
-  .fat-total .v{ font-size:32px; }
-  .fat-leg{ grid-template-columns:1fr 1fr 1fr; gap:6px; } .fat-leg b{ font-size:13px; }
+  .fat-total-v{ font-size:30px; }
+  .fat-leg{ gap:6px; } .fat-leg b{ font-size:13px; }
   .fat-row{ grid-template-columns:1fr; gap:6px; } .fat-row b{ text-align:left; }
   .fat-row input,.fat-row select{ width:100%; text-align:left; }
 }
 </style>
 <script>
-/* FATURAMENTO: premissas guardadas no Supabase (via /api/estimativas). Editar só admin/superadmin. */
+/* FATURAMENTO: premissas + custos guardados no Supabase (via /api/estimativas). Editar só admin/superadmin. */
 (function(){
-  var PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70};
-  var prem=Object.assign({},PAD), info=null, ult=null, editando=false;
+  var PAD={base:'total',carro:100,pessoas:3,preco:50,bar:70,cmv_bar:0,taxa_ingresso:0,custos:[]};
+  var CATS=['Atrações / artistas','Estrutura / palco / som','Produção','Equipe / staff','Segurança','Marketing / tráfego','Bar (insumos)','Estacionamento','Taxas / impostos','Outros'];
+  var prem=JSON.parse(JSON.stringify(PAD)), info=null, ult=null, metas=[], rasc=null;
+  var ed={prem:false,custos:false};
   var NOME={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black'}, COR={FULLPASS:'var(--c-fullpass)',ZONE:'var(--c-zone)',GOLD:'var(--c-gold)',BLACK:'var(--c-black)'};
   var C_ING='var(--accent)', C_EST='#F59E0B', C_BAR='#10B981';
   function g(id){ return document.getElementById(id); }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function din(n,c){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:c===0?0:2,maximumFractionDigits:c===0?0:2}); }
   function int(n){ return Math.round(+n||0).toLocaleString('pt-BR'); }
-  function numBr(n){ return (+n||0).toLocaleString('pt-BR',{maximumFractionDigits:1}); }
+  function nb(n){ return (+n||0).toLocaleString('pt-BR',{maximumFractionDigits:1}); }
   function set(id,v){ var e=g(id); if(e) e.textContent=v; }
+  function sinal(el,v){ var e=typeof el==='string'?g(el):el; if(!e) return; e.classList.toggle('fat-pos',v>=0); e.classList.toggle('fat-neg',v<0); }
   // Permissão: quando o login existir, window.movingUsuario = {papel,nome}. Sem login ainda, todos podem editar.
   function podeEditar(){ var u=window.movingUsuario; return !u || u.papel==='admin' || u.papel==='superadmin'; }
   function token(){ try{ return localStorage.getItem('moving_token')||''; }catch(e){ return ''; } }
-  function calc(){
-    if(!ult) return null;
-    var base = prem.base==='pagos' ? ult.pagos : ult.total;
-    var carros = base*(Math.min(100,Math.max(0,+prem.carro||0))/100)/Math.max(1,+prem.pessoas||1);
-    var est = carros*(+prem.preco||0), bar = base*(+prem.bar||0);
-    return {base:base,carros:carros,est:est,bar:bar,extra:est+bar,total:ult.receita+est+bar};
+  function somaCustos(){ return (prem.custos||[]).reduce(function(a,c){ return a+(+c.valor||0); },0); }
+  // Cenário com N ingressos no total (pagos + cortesias), mantendo a proporção de pagos e o ticket médio atuais
+  function cenario(N, real){
+    var pctPago = ult.total? ult.pagos/ult.total : 1, tm = ult.pagos? ult.receita/ult.pagos : 0;
+    var pagos = real? ult.pagos : N*pctPago, recIng = real? ult.receita : pagos*tm;
+    var publico = prem.base==='pagos'? pagos : N;
+    var carros = publico*(Math.min(100,Math.max(0,+prem.carro||0))/100)/Math.max(1,+prem.pessoas||1);
+    var est = carros*(+prem.preco||0), bar = publico*(+prem.bar||0);
+    var cBar = bar*(+prem.cmv_bar||0)/100, cTaxa = recIng*(+prem.taxa_ingresso||0)/100, fixos = somaCustos();
+    var receita = recIng+est+bar, custos = fixos+cBar+cTaxa, lucro = receita-custos;
+    return {N:N,pagos:pagos,publico:publico,carros:carros,recIng:recIng,est:est,bar:bar,receita:receita,cBar:cBar,cTaxa:cTaxa,fixos:fixos,custos:custos,lucro:lucro,margem: receita? lucro/receita : 0};
   }
-  function msg(t,tipo){ var m=g('fatMsg'); if(!m) return; if(!t){ m.hidden=true; return; } m.hidden=false; m.className='fat-msg '+tipo; m.textContent=t; }
-  function mostrarPremissas(){
-    var v={base: prem.base==='pagos'?'Só ingressos pagos':'Ingressos totais', carro: numBr(prem.carro)+'%', pessoas: numBr(prem.pessoas), preco: din(prem.preco), bar: din(prem.bar)};
-    document.querySelectorAll('#fatPrem [data-v]').forEach(function(b){ b.textContent=v[b.getAttribute('data-v')]; b.hidden=editando; });
-    document.querySelectorAll('#fatPrem [data-i]').forEach(function(i){ i.hidden=!editando; if(!editando) i.value=prem[i.getAttribute('data-i')]; });
-    g('fatEditar').hidden = editando || !podeEditar();
-    g('fatCancelar').hidden = !editando; g('fatSalvar').hidden = !editando;
+  function equilibrio(){
+    var a=cenario(1000,false), b=cenario(2000,false), contrib=(b.lucro-a.lucro)/1000; // lucro por ingresso a mais
+    if(contrib<=0) return null; return Math.max(0, Math.ceil(somaCustos()/contrib));
+  }
+  function desenharKpis(r){
+    set('fatIngressos', din(ult.receita,0)); set('fatIngressosSub', int(ult.pagos)+' pagos · ticket médio '+(ult.pagos? din(ult.receita/ult.pagos) : '—'));
+    var fx=somaCustos(), pago=(prem.custos||[]).filter(function(c){ return c.pago; }).reduce(function(a,c){ return a+(+c.valor||0); },0);
+    set('fatCustos', din(r.custos,0));
+    set('fatCustosSub', (prem.custos||[]).length? (din(fx,0)+' cadastrados ('+din(pago,0)+' já pagos) + '+din(r.cBar+r.cTaxa,0)+' variáveis') : 'nenhum custo cadastrado ainda');
+    set('fatLucro', (r.lucro<0?'− ':'')+din(Math.abs(r.lucro),0)); sinal('fatLucro',r.lucro);
+    set('fatLucroSub', r.lucro>=0? ('lucro · margem '+Math.round(r.margem*100)+'%') : 'prejuízo se as vendas parassem hoje');
+    var eq=equilibrio();
+    if(!fx){ set('fatEquil','—'); set('fatEquilSub','cadastre os custos para calcular'); g('fatEquil').classList.remove('fat-pos','fat-neg'); }
+    else if(eq===null){ set('fatEquil','—'); set('fatEquilSub','cada ingresso não cobre o custo variável'); }
+    else { set('fatEquil', int(eq)+' ingr.'); var falta=eq-ult.total;
+      set('fatEquilSub', falta>0? ('faltam '+int(falta)+' ingressos para empatar') : ('atingido · '+int(-falta)+' ingressos acima'));
+      sinal('fatEquil', -falta); }
+  }
+  function desenharDre(r){
+    function l(t,v,cls){ return '<div class="l '+(cls||'')+'"><span>'+t+'</span><b>'+v+'</b></div>'; }
+    var cats={}; (prem.custos||[]).forEach(function(c){ cats[c.categoria||'Outros']=(cats[c.categoria||'Outros']||0)+(+c.valor||0); });
+    var h='<div class="g">Receitas</div>'+l('Ingressos <span class="fat-real">real</span>',din(r.recIng,0))+l('Estacionamento ('+int(r.carros)+' carros) <span class="fat-est">est.</span>',din(r.est,0))+l('Bar ('+int(r.publico)+' pessoas) <span class="fat-est">est.</span>',din(r.bar,0))+l('Receita total',din(r.receita,0),'st');
+    h+='<div class="g">Custos</div>';
+    Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; }).forEach(function(k){ h+=l(esc(k),'− '+din(cats[k],0)); });
+    if(!Object.keys(cats).length) h+=l('Custos do evento','nenhum cadastrado');
+    if(r.cBar) h+=l('Custo do bar ('+nb(prem.cmv_bar)+'%)','− '+din(r.cBar,0));
+    if(r.cTaxa) h+=l('Taxa das ticketeiras ('+nb(prem.taxa_ingresso)+'%)','− '+din(r.cTaxa,0));
+    h+=l('Custo total','− '+din(r.custos,0),'st');
+    h+='<div class="l res"><span>'+(r.lucro>=0?'Lucro projetado':'Prejuízo projetado')+'</span><b class="'+(r.lucro>=0?'fat-pos':'fat-neg')+'">'+(r.lucro<0?'− ':'')+din(Math.abs(r.lucro),0)+'</b></div>';
+    g('fatDre').innerHTML=h; set('fatPublicoTag', int(ult.total)+' ingressos hoje');
+    set('fatTotal', din(r.receita,0)); set('fatPorPessoa', din(r.publico? r.receita/r.publico : 0));
+    var partes=[['Ingressos',r.recIng,C_ING],['Estacionamento',r.est,C_EST],['Bar',r.bar,C_BAR]];
+    g('fatStack').innerHTML=partes.map(function(p){ return '<span title="'+p[0]+'" style="width:'+(r.receita? p[1]/r.receita*100 : 0).toFixed(2)+'%;background:'+p[2]+'"></span>'; }).join('');
+    g('fatLeg').innerHTML=partes.map(function(p){ return '<div><i style="background:'+p[2]+'"></i>'+p[0]+' · '+(r.receita? Math.round(p[1]/r.receita*100) : 0)+'%<b>'+din(p[1],0)+'</b></div>'; }).join('');
+  }
+  function desenharMetas(r){
+    var lin=[{nome:'Agora',sub:'vendas reais de hoje',c:r,cls:'agora'}];
+    var prox=null; metas.forEach(function(m){ if(prox===null && m.valor>ult.total) prox=m.valor; });
+    metas.forEach(function(m){ lin.push({nome:m.nome,sub:m.classificacao||'',c:cenario(+m.valor,false),cls:(+m.valor===prox?'prox':''),val:+m.valor}); });
+    var eq=somaCustos()? equilibrio() : null;
+    if(eq && eq>ult.total){ lin.push({nome:'Ponto de equilíbrio',sub:'lucro zero',c:cenario(eq,false),cls:'equil',val:eq}); }
+    lin.sort(function(a,b){ return (a.cls==='agora'? ult.total : a.val) - (b.cls==='agora'? ult.total : b.val); });
+    var maxAbs=Math.max.apply(null,lin.map(function(x){ return Math.abs(x.c.lucro); }).concat([1]));
+    g('fatMetasBody').innerHTML=lin.map(function(x){
+      var c=x.c, w=(Math.abs(c.lucro)/maxAbs*100).toFixed(1);
+      var barra='<div class="fat-lucro"><div class="neg">'+(c.lucro<0?'<span style="width:'+w+'%"></span>':'')+'</div><div class="pos">'+(c.lucro>=0?'<span style="width:'+w+'%"></span>':'')+'</div><b class="'+(c.lucro>=0?'fat-pos':'fat-neg')+'">'+(c.lucro<0?'− ':'')+din(Math.abs(c.lucro),0)+'</b></div>';
+      return '<tr class="'+x.cls+'"><td class="cen"><b>'+esc(x.nome)+'</b><small>'+esc(x.sub)+(x.cls==='prox'?' · próxima meta':'')+'</small></td><td>'+int(c.N)+'</td><td>'+din(c.recIng,0)+'</td><td>'+din(c.est+c.bar,0)+'</td><td>'+din(c.receita,0)+'</td><td>'+din(c.custos,0)+'</td><td>'+barra+'</td><td class="'+(c.lucro>=0?'fat-pos':'fat-neg')+'">'+Math.round(c.margem*100)+'%</td></tr>';
+    }).join('');
+    var tm=ult.pagos? ult.receita/ult.pagos : 0;
+    set('fatMetasNota','Cada meta usa o ticket médio atual ('+din(tm)+'), a proporção atual de pagos ('+Math.round((ult.total? ult.pagos/ult.total:1)*100)+'%) e as premissas de estacionamento, bar e custos abaixo. Muda sozinho a cada venda e a cada edição.');
+  }
+  function desenharPrem(r){
+    var v={base: prem.base==='pagos'?'Só ingressos pagos':'Ingressos totais', carro:nb(prem.carro)+'%', pessoas:nb(prem.pessoas), preco:din(prem.preco), bar:din(prem.bar), cmv_bar:nb(prem.cmv_bar)+'%', taxa_ingresso:nb(prem.taxa_ingresso)+'%'};
+    document.querySelectorAll('#fatPrem [data-v]').forEach(function(b){ b.textContent=v[b.getAttribute('data-v')]; b.hidden=ed.prem; });
+    document.querySelectorAll('#fatPrem [data-i]').forEach(function(i){ i.hidden=!ed.prem; if(!ed.prem) i.value=prem[i.getAttribute('data-i')]; });
+    if(r) g('fatCalc').innerHTML='<div>Público base hoje: <b>'+int(r.publico)+'</b> pessoas</div><div>Carros: '+int(r.publico)+' × '+nb(prem.carro)+'% ÷ '+nb(prem.pessoas)+' = <b>'+int(r.carros)+'</b></div><div>Estacionamento: '+int(r.carros)+' × '+din(prem.preco,0)+' = <b>'+din(r.est,0)+'</b></div><div>Bar: '+int(r.publico)+' × '+din(prem.bar,0)+' = <b>'+din(r.bar,0)+'</b></div>';
+  }
+  function desenharCustos(){
+    var lista = ed.custos? rasc : (prem.custos||[]);
+    var body=g('fatCustosBody');
+    if(!lista.length) body.innerHTML='<tr><td colspan="5" class="fat-vazio">'+(ed.custos?'Clique em “+ Adicionar custo”.':'Nenhum custo cadastrado. Clique em Editar para lançar os custos e investimentos do evento.')+'</td></tr>';
+    else if(!ed.custos) body.innerHTML=lista.map(function(c){ return '<tr><td>'+esc(c.nome)+'</td><td>'+esc(c.categoria)+'</td><td>'+din(c.valor)+'</td><td><span class="fat-sit '+(c.pago?'pago':'prev')+'">'+(c.pago?'Pago':'Previsto')+'</span></td><td></td></tr>'; }).join('');
+    else body.innerHTML=lista.map(function(c,i){
+      return '<tr data-k="'+i+'"><td><input data-c="nome" maxlength="80" value="'+esc(c.nome)+'" placeholder="Ex.: Cachê atração principal"></td>'+
+        '<td><select data-c="categoria">'+CATS.map(function(k){ return '<option'+(k===c.categoria?' selected':'')+'>'+esc(k)+'</option>'; }).join('')+(CATS.indexOf(c.categoria)<0&&c.categoria?'<option selected>'+esc(c.categoria)+'</option>':'')+'</select></td>'+
+        '<td><input data-c="valor" type="number" min="0" step="100" inputmode="decimal" value="'+(c.valor===''?'':(+c.valor||0))+'"></td>'+
+        '<td><select data-c="pago"><option value="0"'+(c.pago?'':' selected')+'>Previsto</option><option value="1"'+(c.pago?' selected':'')+'>Pago</option></select></td>'+
+        '<td><button type="button" class="fat-x" data-del="'+i+'" title="Remover">×</button></td></tr>';
+    }).join('');
+    var tot=lista.reduce(function(a,c){ return a+(+c.valor||0); },0), pago=lista.filter(function(c){ return c.pago; }).reduce(function(a,c){ return a+(+c.valor||0); },0);
+    g('fatCustosFoot').innerHTML= lista.length? '<tr><td><b>Total</b></td><td></td><td><b>'+din(tot)+'</b></td><td><small>'+din(pago,0)+' pagos · '+din(tot-pago,0)+' a pagar</small></td><td></td></tr>' : '';
+    var cats={}; lista.forEach(function(c){ cats[c.categoria||'Outros']=(cats[c.categoria||'Outros']||0)+(+c.valor||0); });
+    g('fatCats').innerHTML=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; }).map(function(k){ return '<span>'+esc(k)+'<b>'+din(cats[k],0)+'</b></span>'; }).join('');
+    g('fatAddCusto').hidden=!ed.custos;
+  }
+  function botoes(){
+    [['fatPrem','prem'],['fatCustosCard','custos']].forEach(function(p){
+      var card=g(p[0]); if(!card) return; var em=ed[p[1]];
+      card.querySelector('[data-acao=editar]').hidden = em || !podeEditar();
+      card.querySelector('[data-acao=cancelar]').hidden = !em; card.querySelector('[data-acao=salvar]').hidden = !em;
+    });
     var quando = info && info.atualizado_em ? new Date(info.atualizado_em).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : null;
-    set('fatInfo', (quando ? 'Última edição: '+(info.atualizado_por||'—')+' · '+quando+'. ' : '') + 'Estacionamento e bar são estimativas de receita (não descontam custos). '+(podeEditar()?'Admin e SuperAdmin podem editar.':'Só admin e SuperAdmin podem editar.'));
+    set('fatInfo', (quando? 'Última edição: '+(info.atualizado_por||'—')+' · '+quando+'. ' : '')+'Estacionamento e bar são estimativas. Os valores editados ficam salvos para todos. '+(podeEditar()?'Admin e SuperAdmin podem editar.':'Só admin e SuperAdmin podem editar.'));
   }
   function desenhar(){
-    var r=calc(); if(!r) return;
-    set('fatIngressos', din(ult.receita,0)); set('fatIngressosSub', int(ult.pagos)+' ingressos pagos');
-    set('fatTicket', ult.pagos? din(ult.receita/ult.pagos) : '—');
-    set('fatEst', din(r.est,0)); set('fatEstSub', int(r.carros)+' carros × '+din(prem.preco,0));
-    set('fatBar', din(r.bar,0)); set('fatBarSub', int(r.base)+' pessoas × '+din(prem.bar,0));
-    set('fatTotal', din(r.total,0)); set('fatPorPessoa', din(r.base? r.total/r.base : 0));
-    var partes=[['Ingressos',ult.receita,C_ING],['Estacionamento',r.est,C_EST],['Bar',r.bar,C_BAR]];
-    g('fatStack').innerHTML = partes.map(function(p){ var pc=r.total? p[1]/r.total*100 : 0; return '<span title="'+p[0]+'" style="width:'+pc.toFixed(2)+'%;background:'+p[2]+'"></span>'; }).join('');
-    g('fatLeg').innerHTML = partes.map(function(p){ var pc=r.total? Math.round(p[1]/r.total*100) : 0; return '<div><i style="background:'+p[2]+'"></i>'+p[0]+' · '+pc+'%<b>'+din(p[1],0)+'</b></div>'; }).join('');
-    g('fatCalc').innerHTML =
-      '<div>Público base: <b>'+int(r.base)+'</b> pessoas</div>'+
-      '<div>Carros: '+int(r.base)+' × '+numBr(prem.carro)+'% ÷ '+numBr(prem.pessoas)+' = <b>'+int(r.carros)+' carros</b></div>'+
-      '<div>Estacionamento: '+int(r.carros)+' × '+din(prem.preco,0)+' = <b>'+din(r.est,0)+'</b></div>'+
-      '<div>Bar: '+int(r.base)+' × '+din(prem.bar,0)+' = <b>'+din(r.bar,0)+'</b></div>';
-    mostrarPremissas();
+    if(!ult){ desenharCustos(); botoes(); return; }
+    var r=cenario(ult.total,true);
+    desenharKpis(r); desenharDre(r); desenharMetas(r); desenharPrem(r); desenharCustos(); botoes();
   }
   window.movingFinanceiro=function(d){
     if(!g('financeiroCard')) return;
     var por={}; (d.setores||[]).forEach(function(x){ por[x.setor]=x; });
     var rec=0,total=0,pagos=0; ['FULLPASS','ZONE','GOLD','BLACK'].forEach(function(k){ var x=por[k]||{}; rec+=+x.receita||0; total+=+x.total||0; pagos+=+x.pagos||0; });
     ult={total:total,pagos:pagos,receita:rec};
+    metas=(d.metas||[]).slice().sort(function(a,b){ return a.valor-b.valor; });
     g('finSetores').innerHTML=['FULLPASS','ZONE','GOLD','BLACK'].map(function(k){
       var x=por[k]||{}, r=+x.receita||0, pc=rec?r/rec*100:0, tm=(+x.pagos)? r/x.pagos : 0;
       return '<div class="fin-set" style="--cor:'+COR[k]+'"><div class="t"><span>'+NOME[k]+'</span><b>'+din(r,0)+'</b></div><div class="bar"><span style="width:'+pc.toFixed(1)+'%"></span></div><small>'+pc.toFixed(0)+'% do faturamento · '+int(x.pagos)+' pagos · ticket médio '+din(tm)+'</small></div>';
     }).join('');
     desenhar();
   };
-  function carregar(){
-    fetch('/api/estimativas',{cache:'no-store'}).then(function(r){ return r.ok? r.json() : null; }).then(function(j){
-      if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; } desenhar(); mostrarPremissas();
-    }).catch(function(){ msg('Não consegui carregar as premissas salvas. Mostrando os valores padrão.','erro'); mostrarPremissas(); });
+  function msg(card,t,tipo){ var m=card.querySelector('[data-msg]'); if(!m) return; if(!t){ m.hidden=true; return; } m.hidden=false; m.className='fat-msg '+tipo; m.textContent=t; }
+  function lerRascunho(){
+    if(!rasc) return; document.querySelectorAll('#fatCustosBody tr[data-k]').forEach(function(tr){
+      var c=rasc[+tr.getAttribute('data-k')]; if(!c) return;
+      tr.querySelectorAll('[data-c]').forEach(function(i){ var k=i.getAttribute('data-c'); c[k]= k==='pago'? i.value==='1' : (k==='valor'? (i.value===''?'':Number(String(i.value).replace(',','.'))) : i.value); });
+    });
+  }
+  function salvar(card,dados,qual){
+    var b=card.querySelector('[data-acao=salvar]'); b.disabled=true; b.textContent='Salvando…';
+    var u=window.movingUsuario;
+    fetch('/api/estimativas',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':token()},body:JSON.stringify({dados:dados,quem:u&&u.nome||''})})
+      .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
+      .then(function(j){
+        b.disabled=false; b.textContent='Salvar';
+        if(j && j.erro){ msg(card,j.erro,'erro'); return; }
+        if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; }
+        ed[qual]=false; if(qual==='custos') rasc=null; desenhar();
+        msg(card,'Salvo. Já vale para todos que abrirem o painel.','ok'); setTimeout(function(){ msg(card,''); },4000);
+      }).catch(function(){ b.disabled=false; b.textContent='Salvar'; msg(card,'Sem conexão. Tente de novo.','erro'); });
   }
   function ini(){
-    if(!g('fatEditar')) return;
-    g('fatEditar').addEventListener('click',function(){ if(!podeEditar()) return; editando=true; msg(''); mostrarPremissas(); var f=document.querySelector('#fatPrem [data-i="carro"]'); if(f) f.focus(); });
-    g('fatCancelar').addEventListener('click',function(){ editando=false; msg(''); mostrarPremissas(); });
-    g('fatSalvar').addEventListener('click',function(){
-      var dados={}; document.querySelectorAll('#fatPrem [data-i]').forEach(function(i){ var k=i.getAttribute('data-i'); dados[k]= k==='base'? i.value : Number(String(i.value).replace(',','.')); });
-      var b=g('fatSalvar'); b.disabled=true; b.textContent='Salvando…';
-      var u=window.movingUsuario;
-      fetch('/api/estimativas',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':token()},body:JSON.stringify({dados:dados,quem:u&&u.nome||''})})
-        .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
-        .then(function(j){
-          b.disabled=false; b.textContent='Salvar';
-          if(j && j.erro){ msg(j.erro,'erro'); return; }
-          if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; }
-          editando=false; msg('Estimativa salva. Vale para todos que abrirem o painel.','ok'); desenhar();
-          setTimeout(function(){ msg(''); },4000);
-        }).catch(function(){ b.disabled=false; b.textContent='Salvar'; msg('Sem conexão. Tente de novo.','erro'); });
+    var P=g('fatPrem'), C=g('fatCustosCard'); if(!P||!C) return;
+    P.querySelector('[data-acao=editar]').addEventListener('click',function(){ if(!podeEditar()) return; ed.prem=true; msg(P,''); desenhar(); });
+    P.querySelector('[data-acao=cancelar]').addEventListener('click',function(){ ed.prem=false; msg(P,''); desenhar(); });
+    P.querySelector('[data-acao=salvar]').addEventListener('click',function(){
+      var dados={}; P.querySelectorAll('[data-i]').forEach(function(i){ var k=i.getAttribute('data-i'); dados[k]= k==='base'? i.value : Number(String(i.value).replace(',','.')); });
+      salvar(P,dados,'prem');
     });
-    mostrarPremissas(); carregar();
+    C.querySelector('[data-acao=editar]').addEventListener('click',function(){ if(!podeEditar()) return; rasc=JSON.parse(JSON.stringify(prem.custos||[])); ed.custos=true; msg(C,''); desenhar(); });
+    C.querySelector('[data-acao=cancelar]').addEventListener('click',function(){ ed.custos=false; rasc=null; msg(C,''); desenhar(); });
+    C.querySelector('[data-acao=salvar]').addEventListener('click',function(){
+      lerRascunho();
+      var lista=(rasc||[]).filter(function(c){ return String(c.nome||'').trim() || (+c.valor); });
+      for(var i=0;i<lista.length;i++){ if(!String(lista[i].nome||'').trim()){ msg(C,'Todo custo precisa de um nome.','erro'); return; } if(lista[i].valor===''||isNaN(+lista[i].valor)){ msg(C,'Preencha o valor de: '+lista[i].nome,'erro'); return; } }
+      salvar(C,{custos:lista.map(function(c){ return {nome:String(c.nome).trim(),categoria:c.categoria||'Outros',valor:+c.valor,pago:!!c.pago}; })},'custos');
+    });
+    g('fatAddCusto').addEventListener('click',function(){ lerRascunho(); rasc.push({nome:'',categoria:CATS[0],valor:'',pago:false}); desenharCustos(); var ins=document.querySelectorAll('#fatCustosBody input[data-c=nome]'); if(ins.length) ins[ins.length-1].focus(); });
+    g('fatCustosBody').addEventListener('click',function(e){ var x=e.target.closest('[data-del]'); if(!x) return; lerRascunho(); rasc.splice(+x.getAttribute('data-del'),1); desenharCustos(); });
+    g('fatCustosBody').addEventListener('input',function(){ if(!ed.custos) return; lerRascunho(); var tot=rasc.reduce(function(a,c){ return a+(+c.valor||0); },0); var f=g('fatCustosFoot').querySelector('b+b, td:nth-child(3) b'); if(f) f.textContent=din(tot); });
+    desenhar();
+    fetch('/api/estimativas',{cache:'no-store'}).then(function(r){ return r.ok? r.json() : null; }).then(function(j){
+      if(j && j.dados){ prem=Object.assign({},PAD,j.dados); info=j; } desenhar();
+    }).catch(function(){ msg(P,'Não consegui carregar os valores salvos. Mostrando o padrão.','erro'); });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();

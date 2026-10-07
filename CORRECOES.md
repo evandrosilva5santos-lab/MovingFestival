@@ -95,3 +95,9 @@
 - **Premissas da estimativa** (público base, % que vai de carro, pessoas por carro, R$ por carro, ticket do bar) ficam no Supabase, na tabela `moving_excluir_estimativas`, lidas e gravadas por `GET/POST /api/estimativas` (Worker → RPCs `moving_excluir_estimativas_ler` / `moving_excluir_estimativas_salvar`). Valem para todos os usuários.
 - Fluxo: botão **Editar** → campos → **Salvar** / **Cancelar**. O banco valida os limites.
 - Permissão: o front usa `window.movingUsuario = {papel, nome}` e o header `X-Moving-Token` (token em `localStorage.moving_token`). Só `admin` e `superadmin` editam. **Enquanto o login não existir, qualquer um consegue editar.** A RPC de salvar já passa a exigir token de admin/superadmin automaticamente assim que existir a tabela `moving_excluir_usuarios` com algum usuário.
+
+## 12. Faturamento completo: custos, lucro/prejuízo, ponto de equilíbrio e projeção por meta
+- Aba Faturamento: KPIs (faturamento real, custos, resultado projetado hoje, ponto de equilíbrio) → DRE "Resultado projetado com as vendas de hoje" → receita por origem + por setor → tabela "Projeção de lucro por meta" (usa as mesmas metas de `moving_excluir_metas`, ticket médio e % de pagos atuais) → Premissas | Custos → tendência de vendas.
+- Custos e investimentos: lista editável (item, categoria, valor, pago/previsto) com Editar / + Adicionar / Salvar / Cancelar. Premissas ganharam "custo do bar (%)" e "taxa das ticketeiras (%)".
+- Tudo fica em `moving_excluir_estimativas.dados` (`custos`, `cmv_bar`, `taxa_ingresso` + premissas). A RPC `moving_excluir_estimativas_salvar` **mescla** com o que já está salvo, então salvar só os custos não apaga as premissas e vice-versa.
+- Ponto de equilíbrio = custos cadastrados ÷ lucro que cada ingresso a mais traz (ingresso + estacionamento + bar − custo do bar − taxa).
