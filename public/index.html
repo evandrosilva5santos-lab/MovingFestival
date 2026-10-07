@@ -338,6 +338,7 @@
       <a data-view="promoters" title="Ações Start & Cupons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Ações Start & Cupons</span></a>
       <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
       <a data-view="tendencias" title="Faturamento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="nav-txt">Faturamento</span></a>
+      <a data-view="conferencia" title="Importar e conferir planilhas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="nav-txt">Importar e conferir</span></a>
     </nav>
     <div class="side-foot"><div class="avatar">EG</div><div class="who">Evandro & Gê<small>Start Inc.</small></div><button class="theme-toggle" id="themeToggle" type="button" title="Alternar tema claro/escuro">
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -888,6 +889,53 @@
         </div>
       </section>
 
+      <!-- CONFERENCIA: importar planilha (CSV/XLSX) da Sympla ou Uticket e cruzar com o painel -->
+      <section data-view="conferencia" hidden>
+        <div class="card cf-up">
+          <div class="ttl">Importar planilha para conferir <span class="tag">CSV ou Excel (.xlsx / .xls)</span></div>
+          <div class="cf-linha">
+            <label class="cf-campo">Ticketeira
+              <select id="cfPlat"><option value="auto">Detectar sozinho</option><option value="UTICKET">Uticket</option><option value="SYMPLA">Sympla</option></select>
+            </label>
+            <label class="cf-drop" id="cfDrop">
+              <input type="file" id="cfArq" accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+              <b>Arraste o arquivo aqui</b> ou <u>clique para escolher</u>
+              <small>Exportação de participantes / extrato de vendas da Sympla ou da Uticket</small>
+            </label>
+          </div>
+          <p class="cf-priv">O arquivo é lido só no seu navegador. Nomes, e-mails e telefones não são enviados para lugar nenhum: o painel compara apenas uma “impressão digital” (hash) do código de cada ingresso.</p>
+          <div class="cf-msg" id="cfMsg" hidden></div>
+        </div>
+
+        <div class="card cf-map" id="cfMapa" hidden>
+          <div class="ttl">Colunas encontradas <span class="tag" id="cfArqInfo">—</span></div>
+          <p class="cf-priv" style="margin-top:0">Conferi as colunas sozinho. Se alguma estiver errada, troque abaixo e clique em Conferir.</p>
+          <div class="cf-map-g" id="cfMapaCampos"></div>
+          <div class="cf-acoes"><button type="button" class="fat-btn fat-btn-pri" id="cfConferir">Conferir com o painel</button></div>
+        </div>
+
+        <div id="cfRes" hidden>
+          <div class="card">
+            <div class="ttl">Resultado da conferência <span class="tag" id="cfResTag">—</span></div>
+            <div class="cf-kpis" id="cfKpis"></div>
+            <div class="cf-veredito" id="cfVeredito"></div>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="ttl">Totais: planilha × painel <span class="tag">só itens válidos (sem cancelados)</span></div>
+            <div class="tscroll"><table class="fat-tab" id="cfTotais"></table></div>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <div class="ttl">O que não bate
+              <span class="fat-acoes"><button type="button" class="fat-btn" id="cfBaixar">Baixar divergências (CSV)</button></span>
+            </div>
+            <div class="cf-filtros" id="cfFiltros"></div>
+            <div class="tscroll"><table class="fat-tab cf-tab"><thead><tr><th>Problema</th><th>Código</th><th>Lote / tipo</th><th>Valor planilha</th><th>Valor painel</th><th>Status planilha</th><th>Status painel</th></tr></thead><tbody id="cfDivBody"></tbody></table></div>
+            <p class="fat-nota" id="cfDivNota"></p>
+          </div>
+        </div>
+      </section>
+
+
     </div>
   </main>
 </div>
@@ -1027,7 +1075,8 @@
     plataformas:['Plataformas & canais','De onde vêm as vendas'],
     promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
     ingressos:['Ingressos','Ticket médio e lotes que mais vendem'],
-    tendencias:['Faturamento','Faturamento real dos ingressos e estimativa de estacionamento e bar']
+    tendencias:['Faturamento','Faturamento real dos ingressos e estimativa de estacionamento e bar'],
+    conferencia:['Importar e conferir','Suba a planilha da Sympla ou da Uticket e veja o que não bate com o painel']
   };
   var views = [].slice.call(document.querySelectorAll('section[data-view]'));
   var links = [].slice.call(document.querySelectorAll('#nav a'));
@@ -2427,7 +2476,7 @@
 <script>
 // Cabeçalho do celular (logo + tema) e nomes curtos das abas
 (function(){
-  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Faturamento' };
+  var CURTO = { overview:'Geral', diario:'Por dia', plataformas:'Plataformas', promoters:'Cupons', ingressos:'Ingressos', tendencias:'Faturamento', conferencia:'Conferir' };
   [].slice.call(document.querySelectorAll('#nav a[data-view]')).forEach(function(a){
     a.setAttribute('data-curto', CURTO[a.getAttribute('data-view')] || (a.textContent||'').trim());
   });
@@ -3075,6 +3124,211 @@
     if(!document.querySelector('[data-fat-tab]')) return;
     document.querySelectorAll('[data-fat-tab]').forEach(function(b){ b.addEventListener('click',function(){ trocar(b.getAttribute('data-fat-tab')); }); });
     var a='resumo'; try{ a=localStorage.getItem('moving_fat_aba')||'resumo'; }catch(e){} trocar(a);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
+})();
+</script>
+
+<style>
+/* CONFERENCIA */
+.cf-linha{ display:grid; grid-template-columns:220px minmax(0,1fr); gap:14px; align-items:stretch; }
+.cf-campo{ display:flex; flex-direction:column; gap:4px; font-size:11.5px; font-weight:600; color:var(--fg-muted); }
+.cf-campo select,.cf-map-g select{ font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px; width:100%; }
+.cf-drop{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; text-align:center; border:2px dashed var(--border); border-radius:14px; padding:22px 16px; cursor:pointer; font-size:14px; color:var(--fg); background:var(--surface-2); transition:border-color .15s, background .15s; }
+.cf-drop u{ color:var(--accent); text-decoration:none; font-weight:600; }
+.cf-drop small{ font-size:11.5px; color:var(--fg-muted); }
+.cf-drop.over{ border-color:var(--accent); background:color-mix(in srgb,var(--accent) 6%,transparent); }
+.cf-priv{ font-size:11.5px; color:var(--fg-muted); margin:12px 0 0; line-height:1.45; }
+.cf-msg{ margin-top:12px; font-size:12.5px; font-weight:600; padding:9px 12px; border-radius:8px; }
+.cf-msg.ok{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 10%,transparent); }
+.cf-msg.erro{ color:var(--c-danger,#DC2626); background:color-mix(in srgb,var(--c-danger,#DC2626) 10%,transparent); }
+.cf-msg.info{ color:var(--fg); background:var(--surface-2); }
+.cf-map{ margin-top:16px; }
+.cf-map-g{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-top:12px; }
+.cf-map-g label{ display:flex; flex-direction:column; gap:4px; font-size:11px; font-weight:700; color:var(--fg-muted); min-width:0; }
+.cf-map-g label i{ font-style:normal; font-weight:500; color:var(--fg-faint); font-size:10.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cf-acoes{ margin-top:14px; display:flex; justify-content:flex-end; }
+#cfRes{ margin-top:16px; }
+.cf-kpis{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; }
+.cf-kpis > div{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:10px 12px; min-width:0; }
+.cf-kpis small{ display:block; font-size:11px; font-weight:600; color:var(--fg-muted); }
+.cf-kpis b{ display:block; font-family:var(--font-display); font-size:22px; font-variant-numeric:tabular-nums; margin-top:2px; }
+.cf-veredito{ margin-top:12px; font-size:13px; font-weight:600; padding:10px 14px; border-radius:10px; }
+.cf-veredito.ok{ color:var(--c-success); background:color-mix(in srgb,var(--c-success) 10%,transparent); }
+.cf-veredito.alerta{ color:#B45309; background:color-mix(in srgb,var(--c-warning) 14%,transparent); }
+.cf-filtros{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.cf-filtros button{ font:inherit; font-size:12px; font-weight:600; padding:5px 11px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--fg); cursor:pointer; }
+.cf-filtros button[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.cf-tab td:nth-child(2),.cf-tab td:nth-child(3){ text-align:left; white-space:normal; }
+.cf-tag{ font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+.cf-tag.f{ color:#B45309; background:color-mix(in srgb,var(--c-warning) 14%,transparent); }
+.cf-tag.p{ color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,transparent); }
+.cf-tag.v,.cf-tag.s{ color:var(--c-danger,#DC2626); background:color-mix(in srgb,var(--c-danger,#DC2626) 10%,transparent); }
+.cf-tag.n{ color:var(--fg-muted); background:var(--surface-2); }
+@media (max-width:1199px){ .cf-kpis{ grid-template-columns:repeat(3,minmax(0,1fr)); } .cf-map-g{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:767px){ .cf-linha{ grid-template-columns:1fr; } .cf-kpis{ grid-template-columns:repeat(2,minmax(0,1fr)); } .cf-kpis b{ font-size:18px; } }
+</style>
+<script>
+/* CONFERENCIA: lê CSV/XLSX no navegador (SheetJS), detecta colunas e compara com o banco via /api/conferencia (só hashes). */
+(function(){
+  var XLSX_URL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  var linhas=null, cab=null, nomeArq='', plat=null, res=null, filtro='todos';
+  var CAMPOS=[
+    {k:'cod', nome:'Código do ingresso', obrig:true, chaves:['cod ingresso','codigo do ingresso','numero do ingresso','n do ingresso','no do ingresso','nº do ingresso','ticket number','numero ingresso','codigo ingresso','ingresso n','localizador','codigo','cod']},
+    {k:'lote', nome:'Lote / tipo de ingresso', chaves:['tipo de ingresso','tipo ingresso','nome do ingresso','ingresso','lote','tipo','categoria']},
+    {k:'valor', nome:'Valor', chaves:['valor do ingresso','valor ingresso','valor pago','preco','valor','total']},
+    {k:'status', nome:'Status', chaves:['status do pedido','situacao do pedido','status','situacao','estado']},
+    {k:'data', nome:'Data da compra', chaves:['data da compra','data do pedido','data de compra','data']}
+  ];
+  function g(id){ return document.getElementById(id); }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function norm(t){ return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[º°]/g,'o').replace(/\s+/g,' ').trim(); }
+  function din(n){ return (+n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+  function int(n){ return Math.round(+n||0).toLocaleString('pt-BR'); }
+  function msg(t,tipo){ var m=g('cfMsg'); if(!t){ m.hidden=true; return; } m.hidden=false; m.className='cf-msg '+tipo; m.textContent=t; }
+  function preco(v){ if(typeof v==='number') return v; var s=String(v||'').replace(/[^\d,.\-]/g,''); if(!s) return 0; if(s.indexOf(',')>=0&&s.indexOf('.')>=0) s=s.replace(/\./g,'').replace(',','.'); else if(s.indexOf(',')>=0) s=s.replace(',','.'); var n=parseFloat(s); return isNaN(n)?0:n; }
+  function classificar(t){ t=String(t||'').toUpperCase(); var s=null;
+    if(t.indexOf('FULLPASS')>=0||t.indexOf('FULL PASS')>=0) s='FULLPASS'; else if(t.indexOf('ZONE')>=0) s='ZONE'; else if(t.indexOf('GOLD')>=0) s='GOLD'; else if(t.indexOf('BLACK')>=0) s='BLACK';
+    if(s) return ['INGRESSO',s]; if(t.indexOf('CAMPING')>=0) return ['CAMPING',null]; if(t.indexOf('COPO')>=0) return ['COPO',null]; return ['INGRESSO',null]; }
+  function statusArq(v){ var t=norm(v); if(!t) return 'CONFIRMADO'; return /cancel|estorn|reembols|devolv|recusad|expirad|chargeback|nao aprovad|pendente/.test(t)? 'CANCELADO' : 'CONFIRMADO'; }
+  function carregarXLSX(){ return new Promise(function(ok,erro){ if(window.XLSX) return ok(); var s=document.createElement('script'); s.src=XLSX_URL; s.onload=function(){ ok(); }; s.onerror=function(){ erro(new Error('Não consegui carregar o leitor de planilhas. Confira a internet e tente de novo.')); }; document.head.appendChild(s); }); }
+  function acharCabecalho(rows){
+    var melhor=-1, pontos=-1;
+    for(var i=0;i<Math.min(rows.length,25);i++){ var r=rows[i]||[], p=0;
+      r.forEach(function(c){ var n=norm(c); if(!n) return; CAMPOS.forEach(function(f){ if(f.chaves.some(function(k){ return n===k||n.indexOf(k)>=0; })) p++; }); });
+      if(p>pontos){ pontos=p; melhor=i; } }
+    return pontos>=2? melhor : -1;
+  }
+  function autoMapa(h){
+    var usado={}, m={};
+    CAMPOS.forEach(function(f){
+      var achou=-1;
+      f.chaves.some(function(k){ for(var i=0;i<h.length;i++){ if(usado[i]) continue; if(norm(h[i])===k){ achou=i; return true; } } return false; });
+      if(achou<0) f.chaves.some(function(k){ for(var i=0;i<h.length;i++){ if(usado[i]) continue; if(norm(h[i]).indexOf(k)>=0){ achou=i; return true; } } return false; });
+      if(achou>=0){ usado[achou]=1; m[f.k]=achou; }
+    });
+    return m;
+  }
+  function detectarPlat(h){
+    var t=h.map(norm).join('|');
+    if(t.indexOf('cod ingresso')>=0 || t.indexOf('data da compra')>=0 && t.indexOf('sympla')<0 && t.indexOf('numero do ingresso')<0) return 'UTICKET';
+    if(t.indexOf('numero do ingresso')>=0 || t.indexOf('no do ingresso')>=0 || t.indexOf('n do ingresso')>=0 || t.indexOf('ticket number')>=0 || t.indexOf('sympla')>=0) return 'SYMPLA';
+    return null;
+  }
+  function lerArquivo(f){
+    if(!f) return; nomeArq=f.name; g('cfRes').hidden=true; g('cfMapa').hidden=true;
+    if(!/\.(csv|xlsx|xls)$/i.test(f.name)){ msg('Use um arquivo .csv, .xlsx ou .xls.','erro'); return; }
+    if(f.size>25*1024*1024){ msg('Arquivo grande demais (máximo 25 MB).','erro'); return; }
+    msg('Lendo '+f.name+'…','info');
+    carregarXLSX().then(function(){ return f.arrayBuffer(); }).then(function(buf){
+      var wb = /\.csv$/i.test(f.name) ? XLSX.read(new TextDecoder(detectarCodificacao(buf)).decode(buf),{type:'string',raw:true}) : XLSX.read(buf,{type:'array',cellDates:false});
+      var melhor=null;
+      wb.SheetNames.forEach(function(n){ var rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''}); var hi=acharCabecalho(rows); if(hi>=0 && (!melhor || rows.length>melhor.rows.length)) melhor={rows:rows,hi:hi,aba:n}; });
+      if(!melhor){ msg('Não encontrei o cabeçalho (código do ingresso, valor, lote…). Confira se é a exportação de participantes ou o extrato de vendas.','erro'); return; }
+      cab=melhor.rows[melhor.hi].map(function(c){ return String(c||'').trim(); });
+      linhas=melhor.rows.slice(melhor.hi+1).filter(function(r){ return r.some(function(c){ return String(c||'').trim(); }); });
+      var m=autoMapa(cab), pd=detectarPlat(cab), esc2=g('cfPlat').value;
+      plat = esc2!=='auto'? esc2 : pd;
+      montarMapa(m);
+      g('cfArqInfo').textContent = f.name+' · '+int(linhas.length)+' linhas'+(wb.SheetNames.length>1?' · aba "'+melhor.aba+'"':'');
+      if(!plat){ msg('Não consegui saber se é Sympla ou Uticket. Escolha a ticketeira acima e clique em Conferir.','info'); }
+      else msg('Planilha lida: '+int(linhas.length)+' linhas ('+(plat==='UTICKET'?'Uticket':'Sympla')+'). Confira as colunas e clique em Conferir.','ok');
+      g('cfMapa').hidden=false;
+      if(plat && m.cod!=null) conferir();
+    }).catch(function(e){ msg('Não consegui ler o arquivo: '+(e&&e.message||e),'erro'); });
+  }
+  function detectarCodificacao(buf){ var b=new Uint8Array(buf.slice(0,4)); if(b[0]===0xEF&&b[1]===0xBB&&b[2]===0xBF) return 'utf-8'; try{ new TextDecoder('utf-8',{fatal:true}).decode(buf); return 'utf-8'; }catch(e){ return 'windows-1252'; } }
+  function montarMapa(m){
+    g('cfMapaCampos').innerHTML = CAMPOS.map(function(f){
+      var ex = m[f.k]!=null && linhas[0] ? String(linhas[0][m[f.k]]||'') : '';
+      return '<label>'+f.nome+(f.obrig?' *':'')+'<select data-campo="'+f.k+'"><option value="">— não tem —</option>'+cab.map(function(h,i){ return '<option value="'+i+'"'+(m[f.k]===i?' selected':'')+'>'+esc(h||('Coluna '+(i+1)))+'</option>'; }).join('')+'</select><i>'+(ex?'ex.: '+esc(ex.slice(0,40)):'&nbsp;')+'</i></label>';
+    }).join('');
+  }
+  function mapaAtual(){ var m={}; document.querySelectorAll('#cfMapaCampos select').forEach(function(s){ if(s.value!=='') m[s.getAttribute('data-campo')]=+s.value; }); return m; }
+  function sha(t){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(function(b){ return Array.prototype.map.call(new Uint8Array(b),function(x){ return ('0'+x.toString(16)).slice(-2); }).join(''); }); }
+  function token(){ try{ return localStorage.getItem('moving_token')||''; }catch(e){ return ''; } }
+  function conferir(){
+    var m=mapaAtual(); var pe=g('cfPlat').value; if(pe!=='auto') plat=pe;
+    if(!plat){ msg('Escolha a ticketeira (Sympla ou Uticket).','erro'); return; }
+    if(m.cod==null){ msg('Escolha qual coluna tem o código do ingresso.','erro'); return; }
+    var b=g('cfConferir'); b.disabled=true; b.textContent='Conferindo…'; msg('Comparando com o painel…','info');
+    var itens=[], vistos={}, dup=0;
+    linhas.forEach(function(r){
+      var cod=String(r[m.cod]||'').trim(); if(!cod) return;
+      if(vistos[cod]){ dup++; return; } vistos[cod]=1;
+      var lote=m.lote!=null? String(r[m.lote]||'').trim() : '';
+      var cl=classificar(lote);
+      itens.push({cod:cod, lote:lote, tipo:cl[0], setor:cl[1], valor: m.valor!=null? preco(r[m.valor]) : null, status: m.status!=null? statusArq(r[m.status]) : 'CONFIRMADO'});
+    });
+    Promise.all([
+      fetch('/api/conferencia?plataforma='+plat,{cache:'no-store',headers:{'X-Moving-Token':token()}}).then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); }),
+      Promise.all(itens.map(function(it){ return sha(plat+'-'+it.cod).then(function(h){ it.h=h; }); }))
+    ]).then(function(rr){
+      b.disabled=false; b.textContent='Conferir com o painel';
+      var j=rr[0]; if(!j || j.erro){ msg('Não consegui buscar os dados do painel: '+(j&&j.erro||'erro'),'erro'); return; }
+      var db={}; (j.registros||[]).forEach(function(x){ db[x[0]]={status:x[1],tipo:x[2],setor:x[3],categoria:x[4],valor:+x[5]||0,lote:x[6]}; });
+      comparar(itens, db, dup); msg('','');
+    }).catch(function(e){ b.disabled=false; b.textContent='Conferir com o painel'; msg('Falhou: '+(e&&e.message||e),'erro'); });
+  }
+  function comparar(itens, db, dup){
+    var div=[], visto={}, ok=0, cont={falta:0,sobra:0,valor:0,status:0,naoclass:0};
+    var tot={arq:{INGRESSO:[0,0],CAMPING:[0,0],COPO:[0,0]}, db:{INGRESSO:[0,0],CAMPING:[0,0],COPO:[0,0]}};
+    itens.forEach(function(it){
+      var d=db[it.h]; visto[it.h]=1;
+      if(it.status==='CONFIRMADO' && tot.arq[it.tipo] && !(it.tipo==='INGRESSO' && !it.setor)){ tot.arq[it.tipo][0]++; tot.arq[it.tipo][1]+=(+it.valor||0); }
+      if(!d){
+        if(it.status==='CANCELADO') return;
+        if(it.tipo==='INGRESSO' && !it.setor){ cont.naoclass++; div.push({t:'n',p:'Lote sem setor (o painel ignora)',cod:it.cod,lote:it.lote,va:it.valor,vb:null,sa:it.status,sb:'—'}); return; }
+        cont.falta++; div.push({t:'f',p:'Na planilha, falta no painel',cod:it.cod,lote:it.lote,va:it.valor,vb:null,sa:it.status,sb:'—'}); return;
+      }
+      var prob=false;
+      if(it.status!==d.status){ cont.status++; prob=true; div.push({t:'s',p:'Status diferente',cod:it.cod,lote:it.lote||d.lote,va:it.valor,vb:d.valor,sa:it.status,sb:d.status}); }
+      else if(it.valor!=null && Math.abs((+it.valor||0)-d.valor)>0.009){ cont.valor++; prob=true; div.push({t:'v',p:'Valor diferente',cod:it.cod,lote:it.lote||d.lote,va:it.valor,vb:d.valor,sa:it.status,sb:d.status}); }
+      if(!prob) ok++;
+    });
+    Object.keys(db).forEach(function(h){ var d=db[h]; if(d.status==='CONFIRMADO' && tot.db[d.tipo]){ tot.db[d.tipo][0]++; tot.db[d.tipo][1]+=d.valor; }
+      if(!visto[h] && d.status==='CONFIRMADO'){ cont.sobra++; div.push({t:'p',p:'No painel, não está na planilha',cod:'(código protegido)',lote:d.lote,va:null,vb:d.valor,sa:'—',sb:d.status}); } });
+    res={div:div, cont:cont, tot:tot, ok:ok, n:itens.length, dup:dup};
+    desenhar();
+  }
+  function desenhar(){
+    var c=res.cont, P=plat==='UTICKET'?'Uticket':'Sympla';
+    g('cfResTag').textContent=P+' · '+nomeArq;
+    function k(t,v,cls){ return '<div><small>'+t+'</small><b'+(cls?' class="'+cls+'"':'')+'>'+v+'</b></div>'; }
+    g('cfKpis').innerHTML = k('Linhas da planilha',int(res.n)) + k('Batem certinho',int(res.ok),'fat-pos') + k('Faltam no painel',int(c.falta),c.falta?'fat-neg':'') + k('Sobram no painel',int(c.sobra),c.sobra?'fat-neg':'') + k('Valor diferente',int(c.valor),c.valor?'fat-neg':'') + k('Status diferente',int(c.status),c.status?'fat-neg':'');
+    var total=c.falta+c.sobra+c.valor+c.status, v=g('cfVeredito');
+    v.className='cf-veredito '+(total?'alerta':'ok');
+    v.textContent = total? ('Encontrei '+int(total)+' diferenças. '+(c.falta?int(c.falta)+' ingressos da planilha não estão no painel (a próxima sincronização costuma trazer). ':'')+(c.sobra?int(c.sobra)+' estão confirmados no painel mas não aparecem na planilha (podem ter sido cancelados, ou a planilha é mais antiga). ':'')+(c.status?int(c.status)+' com status diferente. ':'')+(c.valor?int(c.valor)+' com valor diferente.':'')) : 'Tudo bate: a planilha e o painel têm os mesmos ingressos, valores e status.';
+    if(c.naoclass) v.textContent += ' · '+int(c.naoclass)+' linhas têm lote sem setor (Full Pass/Zone/Gold/Black) e ficam fora do painel de propósito.';
+    if(res.dup) v.textContent += ' · '+int(res.dup)+' códigos repetidos na planilha foram contados uma vez.';
+    var T=res.tot, nomes={INGRESSO:'Ingressos',CAMPING:'Camping',COPO:'Copo'}, h='<thead><tr><th>Tipo</th><th>Qtd. planilha</th><th>Qtd. painel</th><th>Diferença</th><th>R$ planilha</th><th>R$ painel</th><th>Diferença</th></tr></thead><tbody>', sa=[0,0], sb=[0,0];
+    ['INGRESSO','CAMPING','COPO'].forEach(function(t){ var a=T.arq[t], b=T.db[t]; sa[0]+=a[0]; sa[1]+=a[1]; sb[0]+=b[0]; sb[1]+=b[1];
+      h+='<tr><td>'+nomes[t]+'</td><td>'+int(a[0])+'</td><td>'+int(b[0])+'</td><td class="'+(a[0]-b[0]?'fat-neg':'')+'">'+(a[0]-b[0]>0?'+':'')+int(a[0]-b[0])+'</td><td>'+din(a[1])+'</td><td>'+din(b[1])+'</td><td class="'+(Math.abs(a[1]-b[1])>0.5?'fat-neg':'')+'">'+din(a[1]-b[1])+'</td></tr>'; });
+    h+='</tbody><tfoot><tr><td><b>Total</b></td><td><b>'+int(sa[0])+'</b></td><td><b>'+int(sb[0])+'</b></td><td><b>'+int(sa[0]-sb[0])+'</b></td><td><b>'+din(sa[1])+'</b></td><td><b>'+din(sb[1])+'</b></td><td><b>'+din(sa[1]-sb[1])+'</b></td></tr></tfoot>';
+    g('cfTotais').innerHTML=h;
+    var F=[['todos','Todos',res.div.length],['f','Faltam no painel',c.falta],['p','Sobram no painel',c.sobra],['v','Valor diferente',c.valor],['s','Status diferente',c.status],['n','Lote sem setor',c.naoclass]];
+    g('cfFiltros').innerHTML=F.filter(function(x){ return x[0]==='todos'||x[2]; }).map(function(x){ return '<button type="button" data-f="'+x[0]+'" aria-pressed="'+(filtro===x[0])+'">'+x[1]+' ('+int(x[2])+')</button>'; }).join('');
+    var lista=res.div.filter(function(d){ return filtro==='todos'||d.t===filtro; });
+    g('cfDivBody').innerHTML = lista.length? lista.slice(0,300).map(function(d){ return '<tr><td><span class="cf-tag '+d.t+'">'+esc(d.p)+'</span></td><td>'+esc(d.cod)+'</td><td>'+esc(d.lote||'—')+'</td><td>'+(d.va==null?'—':din(d.va))+'</td><td>'+(d.vb==null?'—':din(d.vb))+'</td><td>'+esc(d.sa)+'</td><td>'+esc(d.sb)+'</td></tr>'; }).join('') : '<tr><td colspan="7" class="fat-vazio">Nenhuma diferença 🎉</td></tr>';
+    g('cfDivNota').textContent = (lista.length>300? 'Mostrando 300 de '+int(lista.length)+'. Baixe o CSV para ver tudo. ' : '')+'Para quem está só no painel, o código não aparece aqui por segurança (o painel guarda só o hash).';
+    g('cfRes').hidden=false;
+  }
+  function baixar(){
+    if(!res) return; var l=[['problema','codigo','lote','valor_planilha','valor_painel','status_planilha','status_painel']];
+    res.div.forEach(function(d){ l.push([d.p,d.cod,d.lote||'',d.va==null?'':String(d.va).replace('.',','),d.vb==null?'':String(d.vb).replace('.',','),d.sa,d.sb]); });
+    var csv='﻿'+l.map(function(r){ return r.map(function(c){ c=String(c==null?'':c); return /[;"\n]/.test(c)? '"'+c.replace(/"/g,'""')+'"' : c; }).join(';'); }).join('\n');
+    var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download='divergencias_'+(plat||'')+'_'+new Date().toISOString().slice(0,10)+'.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+  }
+  function ini(){
+    var d=g('cfDrop'), inp=g('cfArq'); if(!d) return;
+    inp.addEventListener('change',function(){ lerArquivo(inp.files[0]); inp.value=''; });
+    ['dragenter','dragover'].forEach(function(ev){ d.addEventListener(ev,function(e){ e.preventDefault(); d.classList.add('over'); }); });
+    ['dragleave','drop'].forEach(function(ev){ d.addEventListener(ev,function(e){ e.preventDefault(); d.classList.remove('over'); }); });
+    d.addEventListener('drop',function(e){ var f=e.dataTransfer && e.dataTransfer.files[0]; if(f) lerArquivo(f); });
+    g('cfConferir').addEventListener('click',conferir);
+    g('cfBaixar').addEventListener('click',baixar);
+    g('cfFiltros').addEventListener('click',function(e){ var b=e.target.closest('[data-f]'); if(!b) return; filtro=b.getAttribute('data-f'); desenhar(); });
+    g('cfMapaCampos').addEventListener('change',function(e){ var s=e.target.closest('select'); if(!s) return; var i=s.parentNode.querySelector('i'); var v=s.value!==''&&linhas[0]? String(linhas[0][+s.value]||'') : ''; i.innerHTML=v?'ex.: '+esc(v.slice(0,40)):'&nbsp;'; });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();

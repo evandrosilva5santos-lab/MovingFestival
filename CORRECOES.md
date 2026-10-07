@@ -116,3 +116,9 @@
 - Topo do Resumo: **Total faturado** (ingressos + camping + copo), **Custo atual do evento**, **Total pago**, **Falta pagar**, **Saldo (faturado − pago)** e barra de pagamento.
 - Despesas têm **valor total** e **já pago** (pagamento parcial), botão **Quitar**, situação automática (Pago / Parcial / A pagar).
 - **Projeção no dia do evento** = ingressos atuais + média diária dos últimos N dias completos × dias até a data do evento. Data do evento (padrão 17/10/2026) e N (padrão 7) editáveis em Receitas extras. Camping e copo projetados na mesma proporção dos ingressos.
+
+## 15. Importar e conferir (planilha Sympla/Uticket × painel)
+- Nova aba `conferencia` ("Importar e conferir"). Aceita CSV, XLSX e XLS (leitor SheetJS 0.18.5 carregado do cdnjs só quando precisa).
+- O arquivo é lido **no navegador**. Detecta sozinho a linha de cabeçalho, as colunas (código, lote, valor, status, data) e a ticketeira; o usuário pode corrigir as colunas.
+- Compara pelo **hash SHA-256** de `PLATAFORMA-código` com a RPC `moving_excluir_conferencia(plataforma, token)` (via `GET /api/conferencia`). O banco nunca devolve código, nome ou e-mail.
+- Mostra: batem, faltam no painel, sobram no painel, valor diferente, status diferente, lote sem setor; totais por tipo (ingresso/camping/copo) e CSV das divergências.

@@ -307,6 +307,25 @@ export default {
     const supabaseUrl = env?.SUPABASE_URL || SUPABASE_DEFAULT_URL;
     const supabaseAnon = env?.SUPABASE_ANON_KEY || SUPABASE_DEFAULT_ANON;
 
+    // CONFERENCIA: lista do banco (só hash do código, sem dados pessoais) para cruzar com planilha importada
+    if (url.pathname === '/api/conferencia') {
+      const jh = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
+      const plataforma = (url.searchParams.get('plataforma') || '').toUpperCase();
+      try {
+        const r = await fetch(`${supabaseUrl}/rest/v1/rpc/moving_excluir_conferencia`, {
+          method: 'POST',
+          headers: { 'apikey': supabaseAnon, 'Authorization': `Bearer ${supabaseAnon}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ p_plataforma: plataforma, p_token: request.headers.get('X-Moving-Token') || null })
+        });
+        const t = await r.text();
+        let st = r.ok ? 200 : 502;
+        try { if (JSON.parse(t).erro) st = 400; } catch (e) {}
+        return new Response(t, { status: st, headers: jh });
+      } catch (err) {
+        return new Response(JSON.stringify({ erro: String(err) }), { status: 500, headers: jh });
+      }
+    }
+
     // ESTIMATIVAS: premissas da projeção de faturamento (estacionamento e bar), guardadas no Supabase
     if (url.pathname === '/api/estimativas') {
       const jh = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
