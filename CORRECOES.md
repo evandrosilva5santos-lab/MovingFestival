@@ -77,3 +77,10 @@
 - **Cookie da Uticket:** não é usado. Login por e-mail/senha renova sozinho.
 - **Não voltar:** `sync_worker.py`, `run_sync_daemon.py` e `server.py` são só para uso local de teste; não são a fonte oficial.
 - Depois de mexer no `index.html`, copiar para `public/index.html` (é a pasta que a Cloudflare publica).
+
+## 10. Reconciliação Temporal Uticket (3.793 vs 3.960), Lote Wix e Motores de Validação
+- **Divergência aparente Uticket (3.960 vs 3.793):** O número 3.793 era a contagem congelada na auditoria de 05/10 às 21:59. Entre 05/10 22:00 e 06/10 22:35, o festival vendeu +167 ingressos reais ao vivo (140 vendas apenas no dia 06/10), chegando a 3.960 ingressos válidos. Não há erro nem duplicidade.
+- **Estrutura Uticket (5.073 linhas):** A API Uticket entrega 5.073 registros brutos no total: 3.960 ingressos oficiais + 1.038 campings (acomodações que não contam como ingresso) + 75 copos avulsos = 5.073. Reconciliação 100% matemática.
+- **Wix (366 ingressos fixos):** Não possui API aberta. Mantido como lote estático de pré-lançamento (01/06) com 366 ingressos (197 Full Pass, 64 Zone, 56 Gold, 49 Black = R$ 52.750,00), protegido via chave única `WIX-HIST-*`.
+- **Suite de Validação (`motores_validacao.py`):** Ferramenta com 5 motores autônomos que cruza os dados ao vivo, gera `relatorio_validacao_cruzada.json` e audita discrepâncias.
+

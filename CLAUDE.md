@@ -98,8 +98,8 @@ Toda venda tem um `tipo`:
 - Sem duplicidade: o `id` é o código do ingresso prefixado pela plataforma (`SYMPLA-123`, `UTICKET-456`). Gravar sempre com **upsert**.
 - Fuso horário: `America/Sao_Paulo`.
 
-### 4.6 Números de referência (auditoria oficial)
-Use para validar o motor. Com os dados da auditoria, o resultado tem que bater exatamente:
+### 4.6 Números de referência (auditoria inicial de 05/10 21:59)
+Valores congelados no marco inicial da campanha (05/10 às 21:59). Usados pelo Motor Temporal de `motores_validacao.py` para medir o ritmo de vendas em tempo real:
 
 | Setor | Pagos | Cortesias | Total |
 |---|---|---|---|
@@ -107,9 +107,11 @@ Use para validar o motor. Com os dados da auditoria, o resultado tem que bater e
 | ZONE | 512 | 0 | 512 |
 | GOLD | 413 | 36 | 449 |
 | BLACK | 136 | 0 | 136 |
-| **TOTAL** | **4.894** | **69** | **4.963** |
+| **TOTAL BASELINE** | **4.894** | **69** | **4.963** |
 
-Por plataforma (total): Uticket 3.793 · Sympla 804 · Wix 366.
+Por plataforma (marco inicial): Uticket 3.793 · Sympla 804 · Wix 366.
+*(Nota: a Uticket ao vivo passou de 3.793 para 3.960 devido a +167 novas vendas reais nos dias 05 e 06/10).*
+
 
 ---
 

@@ -1,0 +1,98 @@
+{
+  "gerado_em": "2026-10-06T23:37:16.133208-03:00",
+  "motor_1_temporal": {
+    "status": "OK",
+    "total_atual": 3960,
+    "marco_auditoria": 3793,
+    "delta_vendas_novas": 167,
+    "timestamp_ingresso_3793": "2026-10-05T21:59:00-03:00",
+    "timestamp_ingresso_3794": "2026-10-05T22:12:00-03:00",
+    "timestamp_ultimo_ingresso": "2026-10-06T22:35:00-03:00",
+    "setores_novos": {
+      "FULLPASS": 160,
+      "GOLD": 4,
+      "ZONE": 3
+    },
+    "dias_novos": {
+      "2026-10-05": 27,
+      "2026-10-06": 140
+    }
+  },
+  "motor_2_estrutural_uticket": {
+    "status": "OK",
+    "total_linhas_brutas": 5073,
+    "ingressos_validos": 3960,
+    "campings": 1038,
+    "copos": 75,
+    "desconhecidos": 0,
+    "soma_categorias": 5073,
+    "reconciliacao_exata": true
+  },
+  "motor_3_sympla": {
+    "status": "OK",
+    "banco_total": 1000,
+    "banco_confirmados": 912,
+    "banco_cancelados": 88,
+    "banco_setores": {
+      "FULLPASS": 384,
+      "GOLD": 106,
+      "OUTROS": 224,
+      "BLACK": 38,
+      "ZONE": 160
+    },
+    "relatorio_api_vs_planilha": {
+      "ingressos_confirmados": 815,
+      "por_setor": {
+        "GOLD": {
+          "total": 125,
+          "pagos": 125,
+          "cortesias": 0,
+          "receita": 21167.66
+        },
+        "ZONE": {
+          "total": 193,
+          "pagos": 193,
+          "cortesias": 0,
+          "receita": 25197.35
+        },
+        "FULLPASS": {
+          "total": 453,
+          "pagos": 453,
+          "cortesias": 0,
+          "receita": 66898.45
+        },
+        "BLACK": {
+          "total": 44,
+          "pagos": 44,
+          "cortesias": 0,
+          "receita": 13627.26
+        }
+      }
+    }
+  },
+  "motor_4_wix": {
+    "status": "AUDITADO_ESTATICO",
+    "total": 366,
+    "receita": 52750.0,
+    "setores": {
+      "FULLPASS": 197,
+      "ZONE": 64,
+      "GOLD": 56,
+      "BLACK": 49
+    },
+    "data_base": "2026-06-01 (Pré-Lançamento)",
+    "integracao": "VALOR FIXO (Sem API pública)"
+  },
+  "motor_5_global": {
+    "status": "DISCREPANCIA_LEVE",
+    "painel_total_ingressos": 5141,
+    "painel_pagos": 5065,
+    "painel_cortesias": 76,
+    "painel_receita": 651069.72,
+    "uticket_ao_vivo": 3960,
+    "sympla_ao_vivo": 912,
+    "wix_fixo": 366,
+    "soma_consolidada": 5238,
+    "delta": -97
+  }
+}
