@@ -140,3 +140,20 @@
 - Importar e conferir: aceita a **Lista de participantes da Uticket**, a **Lista de participantes da Sympla** (o arquivo declara faixa só na coluna A; o painel recalcula) e o **Borderô da Uticket** (resumo por lote: compara quantidade por setor; o borderô usa preço de tabela e desconta cupons no fim).
 - Sympla: quantidades batem 100% com a planilha; 400 ingressos ("PRÉ VENDA LOTE 2") têm no banco o valor com a taxa de 10% da Sympla (ex.: 141,08 × 128,25). Pendente decidir se o faturamento usa o valor sem taxa.
 - Faturamento ganhou a sub-aba **Recebimentos** (repasses lançados por ticketeira, guardados na linha `id='repasses'` de `moving_excluir_estimativas`) e os cartões Recebido / A receber / Caixa hoje (recebido − pago).
+
+## 17. Autenticação, Controle de Acesso (RBAC) e Gestão de Usuários
+- **Banco (Supabase `etjqbqorawnnvdlmztka`):**
+  - Tabela `moving_excluir_usuarios`: `id`, `login` (único, minúsculo), `nome`, `senha_hash` (`bcrypt` via `pgcrypto crypt/gen_salt('bf')`), `papel` (`superadmin | admin | usuario`), `telas text[]`, `ativo boolean`, `tentativas int`, `bloqueado_ate timestamptz`.
+  - Tabela `moving_excluir_sessoes`: `id`, `usuario_id`, `token_hash` (`SHA-256`), `criado_em`, `expira_em` (sessão de 7 dias com auto-renovação).
+  - Bloqueio por força bruta: 6 tentativas com erro bloqueiam por 15 minutos (`bloqueado_ate`).
+  - Salvaguardas: superadmin não pode se auto-excluir e o sistema nunca pode ficar sem ao menos um superadmin ativo.
+  - 7 RPCs `SECURITY DEFINER`: `moving_excluir_login`, `moving_excluir_me`, `moving_excluir_logout`, `moving_excluir_usuarios_listar`, `moving_excluir_usuario_salvar`, `moving_excluir_usuario_excluir`, `moving_excluir_senha_trocar`.
+- **Perfis e Níveis de Acesso:**
+  - `superadmin` (ex: `evandro@startinc.com.br`): acesso total irrestrito + tela exclusiva de Gestão de Usuários no menu lateral (adicionar/editar colaboradores, resetar senhas, bloquear contas e definir telas permitidas).
+  - `admin` (ex: `movingadmin`): acesso a todas as telas analíticas, estimativas, conferência e botão Sincronizar. Sem acesso à tela de usuários.
+  - `usuario` (ex: `carolamandoneves@gmail.com`): acesso restrito apenas às telas marcadas pelo SuperADMIN (padrão inicial: `overview` e `diario`). Botão Sincronizar oculto.
+- **Frontend & Segurança:**
+  - Tela de login com design ManyChat clean: overlay escuro, cartão flutuante com blur, campo com toggle de visualização de senha e feedback de erro em tempo real.
+  - Rodapé da sidebar com perfil ativo: iniciais em avatar estilizado, badge colorido com o papel (`SuperADMIN`, `Administrador`, `Usuário`), botão de troca de senha própria (`/api/senha`) e botão de logout.
+  - Todas as chamadas de dados usam o header `X-Moving-Token`. Sem token válido, o backend responde 401 e a interface direciona para o login.
+
