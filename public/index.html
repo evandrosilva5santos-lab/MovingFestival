@@ -4391,16 +4391,16 @@
     tbodyUsuarios.addEventListener('click', function(e){
       var btnEdit = e.target.closest('button[data-edit-id]');
       if(btnEdit){
-        var id = +btnEdit.getAttribute('data-edit-id');
-        var u = listaUsuariosCache.find(function(x){ return x.id === id; });
+        var id = String(btnEdit.getAttribute('data-edit-id') || '').trim();
+        var u = listaUsuariosCache.find(function(x){ return String(x.id) === id; });
         if(u) abrirModalUsuario(u);
         return;
       }
 
       var btnDel = e.target.closest('button[data-del-id]');
       if(btnDel){
-        var delId = +btnDel.getAttribute('data-del-id');
-        var uDel = listaUsuariosCache.find(function(x){ return x.id === delId; });
+        var delId = String(btnDel.getAttribute('data-del-id') || '').trim();
+        var uDel = listaUsuariosCache.find(function(x){ return String(x.id) === delId; });
         if(uDel){
           if(confirm('Tem certeza que deseja excluir o usuário "' + (uDel.nome || uDel.login) + '"?\nEsta ação não pode ser desfeita.')){
             excluirUsuario(delId);
@@ -4411,8 +4411,8 @@
 
       var btnTgl = e.target.closest('button[data-toggle-id]');
       if(btnTgl){
-        var tglId = +btnTgl.getAttribute('data-toggle-id');
-        var uTgl = listaUsuariosCache.find(function(x){ return x.id === tglId; });
+        var tglId = String(btnTgl.getAttribute('data-toggle-id') || '').trim();
+        var uTgl = listaUsuariosCache.find(function(x){ return String(x.id) === tglId; });
         if(uTgl){
           toggleAtivoUsuario(uTgl);
         }
@@ -4437,8 +4437,8 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res.status === 'ok') carregarUsuarios();
-      else alert((res.erro || res.error) || 'Erro ao alterar status.');
+      if(res && (res.ok || res.status === 'ok')) carregarUsuarios();
+      else alert((res && (res.erro || res.error)) || 'Erro ao alterar status.');
     })
     .catch(function(){ alert('Falha ao comunicar com o servidor.'); });
   }
@@ -4451,10 +4451,10 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res.status === 'ok'){
+      if(res && (res.ok || res.status === 'ok')){
         carregarUsuarios();
       } else {
-        alert((res.erro || res.error) || 'Erro ao excluir usuário.');
+        alert((res && (res.erro || res.error)) || 'Erro ao excluir usuário.');
       }
     })
     .catch(function(){ alert('Erro de rede ao excluir usuário.'); });
@@ -4552,7 +4552,8 @@
   if(formUsuario){
     formUsuario.addEventListener('submit', function(e){
       e.preventDefault();
-      var id = $('usuarioId').value ? +$('usuarioId').value : null;
+      var rawId = ($('usuarioId').value || '').trim();
+      var id = (rawId && rawId !== 'null' && rawId !== 'undefined' && rawId !== 'NaN') ? rawId : null;
       var nome = ($('usuarioNome').value || '').trim();
       var login = ($('usuarioLogin').value || '').trim().toLowerCase();
       var senha = ($('usuarioSenha').value || '').trim();
@@ -4588,7 +4589,7 @@
           return;
         }
       } else {
-        telasSelecionadas = ['overview','diario','plataformas','promoters','ingressos','tendencias'];
+        telasSelecionadas = ['overview','diario','plataformas','promoters','ingressos','tendencias','conferencia'];
       }
 
       var payload = {
@@ -4617,11 +4618,12 @@
         btnSalvar.disabled = false;
         btnSalvar.textContent = 'Salvar Usuário';
 
-        if(res.ok && res.data && res.data.status === 'ok'){
+        if(res.ok && res.data && (res.data.ok || res.data.status === 'ok')){
           fecharModalUsuario();
           carregarUsuarios();
           // Se eu editei a mim mesmo, atualiza dados na interface
-          if(usuarioAtual && usuarioAtual.id === res.data.id){
+          var idSalvo = id || res.data.id;
+          if(usuarioAtual && (usuarioAtual.id === idSalvo || usuarioAtual.login === login)){
             usuarioAtual.nome = nome;
             usuarioAtual.login = login;
             usuarioAtual.papel = papel;

@@ -448,13 +448,15 @@ export default {
       if (request.method === 'POST') {
         try {
           const body = await request.json().catch(() => ({}));
+          const rawId = body.id ? String(body.id).trim() : null;
+          const id = (rawId && rawId !== 'null' && rawId !== 'undefined' && rawId !== 'NaN') ? rawId : null;
           const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_usuario_salvar', {
             p_token: auth.token,
-            p_id: body.id || null,
-            p_login: String(body.login || ''),
-            p_nome: String(body.nome || ''),
-            p_senha: String(body.senha || ''),
-            p_papel: String(body.papel || 'usuario'),
+            p_id: id,
+            p_login: String(body.login || '').trim().toLowerCase(),
+            p_nome: String(body.nome || '').trim(),
+            p_senha: body.senha ? String(body.senha).trim() : '',
+            p_papel: String(body.papel || 'usuario').toLowerCase(),
             p_telas: Array.isArray(body.telas) ? body.telas : [],
             p_ativo: body.ativo !== false
           });
@@ -473,8 +475,12 @@ export default {
             const body = await request.json().catch(() => ({}));
             id = body.id;
           }
+          if (id) {
+            id = String(id).trim();
+            if (id === 'None' || id === 'null' || id === 'undefined' || id === 'NaN' || id === '') id = null;
+          }
           if (!id) {
-            return new Response(JSON.stringify({ ok: false, erro: 'ID do usuário não fornecido' }), { status: 400, headers: corsHeaders() });
+            return new Response(JSON.stringify({ ok: false, erro: 'ID do usuário não fornecido ou inválido' }), { status: 400, headers: corsHeaders() });
           }
           const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_usuario_excluir', {
             p_token: auth.token,

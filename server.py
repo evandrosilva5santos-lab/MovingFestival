@@ -484,8 +484,18 @@ def call_supabase_rpc(rpc_name, params=None):
         },
         method='POST'
     )
-    with urllib.request.urlopen(req, timeout=10) as resp:
-        return json.loads(resp.read().decode('utf-8'))
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except urllib.error.HTTPError as e:
+        err_body = e.read().decode('utf-8', errors='replace')
+        try:
+            parsed = json.loads(err_body)
+            return {'ok': False, 'erro': parsed.get('message', err_body)}
+        except Exception:
+            return {'ok': False, 'erro': f"HTTP {e.code}: {err_body}"}
+    except Exception as e:
+        return {'ok': False, 'erro': str(e)}
 
 def extract_req_token(handler):
     t = handler.headers.get('X-Moving-Token')
@@ -769,13 +779,15 @@ class PlatformHandler(SimpleHTTPRequestHandler):
             body_raw = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else '{}'
             try:
                 body = json.loads(body_raw)
+                raw_id = str(body.get('id', '')).strip()
+                p_id = raw_id if raw_id and raw_id not in ('null', 'undefined', 'None', 'NaN', '') else None
                 res = call_supabase_rpc('moving_excluir_usuario_salvar', {
                     'p_token': auth['token'],
-                    'p_id': body.get('id') or None,
-                    'p_login': str(body.get('login', '')).strip(),
+                    'p_id': p_id,
+                    'p_login': str(body.get('login', '')).strip().lower(),
                     'p_nome': str(body.get('nome', '')).strip(),
                     'p_senha': str(body.get('senha', '')),
-                    'p_papel': str(body.get('papel', 'usuario')),
+                    'p_papel': str(body.get('papel', 'usuario')).lower(),
                     'p_telas': body.get('telas') if isinstance(body.get('telas'), list) else [],
                     'p_ativo': body.get('ativo', True) is not False
                 })
@@ -895,11 +907,16 @@ class PlatformHandler(SimpleHTTPRequestHandler):
                     except Exception:
                         pass
 
+            if user_id:
+                user_id = str(user_id).strip()
+                if user_id in ('None', 'null', 'undefined', 'NaN', ''):
+                    user_id = None
+
             if not user_id:
                 self.send_response(400)
                 self.send_cors()
                 self.end_headers()
-                self.wfile.write(json.dumps({'ok': False, 'erro': 'ID não fornecido'}).encode('utf-8'))
+                self.wfile.write(json.dumps({'ok': False, 'erro': 'ID não fornecido ou inválido'}).encode('utf-8'))
                 return
 
             try:
