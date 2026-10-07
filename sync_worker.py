@@ -283,6 +283,10 @@ def extract_uticket_records(xlsx_bytes):
                 canal = 'AFILIADO_PROMOTER'
                 promoter = cupom_raw
                 
+        # Status do Pedido na Uticket (Coluna J: Confirmado, Cancelado, etc.)
+        status_raw = r.get('J', '').strip().upper()
+        status = 'CANCELADO' if 'CANCEL' in status_raw else 'CONFIRMADO'
+        
         records.append({
             'id': f"UTICKET-{cod}",
             'plataforma': 'UTICKET',
@@ -290,7 +294,7 @@ def extract_uticket_records(xlsx_bytes):
             'setor': setor,
             'lote': tipo_raw,
             'categoria': categoria,
-            'status': 'CONFIRMADO',
+            'status': status,
             'valor': valor,
             'comprador_nome': r.get('C', '').strip() or None,
             'comprador_email': email,
@@ -300,7 +304,9 @@ def extract_uticket_records(xlsx_bytes):
             'canal': canal,
             'promoter': promoter
         })
-    print(f"[+] Uticket: {len(records)} registros extraídos ({len([r for r in records if r['tipo'] == 'INGRESSO'])} ingressos válidos)")
+    val_conf = len([r for r in records if r['tipo'] == 'INGRESSO' and r['status'] == 'CONFIRMADO'])
+    tot_canc = len([r for r in records if r['status'] == 'CANCELADO'])
+    print(f"[+] Uticket: {len(records)} registros extraídos ({val_conf} ingressos válidos confirmados, {tot_canc} cancelados)")
     return records
 
 def extract_sympla_records(file_path):
