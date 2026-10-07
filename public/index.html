@@ -2576,3 +2576,13 @@
   section[data-view="overview"] > #setores .card, section[data-view="overview"] > .grid.g4:not(#setores) .card{ height:100%; }
 }
 </style>
+
+<style>
+/* DIARIO_ULTRAWIDE: em 3440, Vendas por Dia mostra o gráfico de evolução ao lado das ondas do dia */
+@media (min-width:2400px){
+  section[data-view="diario"]:not([hidden]){ display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:26px; align-items:start; }
+  section[data-view="diario"] > *{ margin:0 !important; min-width:0; }
+  section[data-view="diario"] > :nth-child(1), section[data-view="diario"] > :nth-child(2), section[data-view="diario"] > :nth-child(5){ grid-column:1 / -1; }
+  section[data-view="diario"] > #ondaCard{ height:100%; }
+}
+</style>
