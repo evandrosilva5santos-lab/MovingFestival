@@ -1010,6 +1010,7 @@
     var dias={}; (d.por_dia||[]).forEach(function(x){ dias[String(x.dia).slice(0,10)]=x.total; });
     $('kHoje').textContent = num(dias[hojeSP(0)]||0);
     $('kOntem').textContent = 'ontem: '+num(dias[hojeSP(1)]||0)+(f?' · todos os setores':'');
+    if(window.movingHoje) window.movingHoje(d); /* HOJE_DETALHE */
 
     // Cards de setor
     $('setores').innerHTML = ORDEM.map(function(k){
@@ -2496,5 +2497,51 @@
     }
   };
   if(window.DATA) try{ window.movingTicketMedio(window.DATA); }catch(e){}
+})();
+</script>
+
+<style>
+/* HOJE_DETALHE */
+#kHoje{ cursor:help; }
+.hoje-tip{ position:fixed; z-index:50; min-width:210px; max-width:260px; padding:10px 12px; border-radius:12px;
+  background:var(--surface); color:var(--fg); border:1px solid var(--border); box-shadow:0 10px 28px rgba(15,23,42,.14);
+  font-size:12px; line-height:1.5; pointer-events:none; }
+.hoje-tip[hidden]{ display:none!important; }
+.hoje-tip .ht-h{ font-weight:700; margin-bottom:6px; }
+.hoje-tip .ht-r{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:2px 0; }
+.hoje-tip .ht-r i{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; }
+.hoje-tip .ht-r b{ font-variant-numeric:tabular-nums; }
+.hoje-tip .ht-s{ margin-top:6px; padding-top:6px; border-top:1px dashed var(--border); color:var(--fg-muted); }
+</style>
+<script>
+(function(){
+  var NOM={UTICKET:'Uticket',SYMPLA:'Sympla',WIX:'Wix'}, COR={UTICKET:'#2B6CF6',SYMPLA:'#F97316',WIX:'#10B981'};
+  var SETN={FULLPASS:'Full Pass',ZONE:'Zone',GOLD:'Gold',BLACK:'Black'};
+  var det=null, tip=document.createElement('div'); tip.className='hoje-tip'; tip.hidden=true; document.body.appendChild(tip);
+  window.movingHoje=function(d){
+    var n=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));
+    var hoje=n.getFullYear()+'-'+('0'+(n.getMonth()+1)).slice(-2)+'-'+('0'+n.getDate()).slice(-2);
+    var pl={},st={},tot=0;
+    (d.vendas_diarias||[]).forEach(function(x){ if(String(x.dia).slice(0,10)!==hoje||x.setor==='CAMPING') return;
+      pl[x.plataforma]=(pl[x.plataforma]||0)+x.total; st[x.setor]=(st[x.setor]||0)+x.total; tot+=x.total; });
+    det={pl:pl,st:st,tot:tot};
+  };
+  function html(){
+    if(!det||!det.tot) return '<div class="ht-h">Vendas de hoje</div>Ainda sem vendas hoje.';
+    var h='<div class="ht-h">Vendas de hoje por plataforma</div>';
+    Object.keys(det.pl).sort(function(a,b){return det.pl[b]-det.pl[a];}).forEach(function(k){
+      h+='<div class="ht-r"><span><i style="background:'+(COR[k]||'#888')+'"></i>'+(NOM[k]||k)+'</span><b>'+det.pl[k]+' · '+Math.round(det.pl[k]/det.tot*100)+'%</b></div>'; });
+    h+='<div class="ht-s">';
+    Object.keys(det.st).sort(function(a,b){return det.st[b]-det.st[a];}).forEach(function(k){ h+='<div class="ht-r"><span>'+(SETN[k]||k)+'</span><b>'+det.st[k]+'</b></div>'; });
+    return h+'</div>';
+  }
+  function show(e){ var c=e.currentTarget.getBoundingClientRect(); tip.innerHTML=html(); tip.hidden=false;
+    var w=tip.offsetWidth, x=Math.min(Math.max(8,c.left),innerWidth-w-8), y=c.bottom+8;
+    if(y+tip.offsetHeight>innerHeight-8) y=c.top-tip.offsetHeight-8; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+  function hide(){ tip.hidden=true; }
+  function ini(){ var el=document.getElementById('kHoje'); if(!el) return; var c=el.closest('.card')||el;
+    c.addEventListener('mouseenter',show); c.addEventListener('mouseleave',hide);
+    c.addEventListener('click',function(e){ tip.hidden?show(e):hide(); }); document.addEventListener('scroll',hide,true); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ini); else ini();
 })();
 </script>
