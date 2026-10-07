@@ -391,38 +391,6 @@
         </div>
 
         <div class="grid g4" id="setores"></div>
-        <!-- FINANCEIRO_PAINEL -->
-        <div class="card fin-card" id="financeiroCard">
-          <div class="ttl">Receita da campanha <span class="tag">ingressos + projeção de extras</span></div>
-          <div class="fin-grid">
-            <div class="fin-col">
-              <h3>Ingressos e camping</h3>
-              <div class="fin-nums">
-                <div><small>Ingressos totais</small><b id="finTotal">—</b><i>pagos + cortesias</i></div>
-                <div><small>Ingressos vendidos</small><b id="finPagos">—</b><i>só pagos</i></div>
-                <div><small>Camping vendido</small><b id="finCamping">—</b><i>vagas · fora do total</i></div>
-                <div><small>Faturamento de ingressos</small><b id="finReceita">—</b><i>só ingressos pagos</i></div>
-              </div>
-            </div>
-            <div class="fin-col">
-              <h3>Faturamento por setor</h3>
-              <div id="finSetores" class="fin-setores"></div>
-            </div>
-            <div class="fin-col fin-proj">
-              <h3>Projeção de receita extra <em>estimativa</em></h3>
-              <div class="fin-params">
-                <label>Público base
-                  <select id="fpBase"><option value="total">Ingressos totais</option><option value="pagos">Só pagos</option></select></label>
-                <label>% que vai de carro<input id="fpCarro" type="number" min="0" max="100" step="5" inputmode="decimal"></label>
-                <label>Pessoas por carro<input id="fpPessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal"></label>
-                <label>Estacionamento (R$/carro)<input id="fpPreco" type="number" min="0" step="5" inputmode="decimal"></label>
-                <label>Ticket médio do bar (R$/pessoa)<input id="fpBar" type="number" min="0" step="5" inputmode="decimal"></label>
-              </div>
-              <div class="fin-res" id="finRes"></div>
-              <p class="fin-nota">Receita estimada, não é lucro (não desconta custos). Os valores acima são editáveis e ficam salvos neste navegador.</p>
-            </div>
-          </div>
-        </div>
 
         <div class="extras-head" id="extrasHead">
           <h2>Extras</h2><span class="pill">fora do total de ingressos</span>
@@ -814,6 +782,38 @@
           <div class="card"><div class="ttl">Vendas por dia <span class="tag">últimos 30 dias</span></div><div class="chart" id="chartDia"></div></div>
           <div class="card"><div class="ttl">Vendas por hora</div><div class="chart" id="chartHora"></div></div>
           <div class="card"><div class="ttl">Por dia da semana</div><div class="chart" id="chartSemana"></div></div>
+        </div>
+        <!-- FINANCEIRO_PAINEL -->
+        <div class="card fin-card" id="financeiroCard">
+          <div class="ttl">Receita da campanha <span class="tag">faturamento e projeção de extras</span></div>
+          <div class="fin-grid">
+            <div class="fin-col">
+              <h3>Ingressos e camping</h3>
+              <div class="fin-nums">
+                <div><small>Ingressos totais</small><b id="finTotal">—</b><i>pagos + cortesias</i></div>
+                <div><small>Ingressos vendidos</small><b id="finPagos">—</b><i>só pagos</i></div>
+                <div><small>Camping vendido</small><b id="finCamping">—</b><i>vagas · fora do total</i></div>
+                <div><small>Faturamento de ingressos</small><b id="finReceita">—</b><i>só ingressos pagos</i></div>
+              </div>
+            </div>
+            <div class="fin-col">
+              <h3>Faturamento por setor</h3>
+              <div id="finSetores" class="fin-setores"></div>
+            </div>
+            <div class="fin-col fin-proj">
+              <h3>Projeção de receita extra <em>estimativa</em></h3>
+              <div class="fin-params">
+                <label>Público base
+                  <select id="fpBase"><option value="total">Ingressos totais</option><option value="pagos">Só pagos</option></select></label>
+                <label>% que vai de carro<input id="fpCarro" type="number" min="0" max="100" step="5" inputmode="decimal"></label>
+                <label>Pessoas por carro<input id="fpPessoas" type="number" min="1" max="10" step="0.5" inputmode="decimal"></label>
+                <label>Estacionamento (R$/carro)<input id="fpPreco" type="number" min="0" step="5" inputmode="decimal"></label>
+                <label>Ticket médio do bar (R$/pessoa)<input id="fpBar" type="number" min="0" step="5" inputmode="decimal"></label>
+              </div>
+              <div class="fin-res" id="finRes"></div>
+              <p class="fin-nota">Receita estimada, não é lucro (não desconta custos). Os valores acima são editáveis e ficam salvos neste navegador.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -2649,10 +2649,6 @@
 .fin-nota{ font-size:10.5px; color:var(--fg-faint); margin:10px 0 0; line-height:1.4; }
 @media (max-width:1199px){ .fin-grid{ grid-template-columns:1fr; gap:22px; } }
 @media (max-width:480px){ .fin-nums b{ font-size:20px; } }
-@media (min-width:2400px){
-  section[data-view="overview"]:not([hidden]){ grid-template-areas:"metas metas" "kpi set" "fin fin" "exh cross" "ext cross" "fontes fontes" !important; }
-  section[data-view="overview"] > #financeiroCard{ grid-area:fin; }
-}
 </style>
 <script>
 (function(){
