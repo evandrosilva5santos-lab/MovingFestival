@@ -594,6 +594,36 @@
         <span class="btn-login-txt">Acessar Painel</span>
         <span class="btn-login-spinner" style="display:none;"></span>
       </button>
+      <div class="login-links">
+        <button type="button" class="login-link" data-codigo="entrar">Entrar com código por e-mail</button>
+        <span>·</span>
+        <button type="button" class="login-link" data-codigo="senha">Esqueci minha senha</button>
+      </div>
+    </form>
+    <!-- LOGIN_CODIGO -->
+    <form class="login-form" id="codigoForm" hidden autocomplete="on">
+      <p class="login-cod-tit" id="codTitulo">Entrar com código por e-mail</p>
+      <div class="login-field" id="codPassoEmail">
+        <label for="codEmail">Seu e-mail de acesso</label>
+        <div class="input-wrap"><input type="email" id="codEmail" placeholder="ex: evandro@startinc.com.br" autocomplete="email" spellcheck="false" autocapitalize="none"></div>
+      </div>
+      <div class="login-field" id="codPassoCodigo" hidden>
+        <label for="codCodigo">Código de 6 dígitos que chegou no e-mail</label>
+        <div class="input-wrap"><input type="text" id="codCodigo" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000" class="login-cod-input"></div>
+      </div>
+      <div class="login-field" id="codPassoSenha" hidden>
+        <label for="codNova">Crie uma senha nova</label>
+        <div class="input-wrap"><input type="password" id="codNova" autocomplete="new-password" placeholder="mínimo 6 caracteres"></div>
+        <label for="codNova2" style="margin-top:8px">Repita a senha nova</label>
+        <div class="input-wrap"><input type="password" id="codNova2" autocomplete="new-password" placeholder="repita a senha"></div>
+      </div>
+      <div class="login-alert" id="codAlerta" role="alert" style="display:none;"></div>
+      <button type="submit" class="btn-login-submit" id="codBotao"><span class="btn-login-txt">Enviar código</span></button>
+      <div class="login-links">
+        <button type="button" class="login-link" id="codReenviar" hidden>Reenviar código</button>
+        <button type="button" class="login-link" id="codPular" hidden>Agora não, entrar no painel</button>
+        <button type="button" class="login-link" id="codVoltar">← Voltar para login com senha</button>
+      </div>
     </form>
   </div>
 </div>
@@ -895,9 +925,9 @@
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
             <div>
               <div class="start-tag">🚀 Ação da Start Inc.</div>
-              <h2 style="font-size:18px;font-weight:800;margin-top:8px">Desempenho Consolidado da Estratégia Start Inc. (Evandro + Gê)</h2>
+              <h2 style="font-size:18px;font-weight:800;margin-top:8px">Ações de venda da Start Inc. — agência de marketing contratada</h2>
               <p style="font-size:12.5px;color:var(--fg-muted);margin:3px 0 0">
-                Todos os cupons com prefixo <b>START</b> representam ações diretas, campanhas e grupos gerenciados pela Start Inc. (Evandro + Gê).
+                Todos os cupons com prefixo <b>START</b> (STARTADS, STARTADSNATIVO, STARTGRUPON, STARTGRUPOA, STARTEMAIL, STARTSMS, STARTELEICAO, STARTBLACK, STARTCASAMENTO) são ações de venda da Start Inc., agência de marketing contratada pelo Moving.
               </p>
             </div>
             <button class="btn-toggle" id="btnToggleCampanhas" type="button">
@@ -938,6 +968,14 @@
               <!-- Preenchido via JavaScript -->
             </div>
           </div>
+        </div>
+
+        <!-- ANALISE_ADS: cupons por canal (mapa do Evandro) -->
+        <div class="card" id="analiseAdsCard" style="margin-bottom:16px">
+          <div class="ttl">Análise de canais por cupom <span class="tag">ADS · WhatsApp · Orgânico · Interna</span></div>
+          <div class="grid g4" id="analiseAdsGrupos" style="margin-top:12px"></div>
+          <div class="tscroll" style="margin-top:14px"><table class="fat-tab" id="analiseAdsTab"></table></div>
+          <p class="fat-nota" style="margin-top:8px">STARTGRUPON e STARTGRUPOA = vendas dentro dos grupos do WhatsApp · STARTADS = 100% ADS (gestão nova) · MOVINGMANIACO15 = 100% ADS (gestão antiga) · MOVINGBIO = link na bio · MOVINGDIRECT = automação ManyChat (orgânico) · ANINHA = lista interna Moving (prospecção direta). Só ingressos confirmados; receita líquida.</p>
         </div>
 
         <!-- 2. RESUMO DAS OUTRAS AÇÕES (EQUIPE & PARCEIROS) -->
@@ -1102,6 +1140,12 @@
               <div><small>Caixa hoje (recebido − pago)</small><b id="fatSaldo">—</b><i>dinheiro que já entrou menos o que já saiu</i></div>
             </div>
             <div class="fat-barra-pag" id="fatBarraPag"></div>
+          </div>
+
+          <div class="card ia-card" data-ia="faturamento">
+            <div class="ttl">✨ Análise com IA <span class="tag">faturamento, despesas, caixa e metas</span>
+              <span class="fat-acoes"><button type="button" class="fat-btn fat-btn-pri" data-ia-btn>Analisar com IA</button></span></div>
+            <div class="ia-out" data-ia-out><p class="fat-nota" style="margin:0">A IA lê só os números desta tela (sem nomes, e-mails ou códigos) e devolve o que chama atenção, os riscos e o que fazer.</p></div>
           </div>
 
           <div class="grid g4">
@@ -1283,6 +1327,11 @@
             <div class="cf-kpis" id="cfKpis"></div>
             <div class="cf-veredito" id="cfVeredito"></div>
           </div>
+          <div class="card ia-card" style="margin-top:16px" data-ia="conferencia">
+            <div class="ttl">✨ Análise com IA <span class="tag">resultado da conferência</span>
+              <span class="fat-acoes"><button type="button" class="fat-btn fat-btn-pri" data-ia-btn>Analisar com IA</button></span></div>
+            <div class="ia-out" data-ia-out><p class="fat-nota" style="margin:0">A IA lê só os números desta tela (sem nomes, e-mails ou códigos) e devolve o que chama atenção, os riscos e o que fazer.</p></div>
+          </div>
           <div class="card" style="margin-top:16px">
             <div class="ttl">Totais: planilha × painel <span class="tag">só itens válidos (sem cancelados)</span></div>
             <div class="tscroll"><table class="fat-tab" id="cfTotais"></table></div>
@@ -1344,6 +1393,8 @@
     'META_ADS': 'Meta Ads (Tráfego Pago)',
     'CAMPANHA_ELEICAO': 'Campanha Eleição',
     'EMAIL_MARKETING': 'E-mail Marketing',
+    'SMS_MARKETING': 'SMS Marketing',
+    'ADS_NATIVO': 'Venda 100% ADS · nativo (gestão nova)',
     'CAMPANHA_BLACK': 'Black Friday',
     'CAMPANHA_CASAMENTO': 'Ação Casamento',
     'COMUNIDADE_MOVING': 'Comunidade MovinG',
@@ -1351,6 +1402,12 @@
     'ANTIGA_GESTAO': 'Antiga Gestão (Antigo Mkt)',
     'START_OUTROS': 'Ação Start Inc.',
     'PROMOTER': 'Promoter / Divulgação',
+    'WHATSAPP_GRUPO': 'Grupo do WhatsApp',
+    'ADS_GESTAO_NOVA': 'Venda 100% ADS · gestão nova',
+    'ADS_GESTAO_ANTIGA': 'Venda 100% ADS · gestão antiga',
+    'ORGANICO_BIO': 'Orgânico · link na bio',
+    'ORGANICO_MANYCHAT': 'Orgânico · automação ManyChat',
+    'INTERNA_PROSPECCAO': 'Lista interna Moving · prospecção direta',
     'ANIVERSARIANTE': 'Aniversariante (Sympla)',
     'PARCERIA_FESTASRS': 'Parceria Festasrs',
     'PARCERIA_KIOMA': 'Parceria Kioma',
@@ -1715,6 +1772,46 @@
         '</div>';
       }).join('');
     }
+
+    // ANALISE_ADS
+    (function(){
+      var ca = d.canais_analise;
+      var card = $('analiseAdsCard');
+      if(!card) return;
+      if(!ca){ card.hidden = true; return; }
+      card.hidden = false;
+      var G = [
+        {k:'ads', nome:'ADS (venda 100% ADS)', cor:'#2B6CF6'},
+        {k:'whatsapp', nome:'Grupos do WhatsApp', cor:'#10B981'},
+        {k:'organico', nome:'Orgânico', cor:'#8B5CF6'},
+        {k:'interna', nome:'Lista interna Moving', cor:'#E08A00'}
+      ];
+      var totIng = G.reduce(function(a,g){ return a + ((ca[g.k]||{}).ingressos||0); },0) || 1;
+      $('analiseAdsGrupos').innerHTML = G.map(function(g){
+        var x = ca[g.k] || {};
+        var sub = '';
+        if(g.k==='ads'){
+          var n = x.gestao_nova||{}, a = x.gestao_antiga||{};
+          sub = 'Gestão nova: <b>' + num(n.ingressos||0) + '</b> ing. · ' + brl(n.receita||0) + '<br>Gestão antiga: <b>' + num(a.ingressos||0) + '</b> ing. · ' + brl(a.receita||0);
+        } else {
+          sub = (x.cupons||[]).map(function(c){ return esc(c.cupom) + ': <b>' + num(c.ingressos) + '</b>'; }).join(' · ');
+        }
+        var pct = ((x.ingressos||0)/totIng*100).toFixed(1).replace('.',',');
+        return '<div class="card" style="border-top:3px solid ' + g.cor + '">' +
+          '<div class="ttl">' + g.nome + ' <span class="tag">' + pct + '% dos canais</span></div>' +
+          '<div class="val tnum" style="font-family:var(--font-display);font-size:22px;font-weight:800">' + num(x.ingressos||0) + ' ing.</div>' +
+          '<div class="sub" style="font-size:11.5px;color:var(--fg-muted)">' + brl(x.receita||0) + ' · ' + num(x.pedidos||0) + ' pedidos</div>' +
+          '<div class="sub" style="font-size:11.5px;color:var(--fg-muted);margin-top:6px;line-height:1.5">' + sub + '</div>' +
+        '</div>';
+      }).join('');
+      var linhas = [];
+      G.forEach(function(g){ ((ca[g.k]||{}).cupons||[]).forEach(function(c){ linhas.push({g:g, c:c}); }); });
+      $('analiseAdsTab').innerHTML = '<thead><tr><th>Cupom</th><th>Canal</th><th>Ingressos</th><th>Receita</th><th>Pedidos</th><th>Ticket médio</th><th>Ticketeira</th></tr></thead><tbody>' +
+        linhas.map(function(l){
+          var c = l.c, tm = c.ingressos>0 ? brl(c.receita/c.ingressos) : '—';
+          return '<tr><td><b>' + esc(c.cupom) + '</b></td><td>' + esc(c.rotulo || CANAL_LABEL[c.canal] || c.canal) + '</td><td class="tnum">' + num(c.ingressos) + '</td><td class="tnum">' + brl(c.receita) + '</td><td class="tnum">' + num(c.pedidos) + '</td><td class="tnum">' + tm + '</td><td>' + esc((c.plataformas||[]).join(', ') || '—') + '</td></tr>';
+        }).join('') + '</tbody>';
+    })();
 
     // 2. Outras Ações (Promoters, Antiga Gestão, Aniversariantes Sympla, Parcerias)
     if(out.promoters){
@@ -4251,7 +4348,7 @@
       })
       .then(function(res){
         btnSubmit.disabled = false;
-        if(res.ok && res.data && res.data.status === 'ok'){
+        if(res.ok && res.data && (res.data.status === 'ok' || res.data.ok === true)){
           alertBox.className = 'login-alert';
           alertBox.style.background = 'rgba(22,163,74,0.12)';
           alertBox.style.color = 'var(--c-success)';
@@ -4437,7 +4534,7 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res && (res.ok || res.status === 'ok')) carregarUsuarios();
+      if(res && (res.ok === true || res.status === 'ok')) carregarUsuarios();
       else alert((res && (res.erro || res.error)) || 'Erro ao alterar status.');
     })
     .catch(function(){ alert('Falha ao comunicar com o servidor.'); });
@@ -4451,7 +4548,7 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res && (res.ok || res.status === 'ok')){
+      if(res && (res.ok === true || res.status === 'ok')){
         carregarUsuarios();
       } else {
         alert((res && (res.erro || res.error)) || 'Erro ao excluir usuário.');
@@ -4618,7 +4715,7 @@
         btnSalvar.disabled = false;
         btnSalvar.textContent = 'Salvar Usuário';
 
-        if(res.ok && res.data && (res.data.ok || res.data.status === 'ok')){
+        if(res.ok && res.data && (res.data.ok === true || res.data.status === 'ok')){
           fecharModalUsuario();
           carregarUsuarios();
           // Se eu editei a mim mesmo, atualiza dados na interface
@@ -4645,23 +4742,82 @@
   }
 
   // =========================================================================
+  // LOGIN_CODIGO: entrar com código por e-mail e "esqueci minha senha"
+  // =========================================================================
+  (function(){
+    var F=$('codigoForm'), L=$('loginForm'); if(!F||!L) return;
+    var modo='entrar', passo='email', email='', tokenNovo=null, dadosNovos=null;
+    function alerta(t,ok){ var a=$('codAlerta'); if(!t){ a.style.display='none'; return; } a.textContent=t; a.className='login-alert'+(ok?' ok':''); a.style.display='block'; }
+    function botao(t,dis){ var b=$('codBotao'); b.disabled=!!dis; b.querySelector('.btn-login-txt').textContent=t; }
+    function mostrar(p){ passo=p;
+      $('codPassoEmail').hidden = p!=='email'; $('codPassoCodigo').hidden = p!=='codigo'; $('codPassoSenha').hidden = p!=='senha';
+      $('codReenviar').hidden = p!=='codigo'; $('codPular').hidden = p!=='senha'; $('codVoltar').hidden = p==='senha';
+      botao(p==='email'?'Enviar código':(p==='codigo'?'Entrar':'Salvar senha nova'));
+      setTimeout(function(){ var f=p==='email'?$('codEmail'):(p==='codigo'?$('codCodigo'):$('codNova')); if(f) f.focus(); },50);
+    }
+    function abrir(m){ modo=m; L.hidden=true; F.hidden=false; alerta('');
+      $('codTitulo').textContent = m==='senha' ? 'Esqueci minha senha: vamos mandar um código para o seu e-mail' : 'Entrar com código por e-mail';
+      var u=($('loginUser').value||'').trim(); if(u.indexOf('@')>0) $('codEmail').value=u; $('codCodigo').value=''; $('codNova').value=''; $('codNova2').value=''; mostrar('email'); }
+    function fechar(){ F.hidden=true; L.hidden=false; alerta(''); }
+    function entrarNoPainel(){
+      localStorage.setItem(TOKEN_KEY, tokenNovo); usuarioAtual=dadosNovos; window.movingUsuario=usuarioAtual;
+      fechar(); esconderLogin(); aplicarPermissoes(usuarioAtual); if(window.movingRecarregarDados) window.movingRecarregarDados();
+    }
+    function post(url,corpo,tk){ var h={'Content-Type':'application/json'}; if(tk) h['X-Moving-Token']=tk;
+      return fetch(url,{method:'POST',headers:h,body:JSON.stringify(corpo)}).then(function(r){ return r.json().catch(function(){ return {ok:false,erro:'Resposta inválida ('+r.status+')'}; }); }); }
+    function enviar(){
+      email=($('codEmail').value||'').trim().toLowerCase();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ alerta('Digite um e-mail válido.'); return; }
+      botao('Enviando…',true);
+      post('/api/login/codigo',{email:email}).then(function(j){
+        if(!j.ok){ mostrar('email'); alerta(j.erro||'Não consegui enviar o código.'); return; }
+        mostrar('codigo'); alerta((j.mensagem||'Enviamos um código.')+' Confira também o spam.',true);
+      }).catch(function(){ mostrar('email'); alerta('Sem conexão. Tente de novo.'); });
+    }
+    document.querySelectorAll('[data-codigo]').forEach(function(b){ b.addEventListener('click',function(){ abrir(b.getAttribute('data-codigo')); }); });
+    $('codVoltar').addEventListener('click',fechar);
+    $('codReenviar').addEventListener('click',enviar);
+    $('codPular').addEventListener('click',entrarNoPainel);
+    F.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(passo==='email') return enviar();
+      if(passo==='codigo'){
+        var c=($('codCodigo').value||'').replace(/\D/g,''); if(c.length!==6){ alerta('O código tem 6 números.'); return; }
+        botao('Conferindo…',true);
+        post('/api/login/codigo/entrar',{email:email,codigo:c}).then(function(j){
+          if(!j.ok||!j.token){ mostrar('codigo'); alerta(j.erro||'Código inválido.'); return; }
+          tokenNovo=j.token; dadosNovos=j.usuario;
+          if(modo==='senha'){ alerta(''); mostrar('senha'); } else entrarNoPainel();
+        }).catch(function(){ mostrar('codigo'); alerta('Sem conexão. Tente de novo.'); });
+        return;
+      }
+      var n1=$('codNova').value||'', n2=$('codNova2').value||'';
+      if(n1.length<6){ alerta('A senha nova precisa ter pelo menos 6 caracteres.'); return; }
+      if(n1!==n2){ alerta('As duas senhas não são iguais.'); return; }
+      botao('Salvando…',true);
+      post('/api/senha/redefinir',{nova:n1},tokenNovo).then(function(j){
+        if(!j.ok){ mostrar('senha'); alerta(j.erro||'Não consegui salvar a senha.'); return; }
+        alerta('Senha nova salva! Entrando…',true); setTimeout(entrarNoPainel,700);
+      }).catch(function(){ mostrar('senha'); alerta('Sem conexão. Tente de novo.'); });
+    });
+  })();
+
+  // =========================================================================
   // INICIALIZAÇÃO DO ESTADO DE SESSÃO
   // =========================================================================
   var tokenSalvo = localStorage.getItem(TOKEN_KEY);
-  if(!tokenSalvo){
-    mostrarLogin();
-  } else {
-    // Validar token no backend
+  {
+    // Validar token no backend (sem token também pergunta: se o login ainda não estiver ativado no banco, o painel abre em acesso livre)
     fetch('/api/me', {
       method: 'GET',
-      headers: { 'X-Moving-Token': tokenSalvo }
+      headers: tokenSalvo ? { 'X-Moving-Token': tokenSalvo } : {}
     })
     .then(function(r){
       if(!r.ok) throw new Error('Token inválido');
       return r.json();
     })
     .then(function(res){
-      if(res && res.status === 'ok' && res.usuario){
+      if(res && (res.ok === true || res.status === 'ok') && res.usuario){
         usuarioAtual = res.usuario;
         esconderLogin();
         aplicarPermissoes(usuarioAtual);
@@ -4678,3 +4834,61 @@
 })();
 </script>
 </html>
+
+<style>
+/* IA_ANALISE */
+.ia-card{ border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border)); background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 5%,var(--surface)),var(--surface)); }
+.fat > .ia-card, .fat-pane > .ia-card{ margin-top:16px; }
+.ia-out{ font-size:13px; line-height:1.55; color:var(--fg); }
+.ia-out h4{ font-size:12.5px; margin:12px 0 4px; } .ia-out ul{ margin:4px 0 0; padding-left:18px; } .ia-out li{ margin:3px 0; }
+.ia-out .ia-erro{ color:var(--c-danger,#DC2626); font-weight:600; } .ia-out .ia-carr{ color:var(--fg-muted); }
+</style>
+<script>
+/* IA_ANALISE: manda para /api/ia só o texto com números da tela (sem a tabela de códigos) */
+(function(){
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function txt(el){ return el? (el.innerText||'').replace(/\n{3,}/g,'\n\n').trim() : ''; }
+  function contexto(k){
+    var hoje=new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
+    if(k==='faturamento'){
+      var pane=document.querySelector('[data-fat-pane="resumo"]'), clone=pane? pane.cloneNode(true) : null;
+      if(clone){ clone.querySelectorAll('.ia-card,.fat-sim-chips').forEach(function(x){ x.remove(); }); }
+      var rec=document.getElementById('fatRecTab');
+      return 'Data/hora: '+hoje+'\nTELA FATURAMENTO DO PAINEL MOVING\n'+(clone? (clone.innerText||'') : '')+'\n\nRECEBIDO POR TICKETEIRA\n'+txt(rec);
+    }
+    var r=document.getElementById('cfRes');
+    return 'Data/hora: '+hoje+'\nCONFERÊNCIA PLANILHA x PAINEL\n'+txt(document.getElementById('cfResTag'))+'\n'+txt(document.getElementById('cfKpis'))+'\n'+txt(document.getElementById('cfVeredito'))+'\n'+txt(document.getElementById('cfTotais'));
+  }
+  function formatar(t){
+    var linhas=String(t).split(/\n/), h='', lista=false;
+    linhas.forEach(function(l){ var s=l.trim(); if(!s){ if(lista){ h+='</ul>'; lista=false; } return; }
+      s=esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+      if(/^[-*•]\s+/.test(s)){ if(!lista){ h+='<ul>'; lista=true; } h+='<li>'+s.replace(/^[-*•]\s+/,'')+'</li>'; }
+      else { if(lista){ h+='</ul>'; lista=false; } h+= /^#+\s/.test(s)||/:$/.test(s)? '<h4>'+s.replace(/^#+\s*/,'')+'</h4>' : '<p style="margin:6px 0">'+s+'</p>'; } });
+    if(lista) h+='</ul>'; return h;
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-ia-btn]'); if(!b) return;
+    var card=b.closest('[data-ia]'), out=card.querySelector('[data-ia-out]'), k=card.getAttribute('data-ia');
+    var ctx=contexto(k); if(ctx.length<60){ out.innerHTML='<p class="ia-erro">Ainda não há números nesta tela.</p>'; return; }
+    b.disabled=true; b.textContent='Analisando…'; out.innerHTML='<p class="ia-carr">A IA está lendo os números…</p>';
+    fetch('/api/ia',{method:'POST',headers:{'Content-Type':'application/json','X-Moving-Token':(function(){ try{ return localStorage.getItem('moving_token')||''; }catch(x){ return ''; } })()},body:JSON.stringify({contexto:ctx.slice(0,15000),foco:k})})
+      .then(function(r){ return r.json().catch(function(){ return {erro:'Resposta inválida ('+r.status+')'}; }); })
+      .then(function(j){ b.disabled=false; b.textContent='Analisar de novo';
+        if(j.erro){ out.innerHTML='<p class="ia-erro">'+esc(j.erro)+'</p>'; return; }
+        out.innerHTML=formatar(j.texto)+'<p class="fat-nota">Gerado por IA a partir dos números desta tela em '+esc(new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}))+'. Confira antes de decidir.</p>'; })
+      .catch(function(){ b.disabled=false; b.textContent='Analisar com IA'; out.innerHTML='<p class="ia-erro">Sem conexão. Tente de novo.</p>'; });
+  });
+})();
+</script>
+
+<style>
+/* LOGIN_CODIGO */
+.login-links{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px 10px; margin-top:12px; font-size:12.5px; color:var(--fg-faint); }
+.login-link{ background:none; border:0; padding:2px 0; font:inherit; font-size:12.5px; font-weight:600; color:var(--accent); cursor:pointer; }
+.login-link:hover{ text-decoration:underline; }
+.login-link[hidden],#codigoForm[hidden],#loginForm[hidden],#codigoForm [hidden]{ display:none!important; }
+.login-cod-tit{ font-weight:700; font-size:14px; margin:0 0 4px; text-align:left; }
+.login-cod-input{ letter-spacing:8px; font-size:20px!important; font-weight:700; text-align:center; }
+.login-alert.ok{ background:rgba(22,163,74,.12)!important; color:var(--c-success)!important; }
+</style>

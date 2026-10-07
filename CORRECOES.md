@@ -157,3 +157,30 @@
   - Rodapé da sidebar com perfil ativo: iniciais em avatar estilizado, badge colorido com o papel (`SuperADMIN`, `Administrador`, `Usuário`), botão de troca de senha própria (`/api/senha`) e botão de logout.
   - Todas as chamadas de dados usam o header `X-Moving-Token`. Sem token válido, o backend responde 401 e a interface direciona para o login.
 
+
+## 17. Login pendente, IA e Sympla sem taxa (07/10)
+- **Login travava o painel:** o login foi publicado mas as tabelas `moving_excluir_usuarios/sessoes` não existem no banco. Agora o Worker detecta isso (`loginAtivo`) e abre o painel em **acesso livre** (usuário "Acesso livre", papel admin). Quando o `migration_auth.sql` for aplicado, o login passa a ser exigido sozinho (cache de 60 s).
+- Corrigido no front: `/api/me` devolve `{ok:true}` (o front esperava `status:'ok'` e deslogava todo mundo). Mesma correção em trocar senha / salvar / excluir usuário.
+- `migration_auth.sql` estava com as senhas reais em texto. Trocadas por `TROQUE_PELA_SENHA` (preencher na hora de rodar). As senhas antigas ainda aparecem no histórico do Git.
+- **Sympla sem taxa (Edge Function v5):** valor do ingresso = `ticket_sale_price × (order_total_net_value ÷ order_total_sale_price)` do pedido. Remove a taxa de conveniência de 10% que o comprador paga.
+- **Análise com IA:** `POST /api/ia` (exige sessão ou acesso livre) usa `GEMINI_API_KEY` (modelo `GEMINI_MODEL`, padrão `gemini-2.5-flash`) ou `ANTHROPIC_API_KEY` (modelo `CLAUDE_MODEL`). Sem chave, responde 501 com instrução. Botões "Analisar com IA" no Resumo do Faturamento e no resultado da Conferência; só manda o texto com números da tela (sem nomes, e-mails ou códigos).
+- Uticket financeiro: testados 20 endpoints prováveis da API (`/financial`, `/transfers`, `/withdraws`, …) — todos 404. Falta a chamada real da página Financeiro.
+
+## 18. Entrar com código por e-mail / Esqueci minha senha
+- Tela de login ganhou "Entrar com código por e-mail" e "Esqueci minha senha" (o segundo pede uma senha nova depois do código).
+- Banco: `migration_codigo_email.sql` (tabela `moving_excluir_codigos`, coluna `via_codigo` em `moving_excluir_sessoes`, RPCs `moving_excluir_codigo_enviar`, `moving_excluir_codigo_entrar`, `moving_excluir_senha_redefinir`).
+- O código (6 dígitos, 10 min, 5 tentativas, até 3 pedidos a cada 15 min) é gerado e enviado **pelo próprio banco** (pg_net → Resend), então nunca passa pelo Worker nem pelo navegador. Chave no cofre: `moving_excluir_resend_key`; remetente: `moving_excluir_email_remetente`.
+- Senha nova sem a atual só vale numa sessão aberta por código há menos de 15 min; derruba as outras sessões do usuário.
+- Worker: `POST /api/login/codigo`, `POST /api/login/codigo/entrar`, `POST /api/senha/redefinir`.
+- Só funciona para usuários cujo login é um e-mail (o `movingadmin` não recebe código).
+
+## 19. Cupons por canal (análise de ADS) — 07/10
+- Mapa fixo em `_worker.js` (`MAPA_ANALISE`, match exato do código):
+  STARTGRUPON / STARTGRUPOA = Grupo do WhatsApp · STARTADS = 100% ADS gestão nova ·
+  MOVINGMANIACO15 = 100% ADS gestão antiga · MOVINGBIO = orgânico link na bio · MOVINGDIRECT = orgânico ManyChat.
+- `/api/resumo` devolve `canais_analise` {ads (com gestao_nova/gestao_antiga), whatsapp, organico}.
+- Tela Cupons: card "Análise de canais por cupom" (comentário `ANALISE_ADS`).
+- MOVINGBIO e MOVINGDIRECT saíram de "Promoters" (não ganham recompensa de 10 vendas).
+- ANINHA = lista interna Moving (prospecção direta), fora de Promoters.
+- Todos os cupons START* = ações de venda da Start Inc. (agência contratada). STARTADSNATIVO entra em ADS gestão nova; STARTSMS = SMS Marketing.
+- Para incluir cupom novo num canal, adicionar uma linha em `MAPA_ANALISE`.

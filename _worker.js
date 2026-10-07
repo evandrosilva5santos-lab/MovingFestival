@@ -21,6 +21,7 @@ function classifyCupom(cupomRaw) {
   else if (u.includes('STARTGRUPOA')) canal = 'GRUPO_VIP_ANTIGOS';
   else if (u.includes('STARTADS')) canal = 'META_ADS';
   else if (u.includes('STARTEMAIL')) canal = 'EMAIL_MARKETING';
+  else if (u.includes('STARTSMS')) canal = 'SMS_MARKETING';
   else if (u.includes('STARTELEICAO')) canal = 'CAMPANHA_ELEICAO';
   else if (u.includes('STARTBLACK')) canal = 'CAMPANHA_BLACK';
   else if (u.includes('STARTCASAMENTO')) canal = 'CAMPANHA_CASAMENTO';
@@ -30,7 +31,30 @@ function classifyCupom(cupomRaw) {
   else if (origem === 'ANIVERSARIANTE') canal = 'ANIVERSARIANTE';
   else if (origem === 'PARCERIA') canal = 'PARCERIA';
 
-  return { origem, canal };
+  // ANALISE_ADS — mapa definido pelo Evandro (07/10)
+  const ac = analiseCanal(u);
+  if (ac) {
+    canal = ac.canal;
+    if (ac.grupo === 'ORGANICO') origem = 'ORGANICO';
+    if (ac.grupo === 'INTERNA') origem = 'INTERNA';
+  }
+  return { origem, canal, grupo: ac ? ac.grupo : null, gestao: ac ? ac.gestao : null };
+}
+
+// Cupons que entram na análise de ADS / canais (match exato do código do cupom).
+const MAPA_ANALISE = {
+  STARTGRUPON:    { grupo: 'WHATSAPP', canal: 'WHATSAPP_GRUPO', rotulo: 'Grupo do WhatsApp' },
+  STARTGRUPOA:    { grupo: 'WHATSAPP', canal: 'WHATSAPP_GRUPO', rotulo: 'Grupo do WhatsApp' },
+  STARTADS:       { grupo: 'ADS', canal: 'ADS_GESTAO_NOVA',   gestao: 'NOVA',   rotulo: 'Venda 100% ADS · gestão nova' },
+  STARTADSNATIVO: { grupo: 'ADS', canal: 'ADS_NATIVO',        gestao: 'NOVA',   rotulo: 'Venda 100% ADS · nativo (gestão nova)' },
+  MOVINGMANIACO15:{ grupo: 'ADS', canal: 'ADS_GESTAO_ANTIGA', gestao: 'ANTIGA', rotulo: 'Venda 100% ADS · gestão antiga' },
+  MOVINGBIO:      { grupo: 'ORGANICO', canal: 'ORGANICO_BIO',      rotulo: 'Orgânico · link na bio' },
+  MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' },
+  ANINHA:         { grupo: 'INTERNA', canal: 'INTERNA_PROSPECCAO', rotulo: 'Lista interna Moving · prospecção direta' }
+};
+function analiseCanal(u) {
+  const k = String(u || '').toUpperCase().replace(/\s+/g, '');
+  return MAPA_ANALISE[k] || null;
 }
 
 // SYNC_NUVEM — nenhum segredo neste arquivo. Uticket/Sympla são consultadas pela função
@@ -69,8 +93,8 @@ async function buscarCuponsNuvem(env) {
 function comClasse(lista, plataforma) {
   return (lista || []).map(c => {
     const code = String(c.cupom || '').trim();
-    const { origem, canal } = classifyCupom(code);
-    return { cupom: code, plataforma, origem, canal, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
+    const { origem, canal, grupo, gestao } = classifyCupom(code);
+    return { cupom: code, plataforma, origem, canal, grupo, gestao, total: Number(c.total) || 0, pedidos: Number(c.pedidos) || 0,
              receita: Number(c.receita) || 0, desconto: Number(c.desconto) || 0, ativo: c.ativo !== false };
   });
 }
@@ -127,8 +151,38 @@ async function consolidateLiveSources(env) {
   const utProms = combined.filter(c => c.plataforma === 'UTICKET' && c.origem === 'PROMOTER' && c.recompensa_10?.ganhos > 0);
   const totGanhos = utProms.reduce((acc, c) => acc + (c.recompensa_10?.ganhos || 0), 0);
 
+  const soma = (lst) => ({
+    ingressos: lst.reduce((a, c) => a + c.total, 0),
+    receita: lst.reduce((a, c) => a + c.receita, 0),
+    pedidos: lst.reduce((a, c) => a + c.pedidos, 0)
+  });
+  const porCupom = (lst) => {
+    const m = new Map();
+    for (const c of lst) {
+      const k = c.cupom.toUpperCase();
+      const r = m.get(k) || { cupom: k, canal: c.canal, gestao: c.gestao, rotulo: (MAPA_ANALISE[k] || {}).rotulo || c.canal, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] };
+      r.ingressos += c.total; r.receita += c.receita; r.pedidos += c.pedidos;
+      if (!r.plataformas.includes(c.plataforma)) r.plataformas.push(c.plataforma);
+      m.set(k, r);
+    }
+    // cupons do mapa que ainda não venderam aparecem zerados
+    return Array.from(m.values());
+  };
+  const canaisAnalise = {};
+  for (const g of ['ADS', 'WHATSAPP', 'ORGANICO', 'INTERNA']) {
+    const lst = combined.filter(c => c.grupo === g);
+    const cps = porCupom(lst);
+    for (const [k, v] of Object.entries(MAPA_ANALISE)) {
+      if (v.grupo === g && !cps.some(x => x.cupom === k)) cps.push({ cupom: k, canal: v.canal, gestao: v.gestao || null, rotulo: v.rotulo, ingressos: 0, receita: 0, pedidos: 0, plataformas: [] });
+    }
+    canaisAnalise[g.toLowerCase()] = { ...soma(lst), cupons: cps.sort((a, b) => b.ingressos - a.ingressos) };
+  }
+  canaisAnalise.ads.gestao_nova = soma(combined.filter(c => c.gestao === 'NOVA'));
+  canaisAnalise.ads.gestao_antiga = soma(combined.filter(c => c.gestao === 'ANTIGA'));
+
   return {
     cupons: combined,
+    canais_analise: canaisAnalise,
     start_inc: {
       ingressos: startCoupons.reduce((a, c) => a + c.total, 0),
       receita: startCoupons.reduce((a, c) => a + c.receita, 0),
@@ -325,7 +379,24 @@ function extrairToken(request) {
   return null;
 }
 
+// LOGIN_PENDENTE: enquanto as tabelas/funções de login não existirem no Supabase, o painel abre em "acesso livre"
+// (como era antes do login). Assim que o migration_auth.sql for aplicado, o login passa a ser exigido sozinho.
+const USUARIO_LIVRE = { id: null, login: 'acesso-livre', nome: 'Acesso livre (login ainda não ativado)', papel: 'admin',
+  telas: ['overview', 'diario', 'plataformas', 'promoters', 'ingressos', 'tendencias', 'conferencia'], modo_livre: true };
+let cacheAuthAtivo = { valor: null, em: 0 };
+async function loginAtivo(supabaseUrl, supabaseAnon) {
+  if (cacheAuthAtivo.valor !== null && Date.now() - cacheAuthAtivo.em < 60000) return cacheAuthAtivo.valor;
+  let ativo = true;
+  try {
+    const r = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_me', { p_token: 'verificacao' });
+    if (r && r.ok === false && typeof r.erro === 'string' && /PGRST202|Could not find the function|\(404\)/.test(r.erro)) ativo = false;
+  } catch (e) { ativo = true; }
+  cacheAuthAtivo = { valor: ativo, em: Date.now() };
+  return ativo;
+}
+
 async function autenticarUsuario(request, supabaseUrl, supabaseAnon) {
+  if (!(await loginAtivo(supabaseUrl, supabaseAnon))) return { token: null, usuario: USUARIO_LIVRE };
   const token = extrairToken(request);
   if (!token) return null;
   try {
@@ -387,6 +458,26 @@ export default {
       } catch (err) {
         return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
       }
+    }
+
+    // LOGIN_CODIGO: entrar com código por e-mail / esqueci a senha
+    if (url.pathname === '/api/login/codigo' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_codigo_enviar', { p_email: String(body.email || '').slice(0, 120) });
+      if (res && res.ok === false && /PGRST202|Could not find the function|\(404\)/.test(String(res.erro || ''))) {
+        return new Response(JSON.stringify({ ok: false, erro: 'O login por código ainda não foi ativado. Rode o migration_codigo_email.sql no Supabase.' }), { status: 503, headers: corsHeaders() });
+      }
+      return new Response(JSON.stringify(res), { status: res && res.ok ? 200 : 400, headers: corsHeaders() });
+    }
+    if (url.pathname === '/api/login/codigo/entrar' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_codigo_entrar', { p_email: String(body.email || '').slice(0, 120), p_codigo: String(body.codigo || '').slice(0, 12) });
+      return new Response(JSON.stringify(res), { status: res && res.ok ? 200 : 401, headers: corsHeaders() });
+    }
+    if (url.pathname === '/api/senha/redefinir' && request.method === 'POST') {
+      const body = await request.json().catch(() => ({}));
+      const res = await chamarRpc(supabaseUrl, supabaseAnon, 'moving_excluir_senha_redefinir', { p_token: extrairToken(request) || '', p_nova: String(body.nova || '') });
+      return new Response(JSON.stringify(res), { status: res && res.ok ? 200 : 400, headers: corsHeaders() });
     }
 
     // 2. GET /api/me
@@ -491,6 +582,47 @@ export default {
         } catch (err) {
           return new Response(JSON.stringify({ ok: false, erro: String(err) }), { status: 500, headers: corsHeaders() });
         }
+      }
+    }
+
+    // IA: segunda opinião sobre os números (Gemini ou Claude). Recebe só texto com números agregados, sem dados pessoais.
+    if (url.pathname === '/api/ia') {
+      const jh = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
+      if (request.method !== 'POST') return new Response(JSON.stringify({ erro: 'Use POST' }), { status: 405, headers: jh });
+      const authIa = await autenticarUsuario(request, supabaseUrl, supabaseAnon);
+      if (!authIa) return new Response(JSON.stringify({ erro: 'Faça login para usar a análise com IA.' }), { status: 401, headers: jh });
+      const corpo = await request.json().catch(() => ({}));
+      const contexto = String(corpo.contexto || '').slice(0, 15000);
+      const foco = String(corpo.foco || 'geral').slice(0, 40);
+      if (contexto.length < 40) return new Response(JSON.stringify({ erro: 'Sem dados para analisar' }), { status: 400, headers: jh });
+      const sistema = 'Você é um analista financeiro e de vendas de festivais de música no Brasil (Moving Festival 2026, 17 e 18/10). ' +
+        'Responda em português do Brasil, direto, em tópicos curtos, no máximo 220 palavras. Estrutura: "O que chama atenção" (3 a 5 itens com números), ' +
+        '"Riscos" (até 3) e "O que fazer agora" (até 4 ações práticas). Use só os números fornecidos; se faltar dado, diga o que falta. Não invente valores. Foco: ' + foco + '.';
+      try {
+        let texto = '';
+        if (env.GEMINI_API_KEY) {
+          const modelo = env.GEMINI_MODEL || 'gemini-2.5-flash';
+          const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+            body: JSON.stringify({ systemInstruction: { parts: [{ text: sistema }] }, contents: [{ role: 'user', parts: [{ text: contexto }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 900 } })
+          });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok) return new Response(JSON.stringify({ erro: 'Gemini: ' + (j.error && j.error.message || r.status) }), { status: 502, headers: jh });
+          texto = ((j.candidates || [])[0] || {}).content ? j.candidates[0].content.parts.map((p) => p.text || '').join('') : '';
+        } else if (env.ANTHROPIC_API_KEY) {
+          const r = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+            body: JSON.stringify({ model: env.CLAUDE_MODEL || 'claude-sonnet-5-5', max_tokens: 900, system: sistema, messages: [{ role: 'user', content: contexto }] })
+          });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok) return new Response(JSON.stringify({ erro: 'Claude: ' + (j.error && j.error.message || r.status) }), { status: 502, headers: jh });
+          texto = (j.content || []).map((c) => c.text || '').join('');
+        } else {
+          return new Response(JSON.stringify({ erro: 'A análise com IA ainda não está ligada. Falta cadastrar na Cloudflare o segredo GEMINI_API_KEY (ou ANTHROPIC_API_KEY).', configurar: true }), { status: 501, headers: jh });
+        }
+        return new Response(JSON.stringify({ texto: texto || 'A IA não devolveu texto.' }), { headers: jh });
+      } catch (err) {
+        return new Response(JSON.stringify({ erro: String(err) }), { status: 500, headers: jh });
       }
     }
 
