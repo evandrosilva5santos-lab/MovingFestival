@@ -53,6 +53,8 @@ const MAPA_ANALISE = {
   MOVINGMANIACO15:{ grupo: 'ADS', canal: 'ADS_GESTAO_ANTIGA', gestao: 'ANTIGA', rotulo: 'Venda 100% ADS · gestão antiga' },
   MOVINGBIO:      { grupo: 'ORGANICO', canal: 'ORGANICO_BIO',      rotulo: 'Orgânico · link na bio' },
   MOVINGDIRECT:   { grupo: 'ORGANICO', canal: 'ORGANICO_MANYCHAT', rotulo: 'Orgânico · automação ManyChat' },
+  MOVINGPROMO:    { grupo: 'ORGANICO', canal: 'ACAO_VENDAS', rotulo: 'Orgânico · ação de vendas (promo)' },
+  MOVINGAMIGO:    { grupo: 'ORGANICO', canal: 'ACAO_VENDAS', rotulo: 'Orgânico · ação de vendas (amigo)' },
   ANINHA:         { grupo: 'INTERNA', canal: 'INTERNA_PROSPECCAO', rotulo: 'Lista interna Moving · prospecção direta' },
   FULLDIVULGACAO: { grupo: 'INTERNA', canal: 'INTERNA_DIVULGACAO', rotulo: 'Equipe de divulgação Moving (equipe direta)' },
   GOLDDIVULGACAO: { grupo: 'INTERNA', canal: 'INTERNA_DIVULGACAO', rotulo: 'Equipe de divulgação Moving (equipe direta)' }
