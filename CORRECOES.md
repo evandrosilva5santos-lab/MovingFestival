@@ -194,3 +194,7 @@
 ## 21. Filtros da lista de cupons — 07/10
 - 4 abas: Todos · Promoter / Afiliados (submenu Uticket 1 a cada 10 / Sympla 7%; inclui promoters, afiliados e equipe Fran Saval) · Aniversariantes (só Sympla) · Marketing (submenu Start Inc. "Champions League" / Jurássico "Íbis" = antiga gestão, só Uticket).
 - O submenu de ticketeira só aparece em Promoter / Afiliados; ao sair dele volta para "Uticket + Sympla".
+
+## 22. Vendas por Dia soma tudo que vendeu — 08/10
+- "Tudo que vendeu" (padrão) = ingressos + camping + copo, em quantidade e faturamento, com a quebra no subtítulo.
+- "Só ingressos" = os 4 setores (sem camping e copo). Chips Camping e Copo separados; tabela ganhou coluna Copo; Ondas do dia seguem o mesmo filtro.

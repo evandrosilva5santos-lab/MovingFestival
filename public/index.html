@@ -812,12 +812,14 @@
 
             <!-- SETOR -->
             <div class="chip-group" id="diarioSetorChips">
-              <button class="chip-btn" aria-pressed="true" data-setor="ALL">Todos os Setores</button>
+              <button class="chip-btn" aria-pressed="true" data-setor="ALL">Tudo que vendeu</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="INGRESSOS">Só ingressos</button>
               <button class="chip-btn" aria-pressed="false" data-setor="FULLPASS"><span class="d" style="background:var(--c-fullpass)"></span>Full Pass</button>
               <button class="chip-btn" aria-pressed="false" data-setor="ZONE"><span class="d" style="background:var(--c-zone)"></span>Zone</button>
               <button class="chip-btn" aria-pressed="false" data-setor="GOLD"><span class="d" style="background:var(--c-gold)"></span>Gold</button>
               <button class="chip-btn" aria-pressed="false" data-setor="BLACK"><span class="d" style="background:var(--c-black)"></span>Black</button>
               <button class="chip-btn" aria-pressed="false" data-setor="CAMPING"><span class="d" style="background:var(--fg-faint)"></span>Camping</button>
+              <button class="chip-btn" aria-pressed="false" data-setor="COPO"><span class="d" style="background:var(--fg-faint)"></span>Copo</button>
             </div>
           </div>
         </div>
@@ -891,7 +893,8 @@
                   <th>Gold</th>
                   <th>Black</th>
                   <th>Camping</th>
-                  <th>Receita Estimada</th>
+                  <th>Copo</th>
+                  <th>Receita</th>
                 </tr>
               </thead>
               <tbody id="diarioTableBody"></tbody>
@@ -2243,7 +2246,7 @@
 
     // Badge de filtros ativos
     var platNome = DIARIO_PLAT === 'ALL' ? 'Todas as Plataformas' : (DIARIO_PLAT === 'UTICKET' ? 'Uticket' : (DIARIO_PLAT === 'SYMPLA' ? 'Sympla' : 'Wix'));
-    var setorNome = DIARIO_SETOR === 'ALL' ? 'Todos os Setores' : (SET[DIARIO_SETOR] ? SET[DIARIO_SETOR].nome : DIARIO_SETOR);
+    var setorNome = DIARIO_SETOR === 'ALL' ? 'Tudo que vendeu' : DIARIO_SETOR === 'INGRESSOS' ? 'Só ingressos' : DIARIO_SETOR === 'COPO' ? 'Copo' : (SET[DIARIO_SETOR] ? SET[DIARIO_SETOR].nome : DIARIO_SETOR);
     var perNome = DIARIO_PERIODO === 'tudo' ? 'Todo o Período' : (DIARIO_PERIODO === 'hoje' ? 'Hoje' : (DIARIO_PERIODO === 'ontem' ? 'Ontem' : (DIARIO_PERIODO === '7d' ? 'Últimos 7 dias' : (DIARIO_PERIODO === '14d' ? 'Últimos 14 dias' : (DIARIO_PERIODO === '30d' ? 'Últimos 30 dias' : 'Personalizado')))));
     if($('diarioFiltroAtivoBadge')){
       $('diarioFiltroAtivoBadge').textContent = perNome + ' · ' + platNome + ' · ' + setorNome;
@@ -2254,9 +2257,9 @@
       if(DIARIO_DATA_INI && v.dia < DIARIO_DATA_INI) return false;
       if(DIARIO_DATA_FIM && v.dia > DIARIO_DATA_FIM) return false;
       if(DIARIO_PLAT !== 'ALL' && v.plataforma !== DIARIO_PLAT) return false;
-      if(DIARIO_SETOR !== 'ALL' && v.setor !== DIARIO_SETOR) return false;
-      // Todos os setores = só INGRESSO (camping e copo não somam; Camping tem chip próprio)
-      if(DIARIO_SETOR === 'ALL' && ['FULLPASS','ZONE','GOLD','BLACK'].indexOf(String(v.setor||'').toUpperCase()) < 0) return false;
+      // Tudo que vendeu = ingressos + camping + copo · Só ingressos = os 4 setores
+      if(DIARIO_SETOR === 'INGRESSOS'){ if(['FULLPASS','ZONE','GOLD','BLACK'].indexOf(String(v.setor||'').toUpperCase()) < 0) return false; }
+      else if(DIARIO_SETOR !== 'ALL' && String(v.setor||'').toUpperCase() !== DIARIO_SETOR) return false;
       return true;
     });
 
@@ -2276,7 +2279,8 @@
           zone: 0,
           gold: 0,
           black: 0,
-          camping: 0
+          camping: 0,
+          copo: 0
         };
       }
       var o = porDiaMap[dia];
@@ -2295,6 +2299,7 @@
       else if(s === 'GOLD') o.gold += tot;
       else if(s === 'BLACK') o.black += tot;
       else if(s === 'CAMPING') o.camping += tot;
+      else if(s === 'COPO') o.copo += tot;
     });
 
     var listaDias = Object.values(porDiaMap);
@@ -2305,11 +2310,12 @@
     var recFiltro = listaDias.reduce(function(acc, x){ return acc + x.receita; }, 0);
     var pagosFiltro = listaDias.reduce(function(acc, x){ return acc + (x.pagos || 0); }, 0);
     // Faturamento = ingressos + camping + copo (receita real total). A quantidade continua só de ingressos.
-    var recExtras = 0;
-    if(DIARIO_SETOR === 'ALL') vendas.forEach(function(v){
-      var se = String(v.setor||'').toUpperCase(); if(se !== 'CAMPING' && se !== 'COPO') return;
-      if(DIARIO_DATA_INI && v.dia < DIARIO_DATA_INI) return; if(DIARIO_DATA_FIM && v.dia > DIARIO_DATA_FIM) return;
-      if(DIARIO_PLAT !== 'ALL' && v.plataforma !== DIARIO_PLAT) return; recExtras += +v.receita || 0; });
+    // Quebra do "Tudo que vendeu": ingressos x camping x copo (quantidade e receita)
+    var qIng = 0, qCamp = 0, qCopo = 0, rIng = 0, rCamp = 0, rCopo = 0;
+    filtrados.forEach(function(v){
+      var se = String(v.setor||'').toUpperCase(), t = +v.total || 0, r = +v.receita || 0;
+      if(se === 'CAMPING'){ qCamp += t; rCamp += r; } else if(se === 'COPO'){ qCopo += t; rCopo += r; } else { qIng += t; rIng += r; }
+    });
     var qtdDias = listaDias.filter(function(x){ return x.total > 0; }).length;
     var mediaDiaria = qtdDias > 0 ? (totFiltro / qtdDias).toFixed(1).replace('.',',') : '0';
 
@@ -2319,10 +2325,10 @@
     });
 
     if($('diarioKpiTotal')) $('diarioKpiTotal').textContent = num(totFiltro);
-    if($('diarioKpiTotalSub')) $('diarioKpiTotalSub').textContent = (DIARIO_SETOR === 'CAMPING' ? 'vagas de camping · ' : (DIARIO_SETOR === 'ALL' ? 'só ingressos (sem camping e copo) · ' : '')) + num(qtdDias) + ' dias com vendas';
-    if($('diarioKpiReceita')) $('diarioKpiReceita').textContent = brl(recFiltro + recExtras);
-    if($('diarioKpiReceitaLbl')) $('diarioKpiReceitaLbl').textContent = DIARIO_SETOR === 'CAMPING' ? 'Faturamento de camping no período' : (DIARIO_SETOR === 'ALL' ? 'Faturamento no período' : 'Faturamento do setor no período');
-    if($('diarioKpiReceitaSub')) $('diarioKpiReceitaSub').textContent = DIARIO_SETOR === 'ALL' ? ('ingressos ' + brl(recFiltro) + ' + camping e copo ' + brl(recExtras)) : (pagosFiltro > 0 ? ('ticket médio ' + brl(recFiltro / pagosFiltro) + ' · ' + num(pagosFiltro) + ' pagos') : 'sem receita');
+    if($('diarioKpiTotalSub')) $('diarioKpiTotalSub').textContent = (DIARIO_SETOR === 'ALL' ? (num(qIng) + ' ingressos + ' + num(qCamp) + ' camping + ' + num(qCopo) + ' copo · ') : (DIARIO_SETOR === 'INGRESSOS' ? 'só ingressos (sem camping e copo) · ' : (DIARIO_SETOR === 'CAMPING' ? 'vagas de camping · ' : (DIARIO_SETOR === 'COPO' ? 'copos · ' : '')))) + num(qtdDias) + ' dias com vendas';
+    if($('diarioKpiReceita')) $('diarioKpiReceita').textContent = brl(recFiltro);
+    if($('diarioKpiReceitaLbl')) $('diarioKpiReceitaLbl').textContent = DIARIO_SETOR === 'ALL' ? 'Faturamento no período' : (DIARIO_SETOR === 'INGRESSOS' ? 'Faturamento de ingressos no período' : (DIARIO_SETOR === 'CAMPING' ? 'Faturamento de camping no período' : (DIARIO_SETOR === 'COPO' ? 'Faturamento de copo no período' : 'Faturamento do setor no período')));
+    if($('diarioKpiReceitaSub')) $('diarioKpiReceitaSub').textContent = DIARIO_SETOR === 'ALL' ? ('ingressos ' + brl(rIng) + ' + camping ' + brl(rCamp) + ' + copo ' + brl(rCopo)) : (pagosFiltro > 0 ? ('ticket médio ' + brl(recFiltro / pagosFiltro) + ' · ' + num(pagosFiltro) + ' pagos') : 'sem receita');
     if($('diarioKpiMedia')) $('diarioKpiMedia').textContent = mediaDiaria;
     if($('diarioKpiMediaSub')) $('diarioKpiMediaSub').textContent = 'vendas por dia ativo';
     if($('diarioKpiPicoVal')) $('diarioKpiPicoVal').textContent = picoDia ? num(picoDia.total) : '—';
@@ -2412,7 +2418,7 @@
 
     if($('diarioTableBody')){
       if(!listaTabela.length){
-        $('diarioTableBody').innerHTML = '<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--fg-muted)">Nenhuma venda encontrada para os filtros selecionados.</td></tr>';
+        $('diarioTableBody').innerHTML = '<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--fg-muted)">Nenhuma venda encontrada para os filtros selecionados.</td></tr>';
         if($('diarioTableFoot')) $('diarioTableFoot').innerHTML = '';
         return;
       }
@@ -2420,7 +2426,7 @@
       var diasSemanaNomes = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
       var PLATS = [['UTICKET','Uticket','plat-uticket'],['SYMPLA','Sympla','plat-sympla'],['WIX','Wix','plat-wix']];
-      function vazio(){ return { total:0, receita:0, FULLPASS:0, ZONE:0, GOLD:0, BLACK:0, CAMPING:0 }; }
+      function vazio(){ return { total:0, receita:0, FULLPASS:0, ZONE:0, GOLD:0, BLACK:0, CAMPING:0, COPO:0 }; }
       var porDiaPlat = {}, totPlat = {}, totGeral = vazio();
       filtrados.forEach(function(v){
         var k = v.dia, pl = v.plataforma, se = String(v.setor || '').toUpperCase();
@@ -2433,7 +2439,7 @@
         });
       });
       function cel(v, cor){ return v ? '<td' + (cor ? ' style="color:' + cor + ';font-weight:700"' : '') + '>' + num(v) + '</td>' : '<td><span style="color:var(--fg-faint)">0</span></td>'; }
-      function setores(o){ return cel(o.FULLPASS) + cel(o.ZONE) + cel(o.GOLD) + cel(o.BLACK) + cel(o.CAMPING, 'var(--c-warning)'); }
+      function setores(o){ return cel(o.FULLPASS) + cel(o.ZONE) + cel(o.GOLD) + cel(o.BLACK) + cel(o.CAMPING, 'var(--c-warning)') + cel(o.COPO, 'var(--c-warning)'); }
       function linhasPlat(mapa, prefixo){
         var h = '';
         PLATS.forEach(function(pp){
@@ -2452,7 +2458,7 @@
         var partes = item.dia.split('-');
         var dataFmt = partes.length === 3 ? (partes[2] + '/' + partes[1] + '/' + partes[0]) : item.dia;
         var doDia = porDiaPlat[item.dia] || {};
-        var soma = { FULLPASS:item.fullpass, ZONE:item.zone, GOLD:item.gold, BLACK:item.black, CAMPING:item.camping };
+        var soma = { FULLPASS:item.fullpass, ZONE:item.zone, GOLD:item.gold, BLACK:item.black, CAMPING:item.camping, COPO:item.copo };
         return '<tr class="dia-row">' +
             '<td><b style="font-family:var(--font-mono);font-size:12.5px">' + dataFmt + '</b></td>' +
             '<td><span style="color:var(--fg-muted);font-weight:600">' + dSemana + '</span></td>' +
@@ -2941,7 +2947,7 @@
   function diasVisiveis(){ return [].slice.call(document.querySelectorAll('#chartDiarioEvolucao rect[data-dia]')).map(function(r){ return r.getAttribute('data-dia'); }); }
   function filtrar(rows){
     var pl = chip('diarioPlatChips','data-plat'), st = chip('diarioSetorChips','data-setor');
-    return rows.filter(function(r){ var se=String(r.setor||'').toUpperCase(); return (pl==='ALL' || r.plataforma===pl) && (st==='ALL' ? ['FULLPASS','ZONE','GOLD','BLACK'].indexOf(se)>=0 : se===st); });
+    return rows.filter(function(r){ var se=String(r.setor||'').toUpperCase(); return (pl==='ALL' || r.plataforma===pl) && (st==='ALL' ? true : (st==='INGRESSOS' ? ['FULLPASS','ZONE','GOLD','BLACK'].indexOf(se)>=0 : se===st)); });
   }
   // Curva suave sem "passar" do valor real (interpolação monotônica)
   function curva(pts){
