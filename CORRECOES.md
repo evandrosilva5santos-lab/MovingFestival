@@ -198,3 +198,4 @@
 ## 22. Vendas por Dia soma tudo que vendeu — 08/10
 - "Tudo que vendeu" (padrão) = ingressos + camping + copo, em quantidade e faturamento, com a quebra no subtítulo.
 - "Só ingressos" = os 4 setores (sem camping e copo). Chips Camping e Copo separados; tabela ganhou coluna Copo; Ondas do dia seguem o mesmo filtro.
+- 08/10: campo de data trocado por calendário (estilo shadcn, JS puro, comentário `CALENDARIO`): botão com o período, mês/ano em lista, escolhe início e fim, Aplicar/Limpar. Continua preenchendo #filtroDataIni/#filtroDataFim (agora hidden) e disparando "change".

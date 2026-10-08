@@ -790,11 +790,15 @@
               <button class="chip-btn" aria-pressed="true" data-periodo="tudo">Todo o Período</button>
             </div>
 
-            <div class="date-picker-wrap">
-              <span>De:</span>
-              <input type="date" id="filtroDataIni" title="Data inicial">
-              <span>Até:</span>
-              <input type="date" id="filtroDataFim" title="Data final">
+            <!-- CALENDARIO: seletor de período (estilo shadcn, com mês/ano em lista) -->
+            <div class="cal-wrap" id="calWrap">
+              <button type="button" class="cal-trigger" id="calTrigger" aria-haspopup="dialog" aria-expanded="false">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span id="calTriggerTxt">Escolher datas</span>
+              </button>
+              <input type="hidden" id="filtroDataIni">
+              <input type="hidden" id="filtroDataFim">
+              <div class="cal-pop" id="calPop" role="dialog" aria-label="Escolher período" hidden></div>
             </div>
 
             <button class="btn-clear-filter" id="btnResetDiarioFiltros" type="button">Limpar Filtros</button>
@@ -2241,6 +2245,7 @@
   // ===== Vendas por Dia (Filtros Multidimensionais) =====
   function renderDiarioView(d){
     if(!d) return;
+    if(window.movingCalSync) setTimeout(window.movingCalSync, 0);
     var vendas = d.vendas_diarias || [];
     window.__movingDados = d; setTimeout(function(){ if(window.movingOnda) window.movingOnda(); }, 0);
 
@@ -5154,3 +5159,124 @@
 .login-cod-input{ letter-spacing:8px; font-size:20px!important; font-weight:700; text-align:center; }
 .login-alert.ok{ background:rgba(22,163,74,.12)!important; color:var(--c-success)!important; }
 </style>
+
+<style>
+/* CALENDARIO — estilo shadcn (borda arredondada, mês/ano em lista, intervalo) */
+.cal-wrap{ position:relative; }
+.cal-trigger{ display:inline-flex; align-items:center; gap:8px; height:36px; padding:0 12px; background:var(--surface); border:1px solid var(--border-2); border-radius:9px; color:var(--fg); font:600 12.5px var(--font-body); cursor:pointer; white-space:nowrap; }
+.cal-trigger svg{ color:var(--fg-muted); flex:none; }
+.cal-trigger:hover{ border-color:var(--accent); }
+.cal-trigger.vazio #calTriggerTxt{ color:var(--fg-muted); font-weight:500; }
+.cal-pop{ position:absolute; z-index:60; top:calc(100% + 6px); right:0; background:var(--surface); border:1px solid var(--border-2); border-radius:12px; box-shadow:0 12px 32px rgba(15,23,42,.14); padding:12px; width:300px; }
+.cal-pop[hidden]{ display:none; }
+.cal-cap{ display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+.cal-cap select{ flex:1; min-width:0; text-overflow:ellipsis; height:32px; padding:0 8px; background:var(--surface); color:var(--fg); border:1px solid var(--border-2); border-radius:8px; font:600 13px var(--font-body); cursor:pointer; }
+.cal-nav{ width:32px; height:32px; flex:none; display:grid; place-items:center; background:transparent; border:1px solid var(--border-2); border-radius:8px; color:var(--fg); cursor:pointer; font-size:16px; }
+.cal-nav:hover{ background:var(--surface-2); }
+.cal-cap select[data-sel="m"]{ flex:1.5; }
+.cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px 0; }
+.cal-wd{ text-align:center; font:600 11px var(--font-body); color:var(--fg-muted); padding:4px 0; }
+.cal-d{ height:34px; border:0; background:transparent; border-radius:8px; color:var(--fg); font:500 13px var(--font-body); cursor:pointer; }
+.cal-d:hover{ background:var(--surface-2); }
+.cal-d.fora{ color:var(--fg-faint); }
+.cal-d.hoje{ box-shadow:inset 0 0 0 1px var(--border-2); font-weight:700; }
+.cal-d.meio{ background:var(--accent-soft); color:var(--accent-ink); border-radius:0; }
+.cal-d.ini,.cal-d.fim{ background:var(--accent); color:#fff; font-weight:700; }
+.cal-d.ini.fim{ border-radius:8px; }
+.cal-d.ini:not(.fim){ border-radius:8px 0 0 8px; }
+.cal-d.fim:not(.ini){ border-radius:0 8px 8px 0; }
+.cal-foot{ display:flex; flex-direction:column; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:11.5px; color:var(--fg-muted); }
+.cal-foot .cal-bts{ display:flex; justify-content:flex-end; gap:6px; }
+.cal-foot button{ height:30px; padding:0 12px; border-radius:8px; border:1px solid var(--border-2); background:var(--surface); color:var(--fg); font:600 12px var(--font-body); cursor:pointer; }
+.cal-foot button[disabled]{ opacity:.5; cursor:default; }
+.cal-foot .pri{ background:var(--accent); border-color:var(--accent); color:#fff; }
+@media (max-width:767px){
+  [data-view="diario"] .cal-wrap,[data-view="diario"] .cal-trigger{ width:100%; }
+  [data-view="diario"] .cal-trigger{ height:44px; justify-content:center; font-size:14px; }
+  .cal-pop{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(320px, calc(100vw - 32px)); }
+  .cal-cap select{ font-size:16px; }
+}
+</style>
+<script>
+/* CALENDARIO: preenche #filtroDataIni / #filtroDataFim e dispara "change" (a lógica do Vendas por Dia continua a mesma) */
+(function(){
+  var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var WD=['Do','Se','Te','Qu','Qu','Se','Sá'];
+  function $(id){ return document.getElementById(id); }
+  function p2(n){ return String(n).padStart(2,'0'); }
+  function iso(d){ return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
+  function br(i){ if(!i) return ''; var a=i.split('-'); return a[2]+'/'+a[1]+'/'+a[0]; }
+  function hoje(){ return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo'}).format(new Date()); }
+  var vis, ini='', fim='', novo=true;
+  function sync(){
+    var a=$('filtroDataIni'), b=$('filtroDataFim'), t=$('calTriggerTxt'), bt=$('calTrigger'); if(!a||!t) return;
+    var x=a.value, y=b.value;
+    if(!x && !y){ t.textContent='Escolher datas'; bt.classList.add('vazio'); }
+    else { bt.classList.remove('vazio'); t.textContent = (!y || !x || x===y) ? br(x||y) : (br(x)+' – '+br(y)); }
+  }
+  window.movingCalSync = sync;
+  function desenhar(){
+    var pop=$('calPop'), y=vis.getFullYear(), m=vis.getMonth(), anoAtual=+hoje().slice(0,4);
+    var anos=[]; for(var a=anoAtual-1;a<=anoAtual+1;a++) anos.push(a);
+    if(anos.indexOf(y)<0) anos.push(y);
+    var h='<div class="cal-cap"><button type="button" class="cal-nav" data-nav="-1" aria-label="Mês anterior">‹</button>'+
+      '<select data-sel="m" aria-label="Mês">'+MESES.map(function(n,i){ return '<option value="'+i+'"'+(i===m?' selected':'')+'>'+n+'</option>'; }).join('')+'</select>'+
+      '<select data-sel="a" aria-label="Ano">'+anos.map(function(n){ return '<option'+(n===y?' selected':'')+'>'+n+'</option>'; }).join('')+'</select>'+
+      '<button type="button" class="cal-nav" data-nav="1" aria-label="Próximo mês">›</button></div><div class="cal-grid">';
+    h+=WD.map(function(w){ return '<div class="cal-wd">'+w+'</div>'; }).join('');
+    var d0=new Date(y,m,1), c0=new Date(y,m,1-d0.getDay()), hj=hoje(), f=fim||ini;
+    for(var i=0;i<42;i++){
+      var d=new Date(c0.getFullYear(),c0.getMonth(),c0.getDate()+i), k=iso(d), c='cal-d';
+      if(d.getMonth()!==m) c+=' fora';
+      if(k===hj) c+=' hoje';
+      if(ini && k===ini) c+=' ini';
+      if(f && k===f) c+=' fim';
+      if(ini && f && k>ini && k<f) c+=' meio';
+      h+='<button type="button" class="'+c+'" data-d="'+k+'">'+d.getDate()+'</button>';
+    }
+    h+='</div><div class="cal-foot"><span>'+(ini ? (fim ? br(ini)+' – '+br(fim) : br(ini)+' · escolha o dia final (ou Aplicar para só este dia)') : 'Clique no dia inicial')+'</span>'+
+       '<div class="cal-bts"><button type="button" data-acao="limpar">Limpar</button><button type="button" class="pri" data-acao="ok"'+(ini?'':' disabled')+'>Aplicar</button></div></div>';
+    pop.innerHTML=h;
+  }
+  function abrir(){
+    ini=$('filtroDataIni').value||''; fim=$('filtroDataFim').value||''; if(fim===ini) fim=''; novo=true;
+    var base=ini||hoje(); vis=new Date(+base.slice(0,4), +base.slice(5,7)-1, 1);
+    desenhar(); $('calPop').hidden=false; $('calTrigger').setAttribute('aria-expanded','true');
+  }
+  function fechar(){ $('calPop').hidden=true; $('calTrigger').setAttribute('aria-expanded','false'); }
+  function gravar(a1,b1){
+    var a=$('filtroDataIni'), b=$('filtroDataFim');
+    a.value=a1; b.value=b1;
+    a.dispatchEvent(new Event('change')); b.dispatchEvent(new Event('change'));
+    sync(); fechar();
+  }
+  function montar(){
+    var pop=$('calPop'), bt=$('calTrigger'); if(!pop||!bt) return;
+    bt.addEventListener('click', function(e){ e.stopPropagation(); pop.hidden ? abrir() : fechar(); });
+    pop.addEventListener('click', function(e){
+      e.stopPropagation();
+      var t=e.target.closest('button'); if(!t) return;
+      if(t.dataset.nav){ vis=new Date(vis.getFullYear(), vis.getMonth()+(+t.dataset.nav), 1); desenhar(); return; }
+      if(t.dataset.d){
+        var k=t.dataset.d;
+        if(novo || !ini || fim){ ini=k; fim=''; novo=false; }
+        else if(k<ini){ fim=ini; ini=k; }
+        else { fim=k; }
+        if(k.slice(0,7)!==iso(vis).slice(0,7)) vis=new Date(+k.slice(0,4), +k.slice(5,7)-1, 1);
+        desenhar(); return;
+      }
+      if(t.dataset.acao==='limpar'){ ini=''; fim=''; gravar('',''); return; }
+      if(t.dataset.acao==='ok' && ini) gravar(ini, fim||ini);
+    });
+    pop.addEventListener('change', function(e){
+      var sel=e.target; if(!sel.dataset || !sel.dataset.sel) return;
+      vis = sel.dataset.sel==='m' ? new Date(vis.getFullYear(), +sel.value, 1) : new Date(+sel.value, vis.getMonth(), 1);
+      desenhar();
+    });
+    document.addEventListener('click', function(){ if(!pop.hidden) fechar(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !pop.hidden) fechar(); });
+    sync();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', montar); else montar();
+})();
+</script>
