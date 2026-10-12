@@ -673,6 +673,7 @@
       <a data-view="plataformas" title="Plataformas & Regiões"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><span class="nav-txt">Plataformas</span></a>
       <a data-view="promoters" title="Ações Start & Cupons" id="navLinkPromoters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt" id="navPromotersTxt">Ações Start & Cupons</span></a>
       <a data-view="ingressos" title="Ingressos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M13 5v14"/></svg><span class="nav-txt">Ingressos</span></a>
+      <a data-view="custos_budget" id="navCustosBudget" title="Custos & Budget" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="nav-txt">Custos & Budget</span></a>
       <a data-view="tendencias" title="Faturamento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="nav-txt">Faturamento</span></a>
       <a data-view="conferencia" title="Importar e conferir planilhas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span class="nav-txt">Importar e conferir</span></a>
       <a data-view="usuarios" id="navUsuarios" title="Gestão de Usuários" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-txt">Usuários</span></a>
@@ -1188,6 +1189,21 @@
         </div>
       </section>
 
+      <!-- CUSTOS & BUDGET (EXCLUSIVO SUPERADMIN) -->
+      <section data-view="custos_budget" id="viewCustosBudget" hidden style="padding: 0;">
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 12px; gap: 10px;">
+          <span style="font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+            Prestação Oficial & Auditoria de Mídia (SuperADMIN)
+          </span>
+          <a href="painel_financeiro.html" target="_blank" class="btn" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; text-decoration: none; padding: 6px 14px; border-radius: 8px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.35); color: #c7d2fe; font-weight: 600;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir em Nova Aba ↗
+          </a>
+        </div>
+        <iframe id="iframeCustosBudget" src="painel_financeiro.html" style="width: 100%; height: calc(100vh - 190px); min-height: 850px; border: 1px solid var(--border-color, rgba(255,255,255,0.08)); border-radius: 14px; background: #0a0d14; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.5);" title="Custos & Budget"></iframe>
+      </section>
+
       <!-- TENDÊNCIAS -->
       <section data-view="tendencias" hidden>
         <!-- FATURAMENTO -->
@@ -1568,6 +1584,7 @@
     plataformas:['Plataformas & canais','De onde vêm as vendas'],
     promoters:['Ações Start Inc. & Cupons','Performance das estratégias da Start Inc. (Evandro + Gê) e mapeamento Uticket + Sympla'],
     ingressos:['Ingressos','Ticket médio e lotes que mais vendem'],
+    custos_budget:['Custos & Budget','Prestação de contas do lançamento, investimentos em mídia e comprovantes'],
     tendencias:['Faturamento','Faturamento real dos ingressos e estimativa de estacionamento e bar'],
     conferencia:['Importar e conferir','Suba a planilha da Sympla ou da Uticket e veja o que não bate com o painel'],
     usuarios:['Gestão de Usuários & Acessos','Controle de permissões e relatórios permitidos']
@@ -1582,8 +1599,8 @@
         v = telasPermitidas[0] || 'overview';
       }
     }
-    // Restrição para tela de gestão de usuários (somente superadmin)
-    if(v === 'usuarios' && window.MOVING_AUTH && window.MOVING_AUTH.usuario && window.MOVING_AUTH.usuario.papel !== 'superadmin'){
+    // Restrição para telas restritas a superadmin (usuarios e custos_budget)
+    if((v === 'usuarios' || v === 'custos_budget') && (!window.MOVING_AUTH || !window.MOVING_AUTH.usuario || window.MOVING_AUTH.usuario.papel !== 'superadmin')){
       v = 'overview';
     }
 
@@ -4300,6 +4317,7 @@
     },
     logoutLocal: function(){
       localStorage.removeItem(TOKEN_KEY);
+      try { localStorage.removeItem('moving_usuario'); } catch(e){}
       usuarioAtual = null;
       window.movingUsuario = null;
       mostrarLogin();
@@ -4317,6 +4335,11 @@
 
   // ===== Exibir / Esconder Tela de Login =====
   function mostrarLogin(){
+    var navCustosBudget = $('navCustosBudget');
+    if(navCustosBudget) navCustosBudget.style.display = 'none';
+    var navUsuarios = $('navUsuarios');
+    if(navUsuarios) navUsuarios.style.display = 'none';
+
     var overlay = $('loginOverlay');
     if(overlay){
       overlay.style.display = 'flex';
@@ -4435,10 +4458,19 @@
         (user.papel === 'admin' ? 'Administrador' : 'Usuário');
     }
 
+    // Salvar dados do usuário atual para abas/iframes
+    try { localStorage.setItem('moving_usuario', JSON.stringify(user)); } catch(e){}
+
     // Tela de gestão de usuários (somente superadmin)
     var navUsuarios = $('navUsuarios');
     if(navUsuarios){
       navUsuarios.style.display = (user.papel === 'superadmin') ? 'flex' : 'none';
+    }
+
+    // Tela de Custos & Budget (somente superadmin - admin e usuario NÃO VEEM)
+    var navCustosBudget = $('navCustosBudget');
+    if(navCustosBudget){
+      navCustosBudget.style.display = (user.papel === 'superadmin') ? 'flex' : 'none';
     }
 
     // Botão de sincronização
@@ -4458,7 +4490,7 @@
 
     navLinks.forEach(function(link){
       var v = link.getAttribute('data-view');
-      if(v === 'usuarios') return; // já tratado acima
+      if(v === 'usuarios' || v === 'custos_budget') return; // já tratado com exclusividade superadmin
       if(user.papel === 'usuario'){
         if(telasPermitidas.indexOf(v) > -1){
           link.style.display = '';
@@ -4476,7 +4508,7 @@
 
     if(user.papel === 'usuario' && telasPermitidas.indexOf(viewAtiva) === -1){
       if(window.movingShowView) window.movingShowView(telasPermitidas[0] || 'overview');
-    } else if(user.papel !== 'superadmin' && viewAtiva === 'usuarios'){
+    } else if(user.papel !== 'superadmin' && (viewAtiva === 'usuarios' || viewAtiva === 'custos_budget')){
       if(window.movingShowView) window.movingShowView('overview');
     }
 

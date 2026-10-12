@@ -837,7 +837,13 @@ export default {
 
     // 9. Arquivos estáticos (index.html, etc)
     if (env && env.ASSETS) {
-      const assetRes = await env.ASSETS.fetch(request);
+      let reqAsset = request;
+      if (url.pathname.startsWith('/public/')) {
+        const rewritten = new URL(request.url);
+        rewritten.pathname = url.pathname.replace(/^\/public/, '');
+        reqAsset = new Request(rewritten, request);
+      }
+      const assetRes = await env.ASSETS.fetch(reqAsset);
       if (url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname === '') {
         const h = new Headers(assetRes.headers);
         h.set('Cache-Control', 'no-cache, no-store, must-revalidate');

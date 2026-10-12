@@ -1,0 +1,84 @@
+{
+  "periodo": {
+    "inicio": "2026-09-10",
+    "fim": "2026-10-12",
+    "descricao": "Lançamento Moving Festival 2026"
+  },
+  "planejamento_budget_ads": {
+    "budget_planejado_total": 25000.00,
+    "historico_plano": "R$ 20.000 inicial (com R$ 5k/6k p/ lançamento) + R$ 5.000 suplementação",
+    "depositos_recebidos": 23800.00,
+    "pendente_de_deposito": 1200.00
+  },
+  "depositos_recebidos": {
+    "total": 23800.00,
+    "itens": [
+      {"data": "21/09/2026", "origem": "Anderson", "valor": 5000.00},
+      {"data": "24/09/2026", "origem": "Happy Park", "valor": 5000.00},
+      {"data": "28/09/2026", "origem": "Henry", "valor": 3800.00},
+      {"data": "30/09/2026", "origem": "Henry", "valor": 5000.00},
+      {"data": "06/10/2026", "origem": "Fernando RO", "valor": 5000.00}
+    ]
+  },
+  "prestacao_de_contas_evento": {
+    "total_depositado": 23800.00,
+    "total_investido_evento": 20913.55,
+    "saldo_remanescente_verba": 2886.45,
+    "saldo_disponivel_conta": 312.23,
+    "detalhamento_investimento": {
+      "meta_ads_conta_nova": 16670.44,
+      "meta_ads_conta_antiga": 2739.41,
+      "meta_ads_saldo_ativo": 131.51,
+      "meta_ads_total_pago": 19409.85,
+      "whatsapp_api_total_pago": 69.98,
+      "manychat_total_pago": 639.72,
+      "meu_grupo_vip_total_pago": 397.00,
+      "crm_sac_chat_total_pago": 397.00,
+      "total_ferramentas_pago": 1503.70
+    }
+  },
+  "comparativo_gasto_vs_pago": [
+    {
+      "categoria": "Meta Ads — Conta Nova (CA01)",
+      "gasto_em_tela": 14644.98,
+      "imposto_taxa": 2025.46,
+      "valor_efetivamente_pago": 16670.44,
+      "detalhe": "Gasto / 0,8785 (PIS/COFINS 9,25% + ISS 2,90%)"
+    },
+    {
+      "categoria": "Meta Ads — Conta Antiga (Moving)",
+      "gasto_em_tela": 2275.72,
+      "imposto_taxa": 332.18,
+      "valor_efetivamente_pago": 2739.41,
+      "detalhe": "R$ 2.607,90 consumidos + R$ 131,51 saldo ativo em veiculação"
+    },
+    {
+      "categoria": "WhatsApp Cloud API (Meta)",
+      "gasto_em_tela": 61.48,
+      "imposto_taxa": 8.50,
+      "valor_efetivamente_pago": 69.98,
+      "detalhe": "1.754 mensagens cobráveis (R$ 61,48 tela / 0,8785 Meta Brasil = R$ 69,98)"
+    },
+    {
+      "categoria": "ManyChat (3 Cobranças)",
+      "gasto_em_tela": 639.72,
+      "imposto_taxa": 0.00,
+      "valor_efetivamente_pago": 639.72,
+      "detalhe": "3 Faturas quitadas: 02/10 (R$ 406,20), 25/09 (R$ 135,80) e 23/09 (R$ 97,72)"
+    },
+    {
+      "categoria": "Meu Grupo VIP (2 Compras - Nups)",
+      "gasto_em_tela": 397.00,
+      "imposto_taxa": 0.00,
+      "valor_efetivamente_pago": 397.00,
+      "detalhe": "R$ 247,00 (16/09) + R$ 150,00 (25/09)"
+    },
+    {
+      "categoria": "CRM.SAC (https://crm.sac.chat/)",
+      "gasto_em_tela": 397.00,
+      "imposto_taxa": 0.00,
+      "valor_efetivamente_pago": 397.00,
+      "detalhe": "Software de CRM de atendimento WhatsApp"
+    }
+  ]
+}

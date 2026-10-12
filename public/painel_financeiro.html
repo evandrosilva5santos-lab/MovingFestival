@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prestação de Contas & Painel Financeiro — Moving Festival 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-card: rgba(18, 24, 38, 0.75);
+      --bg-card-hover: rgba(24, 32, 50, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.25);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --accent-meta: #6366f1;
+      --accent-meta-light: #818cf8;
+      --accent-tools: #10b981;
+      --accent-tools-light: #34d399;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --accent-info: #0ea5e9;
+      --accent-purple: #a855f7;
+      
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-primary);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.10) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Bar */
+    header {
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(10, 13, 20, 0.85);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      font-size: 20px;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p { font-size: 12px; color: var(--text-muted); }
+
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .badge-unsettled {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 8px #fbbf24;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* Reconciliation Hero Card */
+    .reconciliation-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .reconciliation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .rec-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+    }
+
+    .rec-item-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .rec-item-val {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .rec-item-sub {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* Tabs Navigation */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: rgba(18, 24, 38, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 6px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      margin-bottom: 28px;
+      width: fit-content;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover { color: var(--text-main); }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-btn.active.tab-rec {
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .tab-btn.active.tab-meta {
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .tab-btn.active.tab-tools {
+      background: rgba(168, 85, 247, 0.2);
+      color: #e9d5ff;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-pane.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .panel-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .td-num {
+      text-align: right;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tag-whatsapp { background: rgba(37, 211, 102, 0.15); color: #4ade80; }
+    .tag-manychat { background: rgba(14, 165, 233, 0.15); color: #38bdf8; }
+    .tag-vip { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .tag-meta { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
+
+    /* Modal for receipts */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; }
+    .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+    .modal-body { padding: 24px; text-align: center; }
+    .modal-body img { max-width: 100%; max-height: 60vh; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
+    .modal-meta { margin-top: 16px; font-size: 13px; color: var(--text-muted); text-align: left; background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: var(--radius-sm); }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">M</div>
+      <div class="brand-text">
+        <h1>Prestação de Contas & Controle Financeiro</h1>
+        <p>Moving Festival 2026 • Relatório de Gastos de Anúncios e Ferramentas</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" class="btn" target="_top">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Voltar à Plataforma
+      </a>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- HERO CONCILIAÇÃO BANCÁRIA: ENTRADAS VS INVESTIMENTO DO EVENTO -->
+    <div class="reconciliation-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; margin-bottom: 8px;">
+            Prestação de Contas Oficial • Moving Festival 2026
+          </span>
+          <h2 style="font-family: var(--font-heading); font-size: 24px; font-weight: 700;">
+            Total Depositado para o Lançamento: R$ 23.800,00 (5 Aportes)
+          </h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+            Demonstrativo de mídia paga (Meta Ads), ferramentas oficiais de automação e saldo de verba.
+          </p>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Total Investido no Evento</div>
+          <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: #38bdf8;">
+            R$ 20.913,55
+          </div>
+          <div style="font-size: 11px; color: #34d399; margin-top: 2px;">(Mídia entregue + Ferramentas oficiais)</div>
+        </div>
+      </div>
+
+      <div class="reconciliation-grid">
+        <!-- 1. Aporte Realmente Enviado -->
+        <div class="rec-item">
+          <div class="rec-item-title">1. Dinheiro Enviado para Anúncios</div>
+          <div class="rec-item-val" style="color: #38bdf8;">R$ 23.800,00</div>
+          <div class="rec-item-sub">5 depósitos de 21/09 a 06/10 (Anderson, Happy Park, Henry, Fernando)</div>
+        </div>
+
+        <!-- 2. Total Pago Meta Ads -->
+        <div class="rec-item">
+          <div class="rec-item-title">2. Anúncios Meta Ads (Pago)</div>
+          <div class="rec-item-val" style="color: #818cf8;">R$ 19.409,85</div>
+          <div class="rec-item-sub">Conta Nova (16,6k) + Antiga (2,7k c/ R$ 131,51 ativo)</div>
+        </div>
+
+        <!-- 3. Ferramentas do Evento -->
+        <div class="rec-item">
+          <div class="rec-item-title">3. Ferramentas Oficiais</div>
+          <div class="rec-item-val" style="color: #c084fc;">R$ 1.503,70</div>
+          <div class="rec-item-sub">ManyChat (3 cobranças), Meu Grupo VIP, CRM.sac, WhatsApp API</div>
+        </div>
+
+        <!-- 4. Total Investido no Lançamento -->
+        <div class="rec-item" style="border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.05);">
+          <div class="rec-item-title" style="color: #38bdf8;">4. Total Investido no Evento</div>
+          <div class="rec-item-val" style="color: #38bdf8;">R$ 20.913,55</div>
+          <div class="rec-item-sub">Anúncios (19,4k) + Ferramentas (1,5k)</div>
+        </div>
+
+        <!-- 5. Saldo de Verba a Compensar -->
+        <div class="rec-item" style="border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.05);">
+          <div class="rec-item-title" style="color: #fbbf24;">5. Saldo de Verba a Compensar</div>
+          <div class="rec-item-val" style="color: #fbbf24;">R$ 2.886,45</div>
+          <div class="rec-item-sub">R$ 312,23 em conta + R$ 2.574,22 a compensar/reter pós-evento</div>
+        </div>
+
+        <!-- 6. Saldo Ativo na Meta -->
+        <div class="rec-item" style="border-color: rgba(52, 211, 153, 0.4); background: rgba(16, 185, 129, 0.05);">
+          <div class="rec-item-title" style="color: #34d399;">6. Saldo em Anúncios Ativo</div>
+          <div class="rec-item-val" style="color: #34d399;">R$ 131,51</div>
+          <div class="rec-item-sub">Crédito rodando hoje na Meta (autonomia para ~1 dia)</div>
+        </div>
+
+        <!-- 7. Saldo em Conta Bancária -->
+        <div class="rec-item" style="border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.05);">
+          <div class="rec-item-title" style="color: #fbbf24;">7. Saldo em Conta Bancária</div>
+          <div class="rec-item-val" style="color: #fbbf24;">R$ 312,23</div>
+          <div class="rec-item-sub">Disponível imediato (reserva operacional imediata)</div>
+        </div>
+      </div>
+
+      <!-- ALERTA OPERACIONAL DE SUSTENTAÇÃO -->
+      <div style="margin-top: 18px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 22px;">⚠️</span>
+          <div>
+            <div style="font-weight: 700; color: #fbbf24; font-size: 14px;">Status Operacional de Tráfego: Anúncios Rodando em Ritmo Limite</div>
+            <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+              Há <strong>R$ 131,51</strong> em veiculação ativa na Meta e <strong>R$ 312,23</strong> em conta. Esse saldo mantém a operação no ar hoje, mas <strong>não sustenta os próximos dias do evento</strong> sem novo aporte de verba.
+            </div>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-weight: 700; padding: 6px 14px; font-size: 12px; border: 1px solid rgba(245, 158, 11, 0.4);">
+            Necessário Suplementação p/ Sustentar
+          </span>
+        </div>
+      </div>
+
+      <!-- BANNER DE DESTAQUE DO RESULTADO -->
+      <div style="margin-top: 16px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 14px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 700;">🎯 PRESTAÇÃO DE CONTAS CONCLUÍDA</span>
+            <span style="font-weight: 700; font-size: 15px; color: #f8fafc;">Total de Recursos Investidos no Evento</span>
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.6;">
+            • Verba total enviada: <strong style="color: #38bdf8;">R$ 23.800,00</strong> (5 depósitos de 21/09 a 06/10)<br>
+            • (-) Total efetivamente investido em mídia e ferramentas: <strong style="color: #34d399;">R$ 20.913,55</strong> (100% comprovado com notas e recibos)
+          </div>
+        </div>
+        <div style="text-align: right; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 12px 24px; border-radius: 12px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #38bdf8; font-weight: 700;">Total Investido no Evento</div>
+          <div style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: #38bdf8;">
+            R$ 20.913,55
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">(Saldo restante de verba: R$ 2.886,45)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav">
+      <button class="tab-btn tab-rec active" onclick="switchTab('prestacao-contas')">
+        📋 1. Entradas e Saídas do Evento (Resumo Geral)
+      </button>
+      <button class="tab-btn tab-meta" onclick="switchTab('trafego-pago')">
+        🎯 2. Anúncios da Meta (Onde foi o dinheiro)
+      </button>
+      <button class="tab-btn tab-tools" onclick="switchTab('ferramentas')">
+        ⚙️ 3. Ferramentas do Evento (Comprovantes)
+      </button>
+    </div>
+
+    <!-- TAB 1: PRESTAÇÃO DE CONTAS (GASTO VS PAGO) -->
+    <div id="tab-prestacao-contas" class="tab-pane active">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">📋 Controle Linha a Linha: Depósitos, Impostos e Saldo de Anúncios</h2>
+            <p class="panel-desc">
+              Veja exatamente quanto dinheiro foi investido em mídia, os impostos oficiais da Meta Brasil e as ferramentas contratadas para o lançamento.
+            </p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Item / Descrição</th>
+                <th>Conta / Provedor</th>
+                <th style="text-align: right; background: rgba(56, 189, 248, 0.08); color: #7dd3fc;">1. Valor Pago / Depositado</th>
+                <th style="text-align: right; color: #fbbf24;">2. Imposto da Meta</th>
+                <th style="text-align: right; color: #a5b4fc;">3. Saldo em Anúncios</th>
+                <th style="text-align: right; color: #e2e8f0;">4. Gasto até Agora</th>
+                <th style="text-align: right; color: #34d399; background: rgba(16, 185, 129, 0.08);">5. Saldo Restante na Meta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- CA01 -->
+              <tr>
+                <td><span class="tag tag-meta">Meta Ads</span> <strong>Conta Nova (CA01)</strong></td>
+                <td>Gerenciador - Moving (`act_660431949188311`)</td>
+                <td class="td-num" style="color: #38bdf8; background: rgba(56, 189, 248, 0.04); font-size: 15px; font-weight: 700;">R$ 16.670,44</td>
+                <td class="td-num" style="color: #fbbf24;">- R$ 2.025,46</td>
+                <td class="td-num" style="color: #a5b4fc;">R$ 14.644,98</td>
+                <td class="td-num">R$ 14.644,98</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">R$ 0,00 (100% entregue)</td>
+              </tr>
+
+              <!-- Antiga Setembro -->
+              <tr>
+                <td><span class="tag tag-meta">Meta Ads</span> <strong>Conta Antiga (Setembro)</strong></td>
+                <td>BPM Culture (`act_565865536002119`)</td>
+                <td class="td-num" style="color: #38bdf8; background: rgba(56, 189, 248, 0.04); font-size: 15px; font-weight: 700;">R$ 2.739,41</td>
+                <td class="td-num" style="color: #fbbf24;">- R$ 332,18</td>
+                <td class="td-num" style="color: #a5b4fc;">R$ 2.407,23</td>
+                <td class="td-num">R$ 2.275,72</td>
+                <td class="td-num" style="color: #34d399; background: rgba(16, 185, 129, 0.08); font-weight: 700; text-align: right;">● R$ 131,51 (Ativo)</td>
+              </tr>
+
+              <!-- Subtotal Ads -->
+              <tr style="background: rgba(99, 102, 241, 0.08); font-weight: 700;">
+                <td colspan="2" style="color: #a5b4fc;">● SUBTOTAL ANÚNCIOS META</td>
+                <td class="td-num" style="color: #38bdf8; background: rgba(56, 189, 248, 0.08); font-size: 16px;">R$ 19.409,85</td>
+                <td class="td-num" style="color: #fbbf24;">- R$ 2.357,64</td>
+                <td class="td-num" style="color: #a5b4fc;">R$ 17.052,21</td>
+                <td class="td-num" style="color: #fff;">R$ 16.920,70</td>
+                <td class="td-num" style="color: #34d399; background: rgba(16, 185, 129, 0.12); font-size: 15px; text-align: right;">R$ 131,51 Ativo</td>
+              </tr>
+
+              <!-- WhatsApp API -->
+              <tr>
+                <td><span class="tag tag-whatsapp">WhatsApp Cloud API</span></td>
+                <td>Meta Platforms (1.754 mensagens cobráveis)</td>
+                <td class="td-num" style="color: #4ade80; font-weight: 700;">R$ 69,98</td>
+                <td class="td-num" style="color: #fbbf24;">- R$ 8,50</td>
+                <td class="td-num" style="color: #a5b4fc;">R$ 61,48</td>
+                <td class="td-num">R$ 61,48</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">R$ 0,00</td>
+              </tr>
+
+              <!-- ManyChat -->
+              <tr>
+                <td><span class="tag tag-manychat">ManyChat Pro (3 cobranças)</span></td>
+                <td>ManyChat, Inc. (23/09, 25/09 e 02/10)</td>
+                <td class="td-num" style="color: #38bdf8; font-weight: 700;">R$ 639,72</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">—</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">—</td>
+                <td class="td-num">R$ 639,72</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">R$ 0,00</td>
+              </tr>
+
+              <!-- Meu Grupo VIP -->
+              <tr>
+                <td><span class="tag tag-vip">Meu Grupo VIP (2 compras)</span></td>
+                <td>Nups Tecnologia (16/09 e 25/09)</td>
+                <td class="td-num" style="color: #c084fc; font-weight: 700;">R$ 397,00</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">—</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">—</td>
+                <td class="td-num">R$ 397,00</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">R$ 0,00</td>
+              </tr>
+
+              <!-- CRM.sac -->
+              <tr>
+                <td><span class="tag tag-manychat" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">CRM.sac</span></td>
+                <td>Atendimento WhatsApp (Mensalidade)</td>
+                <td class="td-num" style="color: #38bdf8; font-weight: 700;">R$ 397,00</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">—</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">—</td>
+                <td class="td-num">R$ 397,00</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">R$ 0,00</td>
+              </tr>
+
+              <!-- Subtotal Ferramentas -->
+              <tr style="background: rgba(192, 132, 252, 0.08); font-weight: 700;">
+                <td colspan="2" style="color: #c084fc;">● SUBTOTAL FERRAMENTAS OFICIAIS</td>
+                <td class="td-num" style="color: #c084fc; font-size: 16px;">R$ 1.503,70</td>
+                <td class="td-num" style="color: #fbbf24;">- R$ 8,50</td>
+                <td class="td-num" style="color: #a5b4fc;">R$ 1.495,20</td>
+                <td class="td-num" style="color: #fff;">R$ 1.495,20</td>
+                <td class="td-num" style="color: var(--text-dim); text-align: right;">R$ 0,00</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background: rgba(56, 189, 248, 0.12); font-weight: 800; font-size: 15px;">
+                <td colspan="2" style="color: #38bdf8; font-family: var(--font-heading);">
+                  TOTAL INVESTIDO NO EVENTO (ANÚNCIOS + FERRAMENTAS)
+                </td>
+                <td class="td-num" style="color: #38bdf8; font-size: 18px; background: rgba(56, 189, 248, 0.15);">
+                  R$ 20.913,55
+                </td>
+                <td class="td-num" style="color: #fbbf24;">- R$ 2.366,14</td>
+                <td class="td-num" style="color: #a5b4fc;">R$ 18.547,41</td>
+                <td class="td-num" style="color: #fff;">R$ 18.415,90</td>
+                <td class="td-num" style="color: #34d399; font-size: 16px; background: rgba(16, 185, 129, 0.15); text-align: right;">
+                  R$ 131,51 Ativo
+                </td>
+              </tr>
+              <tr style="background: rgba(255, 255, 255, 0.03); font-weight: 700;">
+                <td colspan="2" style="color: var(--text-muted);">
+                  (=) TOTAL DEPOSITADO (R$ 23.800,00) (-) TOTAL INVESTIDO NO EVENTO (R$ 20.913,55)
+                </td>
+                <td class="td-num" style="color: #fbbf24; font-size: 18px;">
+                  R$ 2.886,45
+                </td>
+                <td colspan="4" style="color: #fbbf24; font-weight: 700; text-align: right;">
+                  Saldo a compensar no fechamento pós-evento: R$ 312,23 (em conta) + R$ 2.574,22 (acerto de contas/honorários)
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DETALHE META ADS -->
+    <div id="tab-trafego-pago" class="tab-pane">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title" style="color: #818cf8;">🎯 Detalhe das 2 Contas de Meta Ads</h2>
+            <p class="panel-desc">Entrega bruta de mídia: R$ 16.902,21 | Total pago c/ imposto: R$ 19.239,85</p>
+          </div>
+        </div>
+
+        <div class="two-cols">
+          <!-- CA01 -->
+          <div class="account-card">
+            <div class="account-head">
+              <div>
+                <div class="account-title">
+                  <span>CA01 - atual (Conta Principal)</span>
+                  <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">act_660431949188311</span>
+                </div>
+                <div class="account-meta-info">CNPJ: 49.643.563/0001-97 • VISA *6610</div>
+              </div>
+              <div>
+                <div class="account-val">R$ 16.670,44 Pago</div>
+                <div style="font-size: 11.5px; color: var(--text-dim); text-align: right;">Gasto tela: R$ 14.644,98</div>
+              </div>
+            </div>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 10px;">
+              Processamento concluído das veiculações da conta principal.
+            </p>
+          </div>
+
+          <!-- Antiga -->
+          <div class="account-card" style="border-color: rgba(16, 185, 129, 0.35); background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, rgba(30, 41, 59, 0.7) 100%);">
+            <div class="account-head">
+              <div>
+                <div class="account-title">
+                  <span>CA - Moving Festival (Conta Antiga)</span>
+                  <span class="badge" style="background: rgba(255, 255, 255, 0.08); color: var(--text-muted);">act_565865536002119</span>
+                  <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">● R$ 131,51 em Veiculação</span>
+                </div>
+                <div class="account-meta-info">CNPJ: 54.223.974/0001-63 • Regularizada</div>
+              </div>
+              <div>
+                <div class="account-val">R$ 2.569,41 Pago</div>
+                <div style="font-size: 11.5px; color: #34d399; text-align: right; font-weight: 600;">+ R$ 131,51 saldo ativo</div>
+              </div>
+            </div>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 10px;">
+              Operação de 10/09 a 26/09 quitada • <strong style="color: #34d399;">Possui saldo restante de R$ 131,51 ainda em veiculação ativa</strong> para entrega de anúncios do evento.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: FERRAMENTAS DO EVENTO -->
+    <div id="tab-ferramentas" class="tab-pane">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title" style="color: #c084fc;">⚙️ Ferramentas Oficiais do Evento (R$ 1.503,70 Pagos)</h2>
+            <p class="panel-desc">Comprovantes e recibos oficiais das ferramentas contratadas para automação e atendimento</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Fornecedor</th>
+                <th>Data</th>
+                <th style="text-align: right;">Gasto Tela</th>
+                <th style="text-align: right;">Total Pago</th>
+                <th style="text-align: center;">Status / Recibo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tag tag-manychat">ManyChat Pro Upgrade</span></td>
+                <td>ManyChat, Inc.</td>
+                <td>02/10/2026</td>
+                <td class="td-num">R$ 406,20</td>
+                <td class="td-num" style="color: #38bdf8;">R$ 406,20</td>
+                <td style="text-align: center;">
+                  <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('ManyChat (Upgrade 02/10)', 'public/comprovantes/media_1791813907262.jpg', 'US$ 69,21 | Fatura quitada: R$ 406,20 | Cartão Moving')">🔍 Recibo</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-manychat">ManyChat Pro Assinatura</span></td>
+                <td>ManyChat, Inc.</td>
+                <td>25/09/2026</td>
+                <td class="td-num">R$ 135,80</td>
+                <td class="td-num" style="color: #38bdf8;">R$ 135,80</td>
+                <td style="text-align: center;">
+                  <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('ManyChat (25/09)', 'public/comprovantes/media_1791819943765.jpg', 'US$ 23,25 | Fatura quitada: R$ 135,80 | Cartão Moving')">🔍 Recibo</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-manychat">ManyChat Pro Base</span></td>
+                <td>ManyChat, Inc.</td>
+                <td>23/09/2026</td>
+                <td class="td-num">R$ 97,72</td>
+                <td class="td-num" style="color: #38bdf8;">R$ 97,72</td>
+                <td style="text-align: center;">
+                  <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('ManyChat (Base 23/09)', 'public/comprovantes/media_1791813907261.jpg', 'US$ 17,00 | Fatura quitada: R$ 97,72 | Cartão Moving')">🔍 Recibo</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-vip">Meu Grupo VIP (Licença 1)</span></td>
+                <td>Nups</td>
+                <td>16/09/2026</td>
+                <td class="td-num">R$ 247,00</td>
+                <td class="td-num" style="color: #c084fc;">R$ 247,00</td>
+                <td style="text-align: center;">
+                  <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('Meu Grupo VIP (16/09)', 'public/comprovantes/media_1791814036376.jpg', 'Transação: HP4008618129 | Valor: R$ 247,00')">🔍 Recibo</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-vip">Meu Grupo VIP (Mensalidade 2)</span></td>
+                <td>Nups</td>
+                <td>25/09/2026</td>
+                <td class="td-num">R$ 150,00</td>
+                <td class="td-num" style="color: #c084fc;">R$ 150,00</td>
+                <td style="text-align: center;">
+                  <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('Meu Grupo VIP (25/09)', 'public/comprovantes/comprovante_meugrupovip_25set.jpg', 'Transação: HP2277499246 | Valor: R$ 150,00')">🔍 Recibo</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-manychat" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">CRM.sac</span></td>
+                <td><a href="https://crm.sac.chat/" target="_blank" style="color: #38bdf8; text-decoration: underline; font-weight: 600;">crm.sac.chat ↗</a></td>
+                <td>10/2026</td>
+                <td class="td-num">R$ 397,00</td>
+                <td class="td-num" style="color: #38bdf8; font-weight: 700;">R$ 397,00</td>
+                <td style="text-align: center; color: #34d399; font-size: 12px; font-weight: 600;">
+                  ✓ Confirmado
+                </td>
+              </tr>
+              <tr>
+                <td><span class="tag tag-whatsapp">WhatsApp Cloud API</span></td>
+                <td>Meta Platforms Brasil</td>
+                <td>10/2026</td>
+                <td class="td-num">R$ 61,48</td>
+                <td class="td-num" style="color: #4ade80;">R$ 69,98</td>
+                <td style="text-align: center;">
+                  <button class="btn" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('WhatsApp Cloud API', 'public/comprovantes/media_1791829053064.png', '1.754 mensagens cobráveis disparadas via Meta WhatsApp API | R$ 61,48 tela + R$ 8,50 imposto Meta = R$ 69,98 total')">🔍 Recibo</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal Recibos -->
+  <div id="receipt-modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title">Comprovante de Compra</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modal-img" src="" alt="Comprovante">
+        <div id="modal-desc" class="modal-meta"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== SEGURANÇA: EXCLUSIVO SUPERADMIN =====
+    (function verificarSegurancaSuperAdmin() {
+      var papel = null;
+
+      // 1. Tentar pegar papel através do iframe pai (se estiver embutido no painel)
+      try {
+        if (window.parent && window.parent !== window && window.parent.MOVING_AUTH && window.parent.MOVING_AUTH.usuario) {
+          papel = window.parent.MOVING_AUTH.usuario.papel;
+        }
+      } catch(e) {}
+
+      // 2. Tentar pegar papel do storage local
+      if (!papel) {
+        try {
+          var uSalvo = localStorage.getItem('moving_usuario');
+          if (uSalvo) {
+            var parsed = JSON.parse(uSalvo);
+            papel = parsed.papel || (parsed.usuario && parsed.usuario.papel);
+          }
+        } catch(e) {}
+      }
+
+      var token = null;
+      try { token = localStorage.getItem('moving_token'); } catch(e) {}
+
+      // Se tiver token mas ainda não souber o papel, consultar /api/me
+      if (!papel && token) {
+        fetch('/api/me', { headers: { 'X-Moving-Token': token } })
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (!d || !d.ok || !d.usuario || d.usuario.papel !== 'superadmin') {
+              bloquearTela();
+            }
+          })
+          .catch(function() {
+            // Em caso de falha de conexão com token desconhecido
+            bloquearTela();
+          });
+      } else if (papel && papel !== 'superadmin') {
+        // Bloquear imediatamente se for 'admin' ou 'usuario'
+        bloquearTela();
+      } else if (!papel && !token && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        // Na nuvem sem token gravado, exigir login
+        bloquearTela();
+      }
+
+      function bloquearTela() {
+        document.addEventListener('DOMContentLoaded', function() {
+          document.body.innerHTML = `
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0d14;color:#f8fafc;font-family:'Plus Jakarta Sans',sans-serif;padding:24px;text-align:center;">
+              <div style="max-width:440px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.25);padding:36px 28px;border-radius:16px;box-shadow:0 15px 35px rgba(0,0,0,0.5);">
+                <div style="font-size:44px;margin-bottom:14px;">🔒</div>
+                <h2 style="font-size:20px;font-weight:700;color:#f87171;margin-bottom:8px;">Acesso Restrito ao SuperADMIN</h2>
+                <p style="font-size:13.5px;color:#94a3b8;margin-bottom:24px;line-height:1.6;">Esta visualização de Custos & Budget é estritamente confidencial e visível apenas para o Super Administrador da conta.</p>
+                <a href="index.html" target="_top" style="display:inline-block;padding:10px 22px;background:#6366f1;color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:13px;">Voltar ao Painel Geral</a>
+              </div>
+            </div>
+          `;
+        });
+      }
+    })();
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetPane = document.getElementById('tab-' + tabId);
+      if (targetPane) targetPane.classList.add('active');
+
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => 
+        b.getAttribute('onclick').includes(tabId)
+      );
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function openModal(title, imgSrc, desc) {
+      document.getElementById('modal-title').innerText = title;
+      var img = document.getElementById('modal-img');
+      img.onerror = function() {
+        if (this.src.indexOf('public/comprovantes/') !== -1) {
+          this.src = this.src.replace('public/comprovantes/', 'comprovantes/');
+        } else if (this.src.indexOf('/comprovantes/') !== -1 && this.src.indexOf('/public/') === -1) {
+          this.src = this.src.replace('/comprovantes/', '/public/comprovantes/');
+        }
+      };
+      img.src = imgSrc;
+      document.getElementById('modal-desc').innerText = desc;
+      document.getElementById('receipt-modal').classList.add('active');
+    }
+
+    function closeModal(e) {
+      if (!e || e.target.id === 'receipt-modal' || e.target.classList.contains('modal-close')) {
+        document.getElementById('receipt-modal').classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>
